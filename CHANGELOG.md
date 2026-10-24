@@ -4,6 +4,13 @@ Record each meaningful project change during the event, newest first. Update thi
 
 ## Event build log
 
+## 2026-10-24T23:29:46+05:30 — Re-analyze stale models from the empty state
+
+- Changed: New `frontend/src/components/Reanalyze.tsx`: the NO SIGNAL panel offers RE-ANALYZE for models built before multi-language support (no `summary.languages`). `App.tsx`: re-analyzing the already-open repo reloads its model (cache-busted) and snapshots instead of being ignored as a same-slug switch. `data.ts`: `loadModel(slug, fresh)`.
+- Why: Participant saw 'no source files' for AbhineethVS/arinjilley-web, a TypeScript monorepo (62 .ts files) analyzed before multi-language support; the saved model was stale.
+- Validation: Re-analyzed via CLI: 61 files (55 TS, 6 JS), 145 edges, 28 snapshots; workspace package packages/core resolved (schema.ts reaches 21 files). Playwright: repo opens to the full risk map, no empty state, no page errors. `tsc -b` and `oxlint` clean.
+- Limitations: Re-analysis of other stale local models is manual (button or CLI).
+
 ## 2026-10-24T23:25:26+05:30 — Multi-language import graphs (JS/TS, Go, JVM, Rust, C/C++, C#, Ruby, PHP)
 
 - Changed: New `backend/richter/langs.py`: shared source walker (vendored/build/test/docs dirs and test-file patterns excluded, non-Python files over 400 KB skipped) and per-language import resolvers — JS/TS (relative + index, ./x.js->x.ts, tsconfig/jsconfig path aliases with comment-tolerant JSON, workspace packages), Go (go.mod module paths, package fan-out), Java/Kotlin/Scala (package+class FQCN, wildcard), Rust (mod, use crate/super/self, brace groups, workspace crates), C/C++/ObjC (#include relative then unique suffix), C# (using -> type or namespace files, capped at 60), Ruby (require_relative, gem-style require), PHP (use FQCN, require/include). `deps.py` merges them with the Python ast graph; nodes carry `lang`; model summary gains `languages`. Snapshots sparse-checkout all source extensions + go.mod/Cargo.toml/package.json/tsconfig. UI: language tag in inspector, languages in repo picker, empty-state text no longer Python-only. Added ripgrep (Rust) as a fourth demo with snapshots and AI notes. README: Languages section, ripgrep backtest row, updated limitations.

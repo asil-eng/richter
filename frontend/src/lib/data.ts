@@ -27,9 +27,9 @@ export async function listRepos(): Promise<RepoEntry[]> {
   }
 }
 
-export async function loadModel(slug: string): Promise<RiskModel> {
+export async function loadModel(slug: string, fresh = false): Promise<RiskModel> {
   try {
-    return await getJSON<RiskModel>(`/models/${slug}.json`)
+    return await getJSON<RiskModel>(`/models/${slug}.json${fresh ? `?t=${Date.now()}` : ''}`)
   } catch {
     return getJSON<RiskModel>(`/api/model/${slug}`)
   }

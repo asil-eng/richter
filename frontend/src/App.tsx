@@ -4,6 +4,7 @@ import { BootScreen } from './components/BootScreen'
 import { Inspector } from './components/Inspector'
 import { LeftRail } from './components/LeftRail'
 import { FileFinder } from './components/FileFinder'
+import { Reanalyze } from './components/Reanalyze'
 import { Timeline } from './components/Timeline'
 import { TopBar } from './components/TopBar'
 import { listRepos, loadModel, loadSnapshots } from './lib/data'
@@ -90,7 +91,11 @@ export default function App() {
 
   const onAnalyzed = async (s: string) => {
     setRepos(await listRepos())
-    openRepo(s)
+    if (s !== slug) return openRepo(s)
+    // re-analysis of the open repo: same slug, so reload its data explicitly
+    setSelected(null)
+    setModel(await loadModel(s, true))
+    setSnapshots(await loadSnapshots(s))
   }
 
   return (
@@ -115,6 +120,9 @@ export default function App() {
               were found outside tests/, docs/ and examples/.
             </p>
             <p className="muted">Pick another repo from the REPO menu, or analyze a project in a supported language.</p>
+            {!model.summary.languages && model.repo.url && (
+              <Reanalyze url={model.repo.url} onDone={onAnalyzed} />
+            )}
           </div>
         </main>
       )}

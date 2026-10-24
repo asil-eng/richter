@@ -1955,6 +1955,25 @@ kbd {
   color: var(--amber);
 }
 
+.reanalyze {
+  margin-top: var(--s-4);
+  padding-top: var(--s-4);
+  border-top: 1px solid var(--line-2);
+}
+.reanalyze button {
+  margin: 4px var(--s-3) 0 0;
+  padding: 8px 14px;
+  font-size: var(--fs-10);
+  letter-spacing: 0.08em;
+  border: 1px solid var(--orange);
+  color: var(--orange);
+  transition: background var(--t-fast), color var(--t-fast);
+}
+.reanalyze button:hover:not(:disabled) {
+  background: var(--orange);
+  color: var(--bg);
+}
+
 /* ============================================================ timeline */
 .stage-city .ask {
   bottom: 92px;

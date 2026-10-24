@@ -28,24 +28,12 @@ export function TopBar({ repos, slug, onRepo, view, onView, onAnalyzed, cityRead
   const [job, setJob] = useState<Job | null>(null)
   const [err, setErr] = useState<string | null>(null)
 
-  // first-visit callout pointing at the CODE CITY tab; gone once the city is opened or dismissed
+  // callout pointing at the CODE CITY tab, shown on every visit until the city is opened
+  // (or the callout dismissed) during that visit
   const cityTab = useRef<HTMLButtonElement>(null)
-  const [hintSeen, setHintSeen] = useState(() => {
-    try {
-      return localStorage.getItem('richter.cityHintSeen') === '1'
-    } catch {
-      return false
-    }
-  })
+  const [hintSeen, setHintSeen] = useState(false)
   const [hintPos, setHintPos] = useState<{ x: number; y: number } | null>(null)
-  const dismissHint = () => {
-    setHintSeen(true)
-    try {
-      localStorage.setItem('richter.cityHintSeen', '1')
-    } catch {
-      /* storage unavailable: hint just reappears next visit */
-    }
-  }
+  const dismissHint = () => setHintSeen(true)
   // opening the city by any route (tab, key 3, callout) retires the hint; React's
   // "adjust state while rendering" pattern, guarded so it runs once
   if (view === 'city' && !hintSeen) dismissHint()
@@ -104,6 +92,7 @@ export function TopBar({ repos, slug, onRepo, view, onView, onAnalyzed, cityRead
             <kbd>{v.key}</kbd>
             <span className="long">{v.label}</span>
             <span className="short">{v.short}</span>
+            {v.id === 'city' && <span className="tab-3d">3D</span>}
           </button>
         ))}
       </nav>

@@ -21,6 +21,13 @@ Record each meaningful project change during the event, newest first. Update thi
 
 ## Event build log
 
+## 2026-10-25T04:43:19+05:30 — City callout on every visit + permanent 3D badge
+
+- Changed: `TopBar.tsx`: the code-city callout is no longer remembered forever in localStorage; it shows on every page load while on Graph/Risk until the city is opened or the callout dismissed in that visit. The CODE CITY tab gets a permanent orange 3D badge. `app.css` badge style. Hosted demo rebuilt.
+- Why: Participant could not see the callout: it was hidden in the city view and permanently suppressed after the first city visit.
+- Validation: Playwright: callout on first load, hidden after opening the city in the same visit, shown again after reload; 3D badge present; no page errors. `tsc -b`, `oxlint` clean.
+- Limitations: None identified in these checks.
+
 ## 2026-10-25T04:35:33+05:30 — Callout pointing first-time visitors to the code city
 
 - Changed: `TopBar.tsx`: on first visit, a callout anchored under the CODE CITY tab ('See this repo as a 3D city · towers = files · glow = risk · replay its history →') appears after the boot screen, with a pulsing tab outline; clicking opens the city, ✕ dismisses it. Opening the city by any route retires it (persisted in localStorage). Styles in `app.css`. Hosted demo rebuilt.

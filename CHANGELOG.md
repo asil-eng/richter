@@ -4,6 +4,13 @@ Record each meaningful project change during the event, newest first. Update thi
 
 ## Event build log
 
+## 2026-10-25T00:24:00+05:30 — Demo video (AI narration) + thumbnail
+
+- Changed: Produced a 94 s demo video outside the repo (`~/Desktop/devin/richter-demo/`: `richter-demo.mp4` 1280x800 9.5 MB for README upload, `richter-demo-1920.mp4` 1920x1200 master). Real app recorded via Chrome DevTools screencast with a scripted cursor; title/outro cards; camera punch-ins; captions in Archivo; narration generated with OpenAI `gpt-4o-mini-tts` (voice onyx); low synthesized drone and two impact hits; loudness-normalised to -16 LUFS. Added `docs/demo-thumbnail.jpg`.
+- Why: Participant asked for a top-quality demo video with a human-sounding voice for the README.
+- Validation: Contact-sheet review of 15 timestamps; fixed boot-screen ghosting in the title crossfade, spoken-form text in captions ('cells dot py' -> cells.py), and caption overlap. ebur128: -16.3 LUFS integrated, LRA 6 LU; no silences > 2.5 s. README version under GitHub's 10 MB upload limit.
+- Limitations: Narration is an AI-generated voice and must be disclosed wherever the video is posted. Video files are not committed (size); they must be uploaded via the GitHub README editor or YouTube.
+
 ## 2026-10-24T23:50:47+05:30 — Graph as a seismic hazard map: isoseismal contours, aftershocks, magnitude labels
 
 - Changed: `GraphView.tsx`: computes a hazard field once per layout (each file radiates its magnitude as a gaussian; field = max) and draws banded fills plus marching-squares contour lines at M5–M8 (dashed below M7) with spaced M-labels, fading in after the intro and dimming during a selection; the six hottest files (M ≥ 6) emit periodic aftershock ripples; labels show magnitude in heat color (riskiest 6 + most central 6 files). HUD adds CONTOURS = ISOSEISMAL M5–M8; HOW TO READ legend gains a contours entry.

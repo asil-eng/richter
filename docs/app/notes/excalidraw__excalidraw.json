@@ -1,0 +1,536 @@
+{
+ "head": "b7de45e88111f5680ae4bb3c3f3541c7d3b279fe",
+ "model": "gpt-4o-mini",
+ "guard": {
+  "packages/excalidraw/components/App.tsx": {
+   "source": "ai",
+   "headline": "Key dependencies in App.tsx require careful editing",
+   "what_breaks": [
+    "packages/excalidraw/types.ts \u2014 relies on types defined here",
+    "packages/excalidraw/data/library.ts \u2014 uses components and states managed in App.tsx",
+    "packages/excalidraw/components/ContextMenu.tsx \u2014 interacts with app state and context"
+   ],
+   "why": "This file is central to the application, managing the main app state and UI interactions. Changes here can ripple through numerous components and affect overall functionality.",
+   "checklist": [
+    "Review changes to state management functions like getObservedAppState.",
+    "Check interactions with imported components like ContextMenu and Dialog.",
+    "Ensure any new utility functions do not conflict with existing ones from @excalidraw/common.",
+    "Validate that changes do not break the expected app behavior in dependent components."
+   ]
+  },
+  "packages/excalidraw/types.ts": {
+   "source": "ai",
+   "headline": "Guard note for types.ts modifications",
+   "what_breaks": [
+    "packages/excalidraw/components/App.tsx \u2014 relies on Collaborator and App types",
+    "packages/excalidraw/actions/types.ts \u2014 relies on Action type",
+    "packages/excalidraw/clipboard.ts \u2014 relies on ClipboardData type",
+    "packages/excalidraw/data/types.ts \u2014 relies on ImportedDataState type"
+   ],
+   "why": "This file defines critical types used across multiple components and actions. Changes to these types can lead to widespread issues in dependent files and components.",
+   "checklist": [
+    "Review changes to Collaborator and ClipboardData types for impact.",
+    "Ensure any modifications to types don't break existing imports in App.tsx.",
+    "Check compatibility of changes with Action type in actions/types.ts.",
+    "Confirm that new types or changes are reflected in related components."
+   ]
+  },
+  "packages/common/src/constants.ts": {
+   "source": "ai",
+   "headline": "Constants for Excalidraw application behavior",
+   "what_breaks": [
+    "packages/common/src/index.ts \u2014 relies on constants for app configuration",
+    "packages/common/src/utils.ts \u2014 uses constants for utility functions",
+    "packages/common/src/font-metadata.ts \u2014 depends on font-related constants"
+   ],
+   "why": "This file defines critical constants that affect the overall behavior and configuration of the Excalidraw application. Changes here can impact multiple components and utilities across the project, leading to potential runtime errors or unexpected behavior.",
+   "checklist": [
+    "Review changes to constants affecting UI behavior",
+    "Ensure any new constants are exported for use in dependent files",
+    "Verify that modifications do not conflict with existing constants in utils or font-metadata"
+   ]
+  },
+  "packages/common/src/utils.ts": {
+   "source": "ai",
+   "headline": "Guard Note for utils.ts Modifications",
+   "what_breaks": [
+    "packages/common/src/index.ts \u2014 relies on exported utility functions",
+    "packages/common/src/appEventBus.ts \u2014 may depend on event handling utilities",
+    "packages/common/src/random.ts \u2014 could use random-related utilities",
+    "packages/common/src/url.ts \u2014 might interact with URL-related functions"
+   ],
+   "why": "This file contains essential utility functions that are widely used across multiple modules. Changes here could lead to cascading failures in dependent files if not handled carefully.",
+   "checklist": [
+    "Review all exported functions for potential breaking changes.",
+    "Ensure any new utility functions are properly typed and documented.",
+    "Check for consistency in utility function behavior with existing code.",
+    "Consider the impact of changes on dependent files and their functionality."
+   ]
+  },
+  "packages/element/src/binding.ts": {
+   "source": "ai",
+   "headline": "Binding.ts: Critical for Element Binding Logic",
+   "what_breaks": [
+    "packages/element/src/index.ts \u2014 relies on exports from binding.ts",
+    "packages/element/src/linearElementEditor.ts \u2014 uses functions from binding.ts",
+    "packages/element/src/collision.ts \u2014 depends on binding logic for element interactions"
+   ],
+   "why": "This file contains essential functions and types that manage the binding of elements, which is crucial for the overall functionality of the drawing application. Changes here could directly affect how elements interact and bind to each other, impacting many dependent files.",
+   "checklist": [
+    "Review changes to getBindingGap and maxBindingDistance_simple functions",
+    "Ensure any modifications to BindingStrategy type are reflected in dependent files",
+    "Check for impacts on element binding in linearElementEditor and collision handling"
+   ]
+  },
+  "packages/element/src/textElement.ts": {
+   "source": "ai",
+   "headline": "Key dependencies for textElement.ts modifications",
+   "what_breaks": [
+    "packages/element/src/index.ts \u2014 relies on redrawTextBoundingBox",
+    "packages/element/src/stickyNote.ts \u2014 relies on updateStickyNoteLayout",
+    "packages/element/src/linearElementEditor.ts \u2014 relies on LinearElementEditor",
+    "packages/element/src/bounds.ts \u2014 relies on getBoundTextMaxWidth"
+   ],
+   "why": "This file is central to rendering and managing text elements, impacting multiple components. Changes here can affect how text is displayed and interacted with across the application.",
+   "checklist": [
+    "Verify changes to redrawTextBoundingBox function behavior.",
+    "Check interactions with updateStickyNoteLayout in stickyNote.ts.",
+    "Ensure LinearElementEditor functionality remains intact.",
+    "Review any changes to text measurement logic in measureText."
+   ]
+  },
+  "packages/element/src/linearElementEditor.ts": {
+   "source": "ai",
+   "headline": "Guard Note for linearElementEditor.ts Changes",
+   "what_breaks": [
+    "packages/element/src/index.ts \u2014 relies on LinearElementEditor class",
+    "packages/element/src/bounds.ts \u2014 relies on getElementAbsoluteCoords function",
+    "packages/element/src/textElement.ts \u2014 relies on getBoundTextElement function"
+   ],
+   "why": "This file contains the LinearElementEditor class, which is crucial for handling linear elements in the application. Changes here could affect the functionality of multiple dependent files that utilize this class and its methods.",
+   "checklist": [
+    "Review changes to LinearElementEditor class methods",
+    "Check interactions with getElementAbsoluteCoords in bounds.ts",
+    "Ensure compatibility with getBoundTextElement in textElement.ts"
+   ]
+  },
+  "packages/excalidraw/data/restore.ts": {
+   "source": "ai",
+   "headline": "Restoration Logic for App State Management",
+   "what_breaks": [
+    "packages/excalidraw/components/App.tsx \u2014 relies on AppState structure",
+    "packages/excalidraw/data/blob.ts \u2014 interacts with restored data",
+    "packages/excalidraw/index.tsx \u2014 integrates overall application state"
+   ],
+   "why": "This file is crucial for restoring the application state, affecting how elements are rendered and managed. Changes here can lead to incorrect application behavior or crashes if not handled properly.",
+   "checklist": [
+    "Review changes to handleOversizedLinearElements function for impact on element rendering.",
+    "Check interactions with getDefaultAppState to ensure state integrity.",
+    "Verify dependencies on AppState and related types are consistent with changes."
+   ]
+  },
+  "packages/element/src/bounds.ts": {
+   "source": "ai",
+   "headline": "ElementBounds class impacts layout calculations",
+   "what_breaks": [
+    "packages/element/src/index.ts \u2014 imports ElementBounds",
+    "packages/element/src/linearElementEditor.ts \u2014 uses getBounds from ElementBounds",
+    "packages/element/src/collision.ts \u2014 relies on bounds calculations"
+   ],
+   "why": "The ElementBounds class is crucial for calculating the dimensions and positions of elements in the canvas. Any changes to its methods or properties could disrupt layout and rendering across numerous dependent files.",
+   "checklist": [
+    "Review changes to getBounds method for impact on dependent files.",
+    "Check interactions with boundsCache and nonRotatedBoundsCache for performance issues.",
+    "Ensure type definitions for ExcalidrawElement remain consistent."
+   ]
+  },
+  "packages/element/src/newElement.ts": {
+   "source": "ai",
+   "headline": "Guard Note for newElement.ts Changes",
+   "what_breaks": [
+    "packages/element/src/index.ts \u2014 relies on exports from newElement.ts",
+    "packages/element/src/arrowEndpointText.ts \u2014 uses functions/types from newElement.ts",
+    "packages/element/src/convertToShape.ts \u2014 depends on newElement.ts for element creation"
+   ],
+   "why": "This file is foundational for creating new elements in the application. Changes here can impact multiple dependent files and their functionalities.",
+   "checklist": [
+    "Review changes to _newElementBase function and its parameters.",
+    "Check interactions with imported utility functions like getUpdatedTimestamp.",
+    "Ensure consistency with the ExcalidrawElement types used throughout."
+   ]
+  },
+  "packages/element/src/collision.ts": {
+   "source": "ai",
+   "headline": "Edit collision.ts with care due to dependencies",
+   "what_breaks": [
+    "packages/element/src/index.ts \u2014 imports functions from this file",
+    "packages/element/src/bounds.ts \u2014 relies on bounds-related functions",
+    "packages/element/src/utils.ts \u2014 uses utility functions defined here",
+    "packages/element/src/binding.ts \u2014 interacts with binding logic"
+   ],
+   "why": "This file is central to collision detection and element interaction, impacting numerous dependent files. Changes here can significantly affect the behavior of elements across the application.",
+   "checklist": [
+    "Review changes to functions like shouldTestInside and hitElementItself",
+    "Ensure any modifications to hit testing logic are reflected in related imports",
+    "Check for impacts on bounds calculations in packages/element/src/bounds.ts",
+    "Verify interactions with binding logic in packages/element/src/binding.ts"
+   ]
+  },
+  "packages/excalidraw/scene/export.ts": {
+   "source": "ai",
+   "headline": "Export Scene Functionality Dependencies",
+   "what_breaks": [
+    "packages/excalidraw/data/blob.ts \u2014 relies on export data types",
+    "packages/excalidraw/clipboard.ts \u2014 uses copy functions for clipboard operations",
+    "packages/excalidraw/element \u2014 depends on element manipulation functions"
+   ],
+   "why": "This file handles the export functionality for scenes, which is critical for user interaction. Changes here can affect how scenes are rendered and exported, impacting multiple components and utilities that rely on this functionality.",
+   "checklist": [
+    "Review changes to functions like renderSceneToSvg and renderStaticScene",
+    "Check interactions with clipboard functions for exporting data",
+    "Ensure compatibility with element manipulation functions from @excalidraw/element"
+   ]
+  },
+  "packages/math/src/types.ts": {
+   "source": "ai",
+   "headline": "Guard Note for types.ts Modifications",
+   "what_breaks": [
+    "packages/math/src/index.ts \u2014 relies on types for mathematical constructs",
+    "packages/math/src/point.ts \u2014 uses GlobalPoint and LocalPoint types",
+    "packages/math/src/vector.ts \u2014 depends on Vector type definition",
+    "packages/math/src/polygon.ts \u2014 utilizes Polygon type for shape definitions"
+   ],
+   "why": "This file defines critical types used throughout the math package, impacting numerous dependent files. Changes here can lead to widespread issues in type consistency and functionality across the package.",
+   "checklist": [
+    "Review all type definitions for consistency with existing usage",
+    "Ensure any new types do not conflict with existing ones",
+    "Check for impacts on dependent files like point.ts and vector.ts",
+    "Update comments to reflect any changes made to type definitions"
+   ]
+  },
+  "packages/math/src/utils.ts": {
+   "source": "ai",
+   "headline": "Guard note for utils.ts modifications",
+   "what_breaks": [
+    "packages/math/src/index.ts \u2014 relies on utility functions",
+    "packages/math/src/point.ts \u2014 uses clamp and round functions",
+    "packages/math/src/angle.ts \u2014 depends on isCloseTo for angle comparisons"
+   ],
+   "why": "This file contains essential utility functions that are heavily utilized across multiple components in the math package. Changes here could impact the functionality of dependent files, potentially leading to widespread issues.",
+   "checklist": [
+    "Review changes to clamp, round, and isCloseTo functions",
+    "Ensure no changes affect the expected output of average and isFiniteNumber",
+    "Check for impacts on dependent files, especially point and angle calculations"
+   ]
+  },
+  "packages/math/src/angle.ts": {
+   "source": "ai",
+   "headline": "Critical angle calculations and conversions",
+   "what_breaks": [
+    "packages/math/src/index.ts \u2014 relies on exported functions for angle operations",
+    "packages/math/src/point.ts \u2014 uses angle-related types and functions"
+   ],
+   "why": "This file contains essential functions for angle normalization and conversion, which are heavily utilized by other modules. Changes here could disrupt angle calculations across multiple components, affecting functionality in dependent files.",
+   "checklist": [
+    "Verify changes to normalizeRadians and radiansDifference functions",
+    "Check impact on cartesian2Polar and angle conversion functions",
+    "Ensure type integrity for Degrees and Radians in all functions",
+    "Review interactions with PRECISION in isRightAngleRads function"
+   ]
+  },
+  "packages/excalidraw/wysiwyg/textWysiwyg.tsx": {
+   "source": "ai",
+   "headline": "Text WYSIWYG Editor Dependencies",
+   "what_breaks": [
+    "packages/excalidraw/components/App.text.ts \u2014 imports AppState type",
+    "packages/excalidraw/element \u2014 multiple functions and types used",
+    "packages/excalidraw/common \u2014 various constants and utility functions"
+   ],
+   "why": "This file is crucial for the text editing functionality in Excalidraw. Changes here can affect how text elements are rendered and interacted with across the application.",
+   "checklist": [
+    "Verify changes to functions from @excalidraw/element are compatible.",
+    "Check that AppState usage aligns with expected application behavior.",
+    "Ensure constants from @excalidraw/common are correctly referenced."
+   ]
+  },
+  "packages/excalidraw/fonts/index.ts": {
+   "source": "ai",
+   "headline": "Fonts Module Export Dependencies",
+   "what_breaks": [
+    "packages/excalidraw/components/App.tsx \u2014 relies on Fonts for rendering text",
+    "packages/excalidraw/scene/export.ts \u2014 depends on Fonts for exporting scenes with text",
+    "packages/excalidraw/components/FontPicker/FontPickerList.tsx \u2014 uses Fonts for font selection"
+   ],
+   "why": "This file exports the Fonts module, which is crucial for text rendering across multiple components. Changes here could disrupt the functionality of several dependent files that rely on font management.",
+   "checklist": [
+    "Review the Fonts module for any breaking changes",
+    "Check import paths in App.tsx and FontPickerList.tsx",
+    "Ensure compatibility with FontPicker and actionProperties",
+    "Verify that exported types from Fonts are intact"
+   ]
+  },
+  "packages/math/src/constants.ts": {
+   "source": "ai",
+   "headline": "Guard note for constants.ts edits",
+   "what_breaks": [
+    "packages/math/src/curve.ts \u2014 imports LegendreGaussN24TValues and LegendreGaussN24CValues"
+   ],
+   "why": "This file contains critical mathematical constants used in curve calculations. Changes here can affect numerous dependent files, particularly those that rely on these constants for accurate computations.",
+   "checklist": [
+    "Review changes to LegendreGaussN24TValues and LegendreGaussN24CValues for correctness",
+    "Ensure any modifications maintain the integrity of mathematical properties",
+    "Check for any direct usages in packages/math/src/curve.ts",
+    "Communicate with the author if unsure about changes to constants"
+   ]
+  }
+ },
+ "unblock": {
+  "packages/excalidraw/components/App.tsx": {
+   "source": "ai",
+   "headline": "Frequent Rework of App.tsx Due to Overlapping Features",
+   "diagnosis": "The recurring theme in the commit messages indicates a continuous effort to refactor and enhance the selection and editing features within App.tsx. This suggests that the current implementation may be overly complex or tightly coupled, leading to frequent fixes and modifications as new features are added or existing ones are adjusted.",
+   "plan": [
+    "Conduct a thorough review of the selection and editing logic within App.tsx to identify areas of complexity and potential coupling with other components.",
+    "Create a modular architecture for the selection and editing features, separating them into distinct components or hooks to reduce dependencies on App.tsx.",
+    "Implement comprehensive unit tests for the newly modularized components to ensure stability and prevent regressions during future changes.",
+    "Establish a clear ownership model for the components involved, assigning specific team members to maintain and evolve the selection and editing functionalities."
+   ],
+   "owner_hint": "Assign a dedicated team member to oversee the refactoring and ongoing maintenance of the App.tsx features."
+  },
+  "packages/excalidraw/types.ts": {
+   "source": "ai",
+   "headline": "Frequent Rework of Excalidraw Type Definitions",
+   "diagnosis": "The file 'types.ts' is undergoing frequent changes, primarily due to evolving features and fixes in the Excalidraw editor. The recurring theme in commit messages indicates a focus on enhancing the editor's functionality, which often necessitates updates to the type definitions.",
+   "plan": [
+    "1. Review the recent commit messages to identify specific features that are causing type changes, such as 'wrap/unwrap selection' and 'duplicate logic'.",
+    "2. Conduct a thorough analysis of the type definitions in 'types.ts' to ensure they align with the current implementation and anticipated features.",
+    "3. Establish a more stable interface for the types used in the editor to minimize the need for rework as features evolve.",
+    "4. Create a documentation guideline for type changes that links them to specific feature requests or bug fixes to improve traceability."
+   ],
+   "owner_hint": "Consider assigning a dedicated team member to maintain type definitions."
+  },
+  "packages/common/src/constants.ts": {
+   "source": "ai",
+   "headline": "Frequent Rework of Text Handling Features",
+   "diagnosis": "The commit history indicates a recurring focus on text handling features, with numerous fixes and enhancements related to text wrapping, positioning, and UI interactions. The specific parts of the code that are frequently touched include constants related to text dimensions and behaviors, which suggests instability in how these features are implemented.",
+   "plan": [
+    "Conduct a code review of all recent commits related to text handling to identify common issues and inconsistencies.",
+    "Establish a clear specification for text handling features, including expected behaviors for text wrapping, positioning, and resizing.",
+    "Refactor the relevant constants and logic in 'constants.ts' to align with the new specifications, ensuring that edge cases are handled.",
+    "Implement comprehensive unit tests for text handling functionalities to prevent regressions and ensure stability in future changes."
+   ],
+   "owner_hint": "Ownership should be shared among the editors team to reduce bus factor."
+  },
+  "packages/common/src/utils.ts": {
+   "source": "ai",
+   "headline": "Frequent Reworks in utils.ts",
+   "diagnosis": "The file 'utils.ts' is undergoing repeated changes primarily due to evolving requirements in the editor and Excalidraw features. The commit messages indicate a pattern of adding new features and fixing issues related to cross-document functionality and editor behavior, suggesting that the code is not stable and may require further refinement.",
+   "plan": [
+    "Conduct a thorough review of the recent commit messages to identify specific features that are causing instability, particularly those related to cross-document rendering and editor interactions.",
+    "Refactor the functions in 'utils.ts' that are frequently modified, such as 'getTargetWindow' and 'getDateTime', to ensure they are more robust and can handle edge cases effectively.",
+    "Establish a clear set of requirements for the editor and Excalidraw features to minimize the need for frequent changes and ensure that new features are aligned with existing functionality.",
+    "Implement a testing strategy that includes unit tests for the utility functions to catch issues early and reduce the need for rework."
+   ],
+   "owner_hint": "Ownership should be shared among the core editor team to distribute knowledge."
+  },
+  "packages/element/src/binding.ts": {
+   "source": "ai",
+   "headline": "Frequent Reworks in Binding Logic",
+   "diagnosis": "The commit history indicates a recurring theme of performance optimizations and bug fixes related to binding elements, particularly arrows. The specific issues often revolve around handling binding logic during drag and resize operations, as well as maintaining the integrity of bound elements during state transitions.",
+   "plan": [
+    "Conduct a thorough review of the binding logic, focusing on the functions related to arrow binding and element interactions, particularly in drag and resize scenarios.",
+    "Identify and isolate the root causes of the recurring bugs by analyzing the recent commits that address binding issues, especially those related to distance calculations and state transitions.",
+    "Implement unit tests specifically targeting the binding functionality to ensure that changes do not introduce new bugs and that existing issues are resolved.",
+    "Establish a code review checklist that emphasizes the importance of binding logic, ensuring that any future changes are scrutinized for potential impacts on this critical functionality."
+   ],
+   "owner_hint": "Ownership should be assigned to a single engineer to reduce bus factor."
+  },
+  "packages/element/src/textElement.ts": {
+   "source": "ai",
+   "headline": "Frequent Reworks on Text Element Functionality",
+   "diagnosis": "The textElement.ts file is undergoing frequent changes due to issues related to text alignment, binding, and layout management, particularly with sticky notes and arrows. The recurring theme in commit messages indicates a struggle with maintaining consistent behavior for text elements during various interactions.",
+   "plan": [
+    "Conduct a thorough review of the text handling logic, especially around the redrawTextBoundingBox function and its interaction with sticky notes and arrows.",
+    "Create a comprehensive test suite that covers all edge cases related to text binding and layout adjustments to ensure stability during future changes.",
+    "Establish a clear ownership structure for the text-related functionalities, possibly assigning a dedicated team member to oversee changes and maintain consistency.",
+    "Document the expected behavior of text elements in various scenarios to serve as a reference for future development and reduce ambiguity."
+   ],
+   "owner_hint": "Assign a dedicated engineer to oversee text element functionalities."
+  },
+  "packages/element/src/linearElementEditor.ts": {
+   "source": "ai",
+   "headline": "Frequent Reworks in Linear Element Editor",
+   "diagnosis": "The linearElementEditor.ts file is undergoing frequent reworks primarily due to issues related to arrow binding and focus handling. The commit history indicates a pattern of fixes addressing binding inaccuracies and focus loss during transitions, suggesting a lack of stability in these features.",
+   "plan": [
+    "Conduct a thorough review of the binding logic, particularly in the functions related to arrow endpoints and focus handling.",
+    "Implement comprehensive unit tests for the binding and focus functionalities to ensure they behave as expected under various scenarios.",
+    "Refactor the code to simplify the binding logic and reduce complexity, potentially isolating binding concerns into dedicated modules.",
+    "Engage with the team to gather insights on the frequent fixes and establish clearer requirements for the binding and focus features."
+   ],
+   "owner_hint": "The team responsible for the binding and arrow features should take ownership of these issues."
+  },
+  "packages/excalidraw/data/restore.ts": {
+   "source": "ai",
+   "headline": "Frequent Rework on Restore Functionality",
+   "diagnosis": "The file 'restore.ts' has undergone numerous changes, particularly in handling text and element restoration. The recurring theme in the commit messages indicates a focus on fixing issues related to element properties and their restoration process, leading to instability.",
+   "plan": [
+    "Conduct a thorough review of the restoration logic, particularly focusing on the handling of text elements and their properties, as highlighted in commit messages like 'normalize container + bound text order on restore' and 'handle invalid points on restore'.",
+    "Implement comprehensive unit tests for the restoration functionality to cover edge cases mentioned in the commits, such as large line elements and invalid points.",
+    "Collaborate with the authors of the most recent commits to gather insights on the specific issues they encountered, ensuring that their feedback is incorporated into the next iteration of the code.",
+    "Establish a code review process that emphasizes the stability of the restoration logic before merging future changes, to prevent further reworks."
+   ],
+   "owner_hint": "Ownership lies with the team responsible for the editor features."
+  },
+  "packages/element/src/bounds.ts": {
+   "source": "ai",
+   "headline": "Frequent Rework on Bounds.ts Due to Overlapping Features",
+   "diagnosis": "The recurring theme in the commit messages indicates a pattern of feature additions and subsequent bug fixes related to the bounds and clipping functionality. Specifically, the frequent references to 'bounds checks', 'frame membership', and 'arrow selection' suggest that the code in bounds.ts is not adequately handling various edge cases, leading to instability.",
+   "plan": [
+    "Conduct a thorough review of the bounds.ts code, focusing on the functions related to clipping, frame membership, and arrow selection to identify potential logical flaws.",
+    "Implement unit tests that cover the edge cases mentioned in the commit messages, particularly around the handling of bounds and clipping for different element types.",
+    "Refactor the identified problematic areas in bounds.ts to improve clarity and reduce complexity, ensuring that the logic is straightforward and well-documented.",
+    "Engage with the authors of recent commits to gather insights on their experiences with the bounds.ts file and incorporate their feedback into the refactoring process."
+   ],
+   "owner_hint": "Ownership should be shared among the authors of recent commits to ensure collective knowledge."
+  },
+  "packages/element/src/newElement.ts": {
+   "source": "ai",
+   "headline": "Frequent Reworks in newElement.ts",
+   "diagnosis": "The file newElement.ts is experiencing repeated changes due to evolving requirements around element behavior and interactions in the editor. The recurring theme in the commit messages indicates a focus on enhancing user experience with features like sticky notes, element creation timestamps, and dragging behaviors, which often require adjustments in the underlying element structure.",
+   "plan": [
+    "Conduct a thorough review of the recent commit messages to identify specific features that are causing instability in the newElement.ts file.",
+    "Refactor the element-related logic to create a more modular and flexible structure that can accommodate new features without requiring extensive rewrites.",
+    "Implement comprehensive unit tests for the newElement.ts file to ensure that changes in functionality do not break existing features.",
+    "Establish a clearer ownership model for the file to ensure that changes are coordinated among team members, reducing the likelihood of conflicting changes."
+   ],
+   "owner_hint": "Assign a dedicated owner for newElement.ts to streamline changes."
+  },
+  "packages/element/src/collision.ts": {
+   "source": "ai",
+   "headline": "Frequent Rework on Collision Detection Logic",
+   "diagnosis": "The collision detection logic in 'collision.ts' is repeatedly modified, primarily due to issues with hit testing and element interactions. The recurring theme in the commit messages indicates a focus on fixing precision and soundness in hit tests, which suggests underlying flaws in the current implementation.",
+   "plan": [
+    "Conduct a thorough review of the hit testing algorithms, especially those related to 'Freedraw', 'Binding', and 'Arrow' elements, as they are frequently mentioned in commits.",
+    "Implement unit tests specifically targeting the collision detection functions to ensure they handle edge cases effectively and do not regress in future changes.",
+    "Collaborate with the authors of the recent commits to gather insights on the specific issues they faced, and document these findings to inform future development.",
+    "Refactor the collision detection code to simplify logic and improve readability, potentially reducing the likelihood of errors and rework."
+   ],
+   "owner_hint": "Ownership may be shared among several authors, increasing the bus factor."
+  },
+  "packages/excalidraw/scene/export.ts": {
+   "source": "ai",
+   "headline": "Frequent Rework of Export Functions in Excalidraw",
+   "diagnosis": "The file 'export.ts' has undergone numerous reworks, primarily focusing on export functionality and type handling. The recurring theme in the commit messages indicates issues with ownership, type definitions, and export processes that lead to instability and require fixes.",
+   "plan": [
+    "Conduct a thorough review of the recent commits, particularly those labeled 'fix' and 'feat', to identify specific changes that led to regressions or issues.",
+    "Analyze the export functions and their dependencies, especially the interactions with types like 'NonDeleted' and the handling of dark mode filters, to ensure they are correctly implemented and tested.",
+    "Establish a clear ownership model for the export functionality, possibly assigning a dedicated owner to maintain consistency and accountability in future changes.",
+    "Implement a comprehensive suite of tests for the export functions, focusing on edge cases highlighted in the recent commits, to prevent future regressions."
+   ],
+   "owner_hint": "Assign a dedicated owner for the export functionality to reduce bus factor."
+  },
+  "packages/math/src/types.ts": {
+   "source": "ai",
+   "headline": "Frequent Rework of Math Types",
+   "diagnosis": "The recurring theme in the commit messages indicates ongoing changes related to the structure and functionality of the math types, particularly with the introduction of new features and performance improvements. The presence of TODO comments in the code suggests that there are unresolved issues with the migration to a more unified type system, specifically regarding the transition from object-based coordinates to tuple-based coordinates.",
+   "plan": [
+    "Conduct a code review focused on the TODO comments to assess the impact of the migration on existing functionality.",
+    "Establish a clear migration plan for transitioning from LocalCoord and GlobalCoord to their tuple-based counterparts, ensuring all dependent files are updated accordingly.",
+    "Create a set of unit tests to validate the behavior of the new types and ensure compatibility with existing code, particularly in the context of the recent feature additions.",
+    "Schedule a team meeting to discuss the implications of the changes and gather feedback from all authors involved in the recent commits."
+   ],
+   "owner_hint": "Ownership should be shared among the authors of recent commits."
+  },
+  "packages/math/src/utils.ts": {
+   "source": "ai",
+   "headline": "Rework of doBoundsIntersect Functionality",
+   "diagnosis": "The recent commits indicate a focus on the 'doBoundsIntersect' function, with multiple refactors and moves related to its implementation. This suggests ongoing issues with its integration and usage across dependent files, leading to repeated rework.",
+   "plan": [
+    "Conduct a thorough review of the 'doBoundsIntersect' function's implementation and its dependencies to identify any inconsistencies or bugs.",
+    "Establish a clear set of requirements and expected behaviors for the 'doBoundsIntersect' function to guide future modifications.",
+    "Implement comprehensive unit tests for 'doBoundsIntersect' and related functions in 'utils.ts' to ensure stability and prevent regressions.",
+    "Communicate with all authors involved in recent commits to gather insights on the challenges faced and align on a unified approach moving forward."
+   ],
+   "owner_hint": "Ownership should be clarified among the five authors to reduce bus factor."
+  },
+  "packages/math/src/angle.ts": {
+   "source": "ai",
+   "headline": "Frequent Rework of Angle Functions",
+   "diagnosis": "The recent commits indicate ongoing adjustments to the angle-related functions, particularly with the 'normalizeRadians' function and its usage in other calculations. The recurring theme in the commit messages suggests a lack of clarity or stability in the angle handling logic, leading to multiple revisions.",
+   "plan": [
+    "Conduct a code review focusing on the 'normalizeRadians' function and its interactions with other angle-related functions to identify potential edge cases or logical flaws.",
+    "Establish a set of unit tests for all angle-related functions to ensure they handle a variety of inputs correctly and consistently, especially around boundary conditions.",
+    "Refactor the angle handling logic to improve clarity and maintainability, potentially consolidating related functions or improving documentation.",
+    "Gather feedback from the authors of the recent commits to understand their motivations and challenges, ensuring that any refactor aligns with their needs."
+   ],
+   "owner_hint": "Consider assigning a single engineer to own the angle-related functions to reduce bus factor."
+  },
+  "packages/excalidraw/wysiwyg/textWysiwyg.tsx": {
+   "source": "ai",
+   "headline": "Frequent Rework of Text Editing Features",
+   "diagnosis": "The commit history indicates a recurring theme of fixes and feature additions related to text editing, particularly in the editor component. The high number of fix/revert commits suggests that changes are not being fully validated before merging, leading to instability in the text editing functionality.",
+   "plan": [
+    "Conduct a thorough review of recent text editing commits to identify common issues and patterns causing rework.",
+    "Establish a dedicated testing suite for text editing features to catch regressions before commits are merged.",
+    "Implement a code review checklist focused on text editing changes to ensure all edge cases are considered.",
+    "Assign a single owner or small team to oversee text editing features to improve accountability and reduce bus factor."
+   ],
+   "owner_hint": "Consider appointing a lead developer for text editing features."
+  },
+  "packages/excalidraw/fonts/index.ts": {
+   "source": "ai",
+   "headline": "Recurring Font Issues in Excalidraw",
+   "diagnosis": "The commit history reveals a pattern of fixes related to font handling, indicating instability in the font management structure. The recurring themes in the commit messages suggest ongoing issues with font registration, loading, and support for various font types, particularly CJK and local fonts.",
+   "plan": [
+    "Conduct a thorough review of the font management code in 'packages/excalidraw/fonts/index.ts' to identify structural weaknesses and areas for improvement.",
+    "Create a comprehensive test suite specifically for font loading and registration scenarios to catch issues early in the development cycle.",
+    "Refactor the font handling logic to ensure better separation of concerns, particularly for different font types and their registration processes.",
+    "Document the font management system clearly, including expected behaviors for different font types to aid future developers and reduce the likelihood of rework."
+   ],
+   "owner_hint": "The current bus factor is 1; consider sharing ownership with another team member."
+  },
+  "packages/math/src/constants.ts": {
+   "source": "ai",
+   "headline": "Frequent Reworks of Constants File",
+   "diagnosis": "The file 'constants.ts' has undergone multiple reworks due to precision issues in mathematical constants affecting rendering. The recent commits indicate a recurring theme of fixing inaccuracies in graphical representations, specifically related to large arrows and mid-point calculations.",
+   "plan": [
+    "Conduct a thorough review of the mathematical constants in 'constants.ts' to ensure accuracy and precision.",
+    "Implement unit tests that validate the graphical output against expected results to catch errors early.",
+    "Establish a review process for changes to this file to involve additional team members, reducing the risk of repeated issues.",
+    "Document the mathematical references and rationale for the constants used to provide clarity for future developers."
+   ],
+   "owner_hint": "The current ownership is solely on one author, increasing risk if they are unavailable."
+  }
+ },
+ "ask": {
+  "which files are most fragile?": {
+   "answer": "The most fragile files in this selection are: 'packages/excalidraw/components/App.tsx' with a magnitude of 7.6, 'packages/excalidraw/types.ts' with a magnitude of 6.2, and 'packages/common/src/constants.ts' with a magnitude of 6.1. These files have high fragility scores, indicating they are likely to break with changes.",
+   "files": [
+    "packages/excalidraw/components/App.tsx",
+    "packages/excalidraw/types.ts",
+    "packages/common/src/constants.ts"
+   ],
+   "dropped": 0
+  },
+  "where is hidden coupling?": {
+   "answer": "Hidden coupling exists between the following files: 'packages/excalidraw/components/App.tsx' and 'packages/common/src/constants.ts' (84 commits), 'packages/excalidraw/components/App.tsx' and 'packages/element/src/linearElementEditor.ts' (49 commits), 'packages/excalidraw/actions/actionFinalize.tsx' and 'packages/excalidraw/components/App.tsx' (48 commits), among others. This indicates that changes in one file may require changes in another, which can increase the risk of introducing bugs if not managed carefully.",
+   "files": [
+    "packages/excalidraw/components/App.tsx",
+    "packages/common/src/constants.ts",
+    "packages/element/src/linearElementEditor.ts",
+    "packages/excalidraw/actions/actionFinalize.tsx"
+   ],
+   "dropped": 0
+  },
+  "what would break if i refactor the core?": {
+   "answer": "Refactoring the core could break several files, particularly those with a high blast risk. The most critical file is 'packages/excalidraw/components/App.tsx', which has a blast risk of 409, indicating that many files depend on it. Other files with similar blast risks include 'packages/excalidraw/types.ts', 'packages/common/src/constants.ts', and 'packages/common/src/utils.ts', all of which could also be impacted by changes in the core.",
+   "files": [
+    "packages/excalidraw/components/App.tsx",
+    "packages/excalidraw/types.ts",
+    "packages/common/src/constants.ts",
+    "packages/common/src/utils.ts"
+   ],
+   "dropped": 0
+  }
+ }
+}

@@ -4,6 +4,13 @@ Record each meaningful project change during the event, newest first. Update thi
 
 ## Event build log
 
+## 2026-10-24T23:37:41+05:30 — Ask bar redesign
+
+- Changed: `frontend/src/components/AskBar.tsx` rewritten: suggestions moved out of the input into a popover above the bar (TRY ASKING / MATCHING, category tags FRAGILE/COUPLING/IMPACT/FILE, ⚡ for precomputed answers, two repo-specific questions built from the riskiest and widest-reaching files, filtering as you type, arrow keys + Enter); `A` focuses the bar; RUN button disabled until there is text, spinner while busy; READING state with the question echoed and a live seismograph; answer card with question echo, CACHED badge, COPY and CLEAR, file chips colored by magnitude with scores ('highlighted on the map · click to open'); friendly errors for a missing key or unreachable API. Styles in `app.css` replaced.
+- Why: Participant: the ask bar UI/UX was poor — suggestion chips sat inside the input, overlapped the caret and RUN, and overflowed.
+- Validation: Playwright at 1440x900: idle, focused popover, keyboard selection of a cached question -> answer card with 12 highlighted files, CLEAR, typing 'why is' filters to 1 suggestion, live API question shows READING then an answer; no page errors. `tsc -b` and `oxlint` clean.
+- Limitations: Repo-specific suggestions are answered live, so they need the API and a key unless already cached.
+
 ## 2026-10-24T23:29:46+05:30 — Re-analyze stale models from the empty state
 
 - Changed: New `frontend/src/components/Reanalyze.tsx`: the NO SIGNAL panel offers RE-ANALYZE for models built before multi-language support (no `summary.languages`). `App.tsx`: re-analyzing the already-open repo reloads its model (cache-busted) and snapshots instead of being ignored as a same-slug switch. `data.ts`: `loadModel(slug, fresh)`.

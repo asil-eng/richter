@@ -3,6 +3,7 @@ import { AskBar } from './components/AskBar'
 import { BootScreen } from './components/BootScreen'
 import { Inspector } from './components/Inspector'
 import { LeftRail } from './components/LeftRail'
+import { FileFinder } from './components/FileFinder'
 import { Timeline } from './components/Timeline'
 import { TopBar } from './components/TopBar'
 import { listRepos, loadModel, loadSnapshots } from './lib/data'
@@ -19,7 +20,7 @@ export default function App() {
   const [model, setModel] = useState<RiskModel | null>(null)
   const [snapshots, setSnapshots] = useState<Snapshots | null>(null)
   const [time, setTime] = useState<number | null>(null)
-  const [view, setView] = useState<View>('graph')
+  const [view, setView] = useState<View>('risk') // open on the most informative view
   const [selected, setSelected] = useState<number | null>(null)
   const [highlight, setHighlight] = useState<Set<number>>(new Set())
   const [layers, setLayers] = useState({ ghost: false, bus: false })
@@ -163,6 +164,7 @@ export default function App() {
             )}
             {view === 'city' && snapshots && <Timeline snapshots={snapshots} time={time} setTime={setTime} />}
             {view === 'city' && !snapshots && <div className="hud hud-bl">NO SNAPSHOTS — run `richter.cli snapshots` for time-travel</div>}
+            <FileFinder model={model} onSelect={select} />
             <AskBar slug={slug} model={model} onHighlight={setHighlight} onSelect={select} />
           </main>
           <Inspector model={model} slug={slug} selected={selected} onSelect={select} />

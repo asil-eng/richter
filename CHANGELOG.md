@@ -4,6 +4,13 @@ Record each meaningful project change during the event, newest first. Update thi
 
 ## Event build log
 
+## 2026-10-24T23:00:06+05:30 — UX pass: start-here panel, file finder, zoom controls, hop legend
+
+- Changed: Opens on the Risk Map instead of the monochrome graph (`App.tsx`). Empty inspector replaced by START HERE: one-click epicenters (most dangerous, widest reach, most reworked, one author) plus a HOW TO READ legend (size, color, hops, ghost edge, broken ring) and keys (`Inspector.tsx`). New `FileFinder.tsx` (press F, type, Enter; filename matches first, then by magnitude). Graph view: +/−/FIT buttons, hop-color legend during a cascade, and the camera glides to a selected file if it is off-screen (`GraphView.tsx`). Top-risk titles wrap instead of truncating.
+- Why: Participant asked to improve overall visibility and UX: first screen was hard to read, the right rail was empty until a click, files were hard to find, zoom wasn't discoverable, cascade colors weren't explained.
+- Validation: Playwright at 1440x900: home screen, F + 'traceb' + Enter selects rich/traceback.py, cascade with legend, zoom +/+/FIT; no page errors. `tsc -b` and `oxlint` clean.
+- Limitations: Zoom buttons are on the 2D views only; the city uses orbit controls.
+
 ## 2026-10-24T22:57:03+05:30 — Searchable repo picker + empty state for non-Python repos
 
 - Changed: Added `frontend/src/components/RepoPicker.tsx`: one REPO button (current repo, count, chevron) opening a dropdown with search (multi-term), per-repo files/commits and a TIME-TRAVEL tag, keyboard navigation (/ to open from anywhere, arrows, Enter, Esc) and click-outside close; replaces the scrolling tab strip in `TopBar.tsx` (old tab CSS removed). `App.tsx`: repos with zero analyzable Python files show a NO SIGNAL panel instead of the rails and views; the picker labels them 'no Python files'.

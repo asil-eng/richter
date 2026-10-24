@@ -685,9 +685,7 @@ kbd {
 .risk-title {
   font-size: var(--fs-11);
   color: var(--text);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  overflow-wrap: anywhere;
 }
 .risk-detail {
   font-size: var(--fs-10);
@@ -1220,6 +1218,258 @@ kbd {
 }
 .note-err p {
   color: var(--text-3);
+}
+
+/* ============================================================ start here + legend */
+.starts {
+  display: grid;
+  gap: 6px;
+}
+.start {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  row-gap: 1px;
+  text-align: left;
+  padding: 9px 10px;
+  border: 1px solid var(--line-2);
+  transition: border-color var(--t-fast), background var(--t-fast), transform var(--t-fast) var(--ease-out);
+}
+.start:hover {
+  border-color: var(--orange);
+  background: rgba(255, 106, 26, 0.06);
+  transform: translateX(2px);
+}
+.start-why {
+  font-size: var(--fs-9);
+  letter-spacing: 0.08em;
+  color: var(--text-3);
+}
+.start-file {
+  font-size: var(--fs-12);
+  color: var(--text);
+}
+.start-note {
+  font-size: var(--fs-10);
+  color: var(--text-2);
+}
+.start-m {
+  grid-column: 2;
+  grid-row: 1 / span 3;
+  align-self: center;
+  font-family: var(--font-head);
+  font-weight: 800;
+  font-stretch: 80%;
+  font-size: 22px;
+  font-variant-numeric: tabular-nums;
+}
+.legend-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+  font-size: var(--fs-11);
+  color: var(--text-2);
+}
+.legend-list li {
+  display: grid;
+  grid-template-columns: 44px 1fr;
+  align-items: center;
+  gap: var(--s-2);
+}
+.legend-list b {
+  color: var(--text);
+  font-weight: 500;
+}
+.lg-size {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+.lg-size i {
+  display: block;
+  border-radius: 50%;
+  border: 1.2px solid var(--cool);
+  background: #1b282c;
+}
+.lg-size i:nth-child(1) {
+  width: 6px;
+  height: 6px;
+}
+.lg-size i:nth-child(2) {
+  width: 10px;
+  height: 10px;
+}
+.lg-size i:nth-child(3) {
+  width: 15px;
+  height: 15px;
+}
+.lg-ramp {
+  height: 8px;
+  background: linear-gradient(90deg, #24403f, #4d8583 30%, #708486 50%, #ffb02e 60%, #ff6a1a 78%, #ff2d1f);
+}
+.lg-hops {
+  display: flex;
+  gap: 4px;
+}
+.lg-hops i {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: block;
+}
+.lg-ghost {
+  height: 0;
+  border-top: 2px dashed var(--amber);
+}
+.lg-bus {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 1.4px dashed var(--text);
+}
+
+/* ============================================================ graph overlays */
+.zoom-ctl {
+  position: absolute;
+  right: var(--s-4);
+  bottom: var(--s-5);
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--line-2);
+  background: rgba(13, 17, 20, 0.9);
+  z-index: 2;
+}
+.zoom-ctl button {
+  width: 34px;
+  height: 32px;
+  font-size: 16px;
+  color: var(--text-2);
+  transition: background var(--t-fast), color var(--t-fast);
+}
+.zoom-ctl button + button {
+  border-top: 1px solid var(--line-2);
+}
+.zoom-ctl button:hover {
+  background: var(--text);
+  color: var(--bg);
+}
+.zoom-ctl .zoom-fit {
+  font-size: var(--fs-9);
+  letter-spacing: 0.06em;
+}
+.hop-legend {
+  position: absolute;
+  left: var(--s-4);
+  bottom: 84px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 10px 12px;
+  border: 1px solid var(--line-2);
+  background: rgba(13, 17, 20, 0.9);
+  font-size: var(--fs-10);
+  color: var(--text-2);
+  z-index: 2;
+  animation: fade-up 400ms var(--ease-out);
+}
+.hop-legend span {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.hop-legend i {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  display: block;
+}
+.hop-legend .dim {
+  color: var(--text-3);
+}
+.hop-legend .dim-dot {
+  background: #1b282c;
+  border: 1px solid var(--text-4);
+}
+
+/* ============================================================ file finder */
+.finder {
+  position: absolute;
+  top: var(--s-3);
+  right: var(--s-4);
+  width: 260px;
+  z-index: 4;
+}
+.finder-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 34px;
+  padding: 0 10px;
+  background: rgba(13, 17, 20, 0.94);
+  border: 1px solid var(--line-2);
+  transition: border-color var(--t-fast);
+}
+.finder-bar:focus-within {
+  border-color: var(--orange);
+}
+.finder-icon {
+  color: var(--orange);
+  font-size: 15px;
+}
+.finder-bar input {
+  flex: 1;
+  min-width: 0;
+  background: none;
+  border: 0;
+  outline: 0;
+  font-size: var(--fs-12);
+}
+.finder-bar input::placeholder {
+  color: var(--text-3);
+}
+.finder-list {
+  list-style: none;
+  margin: 0;
+  padding: 4px 0;
+  background: var(--bg-2);
+  border: 1px solid var(--line-3);
+  border-top: 0;
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.55);
+}
+.finder-list button {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 6px 10px;
+  text-align: left;
+  font-size: var(--fs-11);
+}
+.finder-list button.is-cursor {
+  background: rgba(170, 196, 204, 0.08);
+}
+.finder-path {
+  color: var(--text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.finder-dir {
+  color: var(--text-3);
+}
+.finder-m {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.finder-none {
+  padding: 6px 10px;
+  color: var(--text-3);
+  font-size: var(--fs-11);
+}
+/* keep the HUD from running under the finder */
+.hud-tl {
+  right: 300px;
 }
 
 /* ============================================================ ask */

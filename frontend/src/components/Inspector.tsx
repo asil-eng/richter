@@ -3,7 +3,6 @@ import { fetchNote } from '../lib/data'
 import { fmtM, heat, shortName } from '../lib/heat'
 import type { Note, RiskModel } from '../lib/types'
 import { Meter } from './Gauge'
-import { Seismo } from './Seismo'
 
 interface Props {
   model: RiskModel
@@ -15,34 +14,89 @@ interface Props {
 type Kind = 'guard' | 'unblock'
 
 export function Inspector({ model, slug, selected, onSelect }: Props) {
-  if (selected === null || !model.nodes[selected]) return <EmptyInspector />
+  if (selected === null || !model.nodes[selected]) return <EmptyInspector model={model} onSelect={onSelect} />
   return <FileInspector key={`${slug}:${selected}`} model={model} slug={slug} i={selected} onSelect={onSelect} />
 }
 
-function EmptyInspector() {
+function EmptyInspector({ model, onSelect }: { model: RiskModel; onSelect: (i: number) => void }) {
+  const picks = useMemo(() => {
+    const idx = [...model.nodes.keys()]
+    const best = (score: (i: number) => number) => idx.reduce((a, b) => (score(b) > score(a) ? b : a), idx[0])
+    const nodes = model.nodes
+    const out = [
+      { why: 'MOST DANGEROUS', i: best((i) => nodes[i].magnitude), note: (i: number) => `M ${fmtM(nodes[i].magnitude)} · fragile and reworked` },
+      { why: 'WIDEST REACH', i: best((i) => nodes[i].blast_size), note: (i: number) => `${nodes[i].blast_size} files break if it changes` },
+      { why: 'MOST REWORKED', i: best((i) => nodes[i].fixes), note: (i: number) => `${nodes[i].fixes} fix commits` },
+    ]
+    const lone = idx.filter((i) => nodes[i].bus_factor)
+    if (lone.length) {
+      const i = lone.reduce((a, b) => (nodes[b].magnitude > nodes[a].magnitude ? b : a))
+      out.push({ why: 'ONE AUTHOR', i, note: () => 'only one person has ever changed it' })
+    }
+    return out
+  }, [model])
+
   return (
     <aside className="rail rail-right">
-      <section className="panel empty">
-        <div className="label">EPICENTER</div>
-        <Seismo level={0.04} color="#3a454b" height={40} />
-        <div className="empty-title">No epicenter selected</div>
-        <p className="empty-copy">
-          Click any file to trace its blast radius — every module that would feel the shock if it changed, ring by
-          ring.
-        </p>
+      <section className="panel">
+        <div className="label">START HERE</div>
+        <div className="empty-title">Pick an epicenter</div>
+        <p className="empty-copy">Click any file in the view, or one of these, to see what breaks if it changes.</p>
+        <div className="starts">
+          {picks.map((p) => (
+            <button key={p.why} className="start" onClick={() => onSelect(p.i)}>
+              <span className="start-why">{p.why}</span>
+              <span className="start-file">{shortName(model.nodes[p.i].id)}</span>
+              <span className="start-note">{p.note(p.i)}</span>
+              <span className="start-m" style={{ color: heat(model.nodes[p.i].magnitude) }}>
+                {fmtM(model.nodes[p.i].magnitude)}
+              </span>
+            </button>
+          ))}
+        </div>
+      </section>
+      <section className="panel">
+        <div className="label">HOW TO READ</div>
+        <ul className="legend-list">
+          <li>
+            <span className="lg-size">
+              <i />
+              <i />
+              <i />
+            </span>
+            <span><b>Size</b> — importance: how central the file is</span>
+          </li>
+          <li>
+            <span className="lg-ramp" />
+            <span><b>Color</b> — magnitude 0–10: fragile <em>and</em> reworked</span>
+          </li>
+          <li>
+            <span className="lg-hops">
+              <i style={{ background: '#ff2d1f' }} />
+              <i style={{ background: '#ff6a1a' }} />
+              <i style={{ background: '#ffb02e' }} />
+            </span>
+            <span><b>After a click</b> — dependents 1, 2, 3+ hops away</span>
+          </li>
+          <li>
+            <span className="lg-ghost" />
+            <span><b>Ghost edge</b> — change together, never import each other</span>
+          </li>
+          <li>
+            <span className="lg-bus" />
+            <span><b>Broken ring</b> — only one author ever</span>
+          </li>
+        </ul>
+      </section>
+      <section className="panel panel-grow">
+        <div className="label">KEYS</div>
         <div className="empty-keys">
-          <span>
-            <kbd>1</kbd> graph
-          </span>
-          <span>
-            <kbd>2</kbd> risk map
-          </span>
-          <span>
-            <kbd>3</kbd> city
-          </span>
-          <span>
-            <kbd>esc</kbd> clear
-          </span>
+          <span><kbd>1</kbd> graph</span>
+          <span><kbd>2</kbd> risk map</span>
+          <span><kbd>3</kbd> city</span>
+          <span><kbd>F</kbd> find file</span>
+          <span><kbd>/</kbd> switch repo</span>
+          <span><kbd>esc</kbd> clear</span>
         </div>
       </section>
     </aside>

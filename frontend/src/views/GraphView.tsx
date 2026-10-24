@@ -92,6 +92,7 @@ export function GraphView({ model, mode, selected, highlight, layers, onSelect }
   const wrap = useRef<HTMLDivElement>(null)
   const canvas = useRef<HTMLCanvasElement>(null)
   const [tip, setTip] = useState<{ i: number; x: number; y: number } | null>(null)
+  const camApi = useRef<{ zoom: (f: number) => void; fit: () => void } | null>(null)
 
   // Mirror props into refs so the RAF loop never re-subscribes.
   const props = useRef({ mode, selected, highlight, layers })
@@ -231,9 +232,19 @@ export function GraphView({ model, mode, selected, highlight, layers, onSelect }
     cv.addEventListener('pointerleave', onLeave)
     cv.addEventListener('wheel', onWheel, { passive: false })
     cv.addEventListener('dblclick', fit)
+    camApi.current = {
+      fit,
+      zoom: (f) => {
+        const k = Math.min(6, Math.max(0.25, target.k * f))
+        target.x = W / 2 - ((W / 2 - target.x) * k) / target.k
+        target.y = H / 2 - ((H / 2 - target.y) * k) / target.k
+        target.k = k
+      },
+    }
 
     // ---- render loop
     let raf = 0
+    let lastSel: number | null = null
     const frame = (now: number) => {
       raf = requestAnimationFrame(frame)
       const P = props.current
@@ -250,6 +261,17 @@ export function GraphView({ model, mode, selected, highlight, layers, onSelect }
 
       const intro = now - t0
       const sel = P.selected
+      if (sel !== lastSel) {
+        lastSel = sel
+        if (sel !== null) {
+          const sx = L.x[sel] * target.k + target.x
+          const sy = L.y[sel] * target.k + target.y
+          if (sx < 90 || sx > W - 90 || sy < 110 || sy > H - 140) {
+            target.x = W / 2 - L.x[sel] * target.k
+            target.y = (H - 60) / 2 - L.y[sel] * target.k
+          }
+        }
+      }
       const selDt = now - A.selT0
       const hop = new Map<number, number>()
       if (sel !== null && model.nodes[sel]) {
@@ -540,6 +562,20 @@ export function GraphView({ model, mode, selected, highlight, layers, onSelect }
   return (
     <div ref={wrap} className="view-canvas">
       <canvas ref={canvas} />
+      <div className="zoom-ctl" aria-label="zoom">
+        <button onClick={() => camApi.current?.zoom(1.3)} aria-label="zoom in">+</button>
+        <button onClick={() => camApi.current?.zoom(1 / 1.3)} aria-label="zoom out">−</button>
+        <button onClick={() => camApi.current?.fit()} aria-label="fit to screen" className="zoom-fit">FIT</button>
+      </div>
+      {selected !== null && (
+        <div className="hop-legend">
+          <span><i style={{ background: '#fff0e6' }} />EPICENTER</span>
+          <span><i style={{ background: '#ff2d1f' }} />HOP 1 · imports it</span>
+          <span><i style={{ background: '#ff6a1a' }} />HOP 2</span>
+          <span><i style={{ background: '#ffb02e' }} />HOP 3+</span>
+          <span className="dim"><i className="dim-dot" />unaffected</span>
+        </div>
+      )}
       {tipNode && tip && (
         <div className="tooltip" style={{ left: tip.x + 16, top: tip.y + 12 }}>
           <div className="tooltip-path">{tipNode.id}</div>

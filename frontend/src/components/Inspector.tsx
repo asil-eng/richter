@@ -411,7 +411,7 @@ function AgentNote({ slug, file, kind }: { slug: string; file: string; kind: Kin
         <div className="label-dim">{STATIC ? 'NOT IN THE DEMO CACHE' : 'AGENT OFFLINE'}</div>
         <p>
           {STATIC
-            ? 'The hosted demo ships AI notes for each repo's riskiest files and every START HERE pick. Run Richter locally with an OpenAI key to generate notes for any file.'
+            ? "The hosted demo ships AI notes for each repo's riskiest files and every START HERE pick. Run Richter locally with an OpenAI key to generate notes for any file."
             : `Notes need the Richter API running (uvicorn richter.api:app). ${err}`}
         </p>
       </div>

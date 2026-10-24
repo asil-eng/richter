@@ -215,6 +215,34 @@
     "Ensure any modifications to instance variables are reflected in dependent files.",
     "Verify compatibility with subclasses in conv and pgen modules."
    ]
+  },
+  "profiling/dict_big.py": {
+   "source": "ai",
+   "headline": "Guard note for dict_big.py modifications",
+   "what_breaks": [
+    "some.Structure \u2014 relies on correct mapping definitions"
+   ],
+   "why": "This file defines a critical configuration structure that may affect downstream processing. Any changes to the mapping could lead to unexpected behavior in dependent systems or components.",
+   "checklist": [
+    "Verify the integrity of the 'some.Structure' initialization.",
+    "Ensure all keys in 'some_mapping' are correctly formatted.",
+    "Check for consistency in the values assigned to keys.",
+    "Review the commit history for context on previous changes."
+   ]
+  },
+  "profiling/dict_huge.py": {
+   "source": "ai",
+   "headline": "Guard note for dict_huge.py modifications",
+   "what_breaks": [
+    "some.Structure \u2014 relies on correct mapping structure",
+    "some_mapping \u2014 relies on the integrity of key-value pairs"
+   ],
+   "why": "This file defines a critical configuration structure for mappings. Any changes to the mappings or the structure could lead to incorrect behavior in dependent processes.",
+   "checklist": [
+    "Verify the integrity of the 'some.Structure' definition.",
+    "Ensure all keys in 'some_mapping' are valid and correctly mapped.",
+    "Check for consistency in the values associated with each key."
+   ]
   }
  },
  "unblock": {
@@ -385,6 +413,30 @@
     "Engage with the authors of recent commits to gather insights on their challenges and experiences, fostering a collaborative approach to stabilize the implementation."
    ],
    "owner_hint": "Consider assigning a dedicated team member to oversee the Grammar class's evolution."
+  },
+  "profiling/dict_big.py": {
+   "source": "ai",
+   "headline": "Frequent Rework of Profiling Configuration",
+   "diagnosis": "The commit history indicates a single author making changes to the profiling configuration, specifically moving data out of tests. The recurring theme in the commit messages suggests a lack of clarity or stability in the configuration structure, leading to repeated adjustments.",
+   "plan": [
+    "Conduct a review session with the author to understand the rationale behind the changes and identify any underlying issues with the current configuration.",
+    "Establish a clear specification for the profiling data structure to prevent future ambiguity and rework.",
+    "Implement unit tests that validate the integrity and correctness of the profiling data to catch issues early.",
+    "Document the profiling configuration and its intended use cases to provide clarity for future modifications."
+   ],
+   "owner_hint": "The single author is responsible for maintaining this file, highlighting a bus factor of 1."
+  },
+  "profiling/dict_huge.py": {
+   "source": "ai",
+   "headline": "Frequent Rework of Profiling Data Structure",
+   "diagnosis": "The commit history indicates a single author moving profiling data, suggesting ongoing adjustments to the data structure. The repetitive nature of the commit messages implies a lack of clarity or stability in the data configuration.",
+   "plan": [
+    "Conduct a review meeting with the author to discuss the purpose and expected stability of the profiling data structure.",
+    "Establish clear requirements for the profiling data to minimize future changes and ensure consistency.",
+    "Implement unit tests to validate the integrity of the profiling data structure after changes.",
+    "Document the profiling data structure and its intended use cases to guide future modifications."
+   ],
+   "owner_hint": "The sole author is responsible for maintaining the stability of this file."
   }
  },
  "ask": {

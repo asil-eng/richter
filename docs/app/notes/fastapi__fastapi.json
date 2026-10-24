@@ -220,6 +220,21 @@
     "Ensure ModelNameMap remains compatible with dependent models.",
     "Verify that UnionType is correctly referenced in encoders."
    ]
+  },
+  "fastapi/security/base.py": {
+   "source": "ai",
+   "headline": "SecurityBase class dependencies in base.py",
+   "what_breaks": [
+    "fastapi/security/oauth2.py \u2014 relies on SecurityBase",
+    "fastapi/dependencies/models.py \u2014 uses SecurityBase for dependency injection",
+    "fastapi/security/api_key.py \u2014 depends on SecurityBase for API key handling"
+   ],
+   "why": "The SecurityBase class is foundational for several security-related components in FastAPI. Changes here may impact authentication and authorization mechanisms across multiple files.",
+   "checklist": [
+    "Review changes to the SecurityBase class for impact on dependent files.",
+    "Check for any modifications to the SecurityBaseModel imported from fastapi.openapi.models.",
+    "Ensure that any new attributes added to SecurityBase do not break existing functionality."
+   ]
   }
  },
  "unblock": {
@@ -390,6 +405,18 @@
     "Schedule regular code reviews focused on type changes to ensure that any modifications are necessary and well-justified."
    ],
    "owner_hint": "Ownership should be shared among the two authors to distribute the bus factor."
+  },
+  "fastapi/security/base.py": {
+   "source": "ai",
+   "headline": "Frequent Rework of SecurityBase Class",
+   "diagnosis": "The recurring theme in the commit messages indicates ongoing confusion and dissatisfaction with the parameter names and overall structure of the SecurityBase class. The changes suggest that the initial design may not have been well thought out, leading to multiple refactorings and updates.",
+   "plan": [
+    "Conduct a code review session with the author to clarify the intended functionality and design of the SecurityBase class.",
+    "Establish clear naming conventions and parameter orders that align with the overall FastAPI framework to avoid future confusion.",
+    "Create a comprehensive set of unit tests for the SecurityBase class to ensure that any future changes do not break existing functionality.",
+    "Document the design decisions and rationale behind the SecurityBase class to aid future developers in understanding its structure."
+   ],
+   "owner_hint": "The sole author is responsible for the current state and future direction."
   }
  },
  "ask": {

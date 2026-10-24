@@ -27,6 +27,7 @@ No participant AI usage has been recorded yet. Replace the placeholder row as yo
 | 2026-10-24T22:51+05:30 | Claude Code (Claude Opus 5.5) | Visible background grid | Background grid visibility | Pending participant review | Screenshot reviewed |
 | 2026-10-24T22:57+05:30 | Claude Code (Claude Opus 5.5) | Searchable repo picker + empty state for non-Python repos | Built repo picker; found and fixed empty-repo crash | Pending participant review | Playwright interaction checks |
 | 2026-10-24T23:00+05:30 | Claude Code (Claude Opus 5.5) | UX pass: start-here panel, file finder, zoom controls, hop legend | UX pass across inspector, graph overlays and file finder | Pending participant review | Playwright interaction + screenshots |
+| 2026-10-24T23:03+05:30 | Claude Code (Claude Opus 5.5) | Canvas vs panel surfaces | Surface color split between canvas and panels | Pending participant review | Screenshots reviewed |
 
 ## Template preparation
 

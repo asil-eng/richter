@@ -66,13 +66,7 @@ kbd {
   grid-template-rows: var(--topbar-h) minmax(0, 1fr);
   height: 100vh;
   overflow: clip;
-  /* instrument graph paper: minor cells every 32px, major lines every 4 cells */
-  background:
-    repeating-linear-gradient(0deg, rgba(150, 200, 205, 0.085) 0 1px, transparent 1px 128px),
-    repeating-linear-gradient(90deg, rgba(150, 200, 205, 0.085) 0 1px, transparent 1px 128px),
-    repeating-linear-gradient(0deg, rgba(150, 200, 205, 0.04) 0 1px, transparent 1px 32px),
-    repeating-linear-gradient(90deg, rgba(150, 200, 205, 0.04) 0 1px, transparent 1px 32px),
-    var(--bg);
+  background: var(--bg-1);
 }
 .topbar {
   grid-column: 1 / -1;
@@ -87,10 +81,10 @@ kbd {
   animation: rail-in 700ms var(--ease-out) both;
 }
 .rail-left {
-  border-right: 1px solid var(--line);
+  border-right: 1px solid var(--line-3);
 }
 .rail-right {
-  border-left: 1px solid var(--line);
+  border-left: 1px solid var(--line-3);
   animation-delay: 80ms;
 }
 @keyframes rail-in {
@@ -104,6 +98,15 @@ kbd {
   min-width: 0;
   min-height: 0;
   overflow: hidden;
+  /* the screen: darkest surface, instrument graph paper (minor 32px, major 128px),
+     and a soft inner shadow so it sits recessed inside the panel frame */
+  background:
+    repeating-linear-gradient(0deg, rgba(150, 200, 205, 0.075) 0 1px, transparent 1px 128px),
+    repeating-linear-gradient(90deg, rgba(150, 200, 205, 0.075) 0 1px, transparent 1px 128px),
+    repeating-linear-gradient(0deg, rgba(150, 200, 205, 0.035) 0 1px, transparent 1px 32px),
+    repeating-linear-gradient(90deg, rgba(150, 200, 205, 0.035) 0 1px, transparent 1px 32px),
+    var(--bg);
+  box-shadow: inset 0 0 60px rgba(0, 0, 0, 0.55);
 }
 .view-canvas {
   position: absolute;
@@ -173,8 +176,8 @@ kbd {
 .topbar {
   display: flex;
   align-items: stretch;
-  border-bottom: 1px solid var(--line-2);
-  background: rgba(10, 13, 15, 0.92);
+  border-bottom: 1px solid var(--line-3);
+  background: #0f1417;
   position: relative;
   z-index: 5;
   min-width: 0;

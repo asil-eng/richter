@@ -3,11 +3,12 @@
    Risk is the only loud thing on screen. */
 
 :root {
-  /* ground */
-  --bg: #0a0d0f;
-  --bg-1: #0d1114;
-  --bg-2: #111619;
-  --bg-3: #161c20;
+  /* ground: the canvas is the darkest surface (the "screen"); panels are lighter
+     slate so the instrument frame reads as distinct from what it displays */
+  --bg: #060809;
+  --bg-1: #13191d;
+  --bg-2: #1a2227;
+  --bg-3: #20292f;
 
   /* hairlines */
   --line: rgba(170, 196, 204, 0.11);

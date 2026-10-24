@@ -4,6 +4,13 @@ Record each meaningful project change during the event, newest first. Update thi
 
 ## Event build log
 
+## 2026-10-24T23:03:49+05:30 — Canvas vs panel surfaces
+
+- Changed: `tokens.css`: canvas `--bg` darkened to #060809; panel tokens lifted to slate (`--bg-1` #13191d, `--bg-2` #1a2227, `--bg-3` #20292f). `app.css`: graph-paper grid moved from the whole app onto `.stage` only, with an inset shadow so the canvas reads recessed; rails and top bar use the panel color with stronger edge lines.
+- Why: Participant asked for only the canvas to be dark and the sidebars to be a different color, without changing the overall look.
+- Validation: Playwright screenshots at 1440x900 of the home and selection states; finder/select flow still works, no page errors.
+- Limitations: None identified in these checks.
+
 ## 2026-10-24T23:00:06+05:30 — UX pass: start-here panel, file finder, zoom controls, hop legend
 
 - Changed: Opens on the Risk Map instead of the monochrome graph (`App.tsx`). Empty inspector replaced by START HERE: one-click epicenters (most dangerous, widest reach, most reworked, one author) plus a HOW TO READ legend (size, color, hops, ghost edge, broken ring) and keys (`Inspector.tsx`). New `FileFinder.tsx` (press F, type, Enter; filename matches first, then by magnitude). Graph view: +/−/FIT buttons, hop-color legend during a cascade, and the camera glides to a selected file if it is off-screen (`GraphView.tsx`). Top-risk titles wrap instead of truncating.

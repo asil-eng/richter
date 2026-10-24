@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { AskBar } from './components/AskBar'
 import { BootScreen } from './components/BootScreen'
 import { Inspector } from './components/Inspector'
@@ -22,6 +22,17 @@ export default function App() {
   const [snapshots, setSnapshots] = useState<Snapshots | null>(null)
   const [time, setTime] = useState<number | null>(null)
   const [view, setView] = useState<View>('risk') // open on the most informative view
+  const stageRef = useRef<HTMLElement>(null)
+  const [fullscreen, setFullscreen] = useState(false)
+  const toggleFullscreen = useCallback(() => {
+    if (document.fullscreenElement) document.exitFullscreen()
+    else stageRef.current?.requestFullscreen().catch(() => {})
+  }, [])
+  useEffect(() => {
+    const onChange = () => setFullscreen(document.fullscreenElement === stageRef.current)
+    document.addEventListener('fullscreenchange', onChange)
+    return () => document.removeEventListener('fullscreenchange', onChange)
+  }, [])
   const [selected, setSelected] = useState<number | null>(null)
   const [highlight, setHighlight] = useState<Set<number>>(new Set())
   const [layers, setLayers] = useState({ ghost: false, bus: false })
@@ -84,10 +95,11 @@ export default function App() {
       if (e.key === '1') setView('graph')
       if (e.key === '2') setView('risk')
       if (e.key === '3') setView('city')
+      if (e.key === 'x' || e.key === 'X') toggleFullscreen()
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [])
+  }, [toggleFullscreen])
 
   const onAnalyzed = async (s: string) => {
     setRepos(await listRepos())
@@ -129,7 +141,23 @@ export default function App() {
       {model && slug && model.nodes.length > 0 && (
         <>
           <LeftRail model={model} selected={selected} onSelect={select} layers={layers} setLayers={setLayers} />
-          <main className={`stage stage-${view}`} key={slug}>
+          <main className={`stage stage-${view}`} key={slug} ref={stageRef}>
+            <button
+              className="fs-btn"
+              onClick={toggleFullscreen}
+              title={fullscreen ? 'Exit full screen (X or Esc)' : 'Full screen (X)'}
+              aria-label={fullscreen ? 'exit full screen' : 'full screen'}
+            >
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.6">
+                {fullscreen ? (
+                  <path d="M5 1v4H1M9 1v4h4M5 13V9H1M9 13V9h4" />
+                ) : (
+                  <path d="M1 5V1h4M13 5V1H9M1 9v4h4M13 9v4H9" />
+                )}
+              </svg>
+              <span>{fullscreen ? 'EXIT' : 'FULL SCREEN'}</span>
+              <kbd>X</kbd>
+            </button>
             <div className="hud hud-tl">
               <div className="hud-row">
                 <span className="hud-view">{VIEW_NAME[view]}</span>

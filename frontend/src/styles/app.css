@@ -1754,6 +1754,33 @@ kbd {
   border: 1px solid var(--text-4);
 }
 
+.fs-btn {
+  position: absolute;
+  top: 56px;
+  right: var(--s-4);
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 30px;
+  padding: 0 10px;
+  font-size: var(--fs-9);
+  letter-spacing: 0.08em;
+  color: var(--text-2);
+  background: rgba(13, 17, 20, 0.92);
+  border: 1px solid var(--line-2);
+  transition: color var(--t-fast), border-color var(--t-fast), background var(--t-fast);
+}
+.fs-btn:hover {
+  color: var(--text);
+  border-color: var(--orange);
+  background: rgba(255, 106, 26, 0.08);
+}
+.stage:fullscreen {
+  width: 100vw;
+  height: 100vh;
+}
+
 /* ============================================================ file finder */
 .finder {
   position: absolute;

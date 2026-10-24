@@ -104,6 +104,7 @@ function EmptyInspector({ model, onSelect }: { model: RiskModel; onSelect: (i: n
           <span><kbd>3</kbd> city</span>
           <span><kbd>F</kbd> find file</span>
           <span><kbd>/</kbd> switch repo</span>
+          <span><kbd>X</kbd> full screen</span>
           <span><kbd>esc</kbd> clear</span>
         </div>
       </section>

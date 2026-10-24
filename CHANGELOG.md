@@ -4,6 +4,13 @@ Record each meaningful project change during the event, newest first. Update thi
 
 ## Event build log
 
+## 2026-10-25T04:07:44+05:30 — Full-screen canvas
+
+- Changed: `App.tsx`: FULL SCREEN button (top-right of the canvas, under find file) and `X` key toggle the browser Fullscreen API on the stage (graph, risk map, city); label switches to EXIT; Esc also exits. `app.css` styles; `Inspector.tsx` keys list gains X.
+- Why: Participant asked for a full-screen option for the canvas.
+- Validation: Headed Chrome via Playwright: button enters full screen with the canvas at 1440x900 (= screen), city resizes to 1440x900 with timeline and ask bar intact, X exits; no page errors. `tsc -b`, `oxlint` clean. Hosted demo rebuilt.
+- Limitations: The side panels are hidden in full screen; exit to read a selected file's details.
+
 ## 2026-10-25T00:47:57+05:30 — Hosted live demo + README overhaul
 
 - Changed: Static demo mode in the frontend (`VITE_STATIC`, base-aware data paths, cached notes/answers only, clear live-only messages, ANALYZE YOUR REPO link) and `frontend/scripts/build-pages.sh` building to `docs/app/` from committed demo data only; precomputed notes now cover every START HERE pick. Live at https://asil-eng.github.io/richter/app/. README: hero with badges and four headline numbers, Try it now (live app, video, local), a collapsible 60-second judge tour, comparison with existing tool categories, why the numbers can be trusted, who it's for, collapsible scoring/language detail, roadmap (clearly marked as not built). SUBMISSION.md links the live app.

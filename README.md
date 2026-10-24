@@ -30,7 +30,7 @@
 | ▶ | **[Watch the 94-second demo](https://asil-eng.github.io/richter/)** | The whole story with narration |
 | 💻 | **[Run it on your own repo](#-run-it)** | Two commands, then paste any GitHub URL |
 
-[![Richter demo video — 94 seconds](docs/demo-thumbnail.jpg)](https://asil-eng.github.io/richter/)
+[![Watch the 94-second Richter demo](docs/demo-play.jpg)](https://asil-eng.github.io/richter/)
 
 <sub>Click to play · narration is AI-generated (OpenAI TTS)</sub>
 

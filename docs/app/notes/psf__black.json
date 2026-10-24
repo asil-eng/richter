@@ -1,0 +1,428 @@
+{
+ "head": "55996d1fb8342725c8a19b6023cd9439c3c1d6f7",
+ "model": "gpt-4o-mini",
+ "guard": {
+  "src/black/__init__.py": {
+   "source": "ai",
+   "headline": "Guard Note for src/black/__init__.py Edits",
+   "what_breaks": [
+    "src/blackd/__init__.py \u2014 relies on black.cache and black.files",
+    "src/black/concurrency.py \u2014 relies on black.cache and black.output",
+    "scripts/generate_schema.py \u2014 relies on black.files and black.report"
+   ],
+   "why": "This file serves as a central module for Black's functionality, impacting multiple dependent files. Changes here could disrupt the cache mechanism, file handling, and output generation across the project.",
+   "checklist": [
+    "Review changes to classes/functions: WriteBack, read_pyproject_toml",
+    "Ensure imports from black.cache and black.files remain intact",
+    "Verify compatibility with dependent files like src/blackd/__init__.py"
+   ]
+  },
+  "src/black/mode.py": {
+   "source": "ai",
+   "headline": "Key configurations for Black behavior",
+   "what_breaks": [
+    "src/black/__init__.py \u2014 relies on TargetVersion and Feature enums",
+    "src/black/nodes.py \u2014 depends on VERSION_TO_FEATURES mapping",
+    "src/black/parsing.py \u2014 uses features defined in this file"
+   ],
+   "why": "This file defines critical enums and mappings that configure Black's behavior based on Python versions and features. Changes here can impact multiple components that rely on these configurations for functionality.",
+   "checklist": [
+    "Review changes to TargetVersion and Feature enums",
+    "Verify updates to VERSION_TO_FEATURES mapping for accuracy",
+    "Check for any impacts on dependent files like nodes.py and parsing.py",
+    "Ensure consistency in feature flags and their usage across the codebase"
+   ]
+  },
+  "src/black/comments.py": {
+   "source": "ai",
+   "headline": "ProtoComment and generate_comments are critical",
+   "what_breaks": [
+    "src/black/__init__.py \u2014 relies on comments functionality",
+    "src/black/lines.py \u2014 uses ProtoComment for comment handling",
+    "src/black/linegen.py \u2014 depends on generate_comments for processing"
+   ],
+   "why": "This file handles comment parsing and generation, which is foundational for other components. Changes here could disrupt how comments are processed across multiple files, affecting overall functionality.",
+   "checklist": [
+    "Review changes to ProtoComment class for data integrity",
+    "Ensure generate_comments function maintains expected output format",
+    "Check interactions with imported constants from black.nodes",
+    "Confirm compatibility with dependent files like lines.py and linegen.py"
+   ]
+  },
+  "src/black/nodes.py": {
+   "source": "ai",
+   "headline": "Node/Leaf Utility Functions in Black",
+   "what_breaks": [
+    "src/black/__init__.py \u2014 relies on core functionality from this file",
+    "src/black/parsing.py \u2014 uses Node/Leaf transformations defined here",
+    "src/black/strings.py \u2014 depends on string manipulation utilities from this file"
+   ],
+   "why": "This file contains critical utility functions for Node/Leaf transformations used throughout the Black codebase. Changes here can affect multiple components that rely on these transformations for parsing and formatting.",
+   "checklist": [
+    "Review changes to the Visitor class and its visit method",
+    "Check for modifications to token definitions and their usage",
+    "Ensure compatibility with dependent files like parsing.py and strings.py"
+   ]
+  },
+  "src/blib2to3/pgen2/tokenize.py": {
+   "source": "ai",
+   "headline": "Tokenization Functions Impacting Multiple Files",
+   "what_breaks": [
+    "src/blib2to3/pgen2/driver.py \u2014 relies on generate_tokens",
+    "src/black/parsing.py \u2014 relies on tokenize",
+    "src/blib2to3/pgen2/pgen.py \u2014 relies on TokenError"
+   ],
+   "why": "This file contains critical tokenization functions that are used across multiple modules. Changes here can directly affect the behavior of the tokenizer and the parsing logic in dependent files.",
+   "checklist": [
+    "Review changes to generate_tokens and tokenize functions",
+    "Ensure TokenError handling is consistent with existing usage",
+    "Check interactions with pytokens for any breaking changes"
+   ]
+  },
+  "src/black/linegen.py": {
+   "source": "ai",
+   "headline": "LineGenerator class for code formatting",
+   "what_breaks": [
+    "src/black/__init__.py \u2014 imports LineGenerator",
+    "src/black.lines \u2014 relies on Line class",
+    "src/black.mode \u2014 uses Mode and Feature classes"
+   ],
+   "why": "The LineGenerator class is crucial for generating reformatted Line objects, which are essential for the code formatting functionality. Changes to this class could impact how lines of code are processed and emitted across multiple dependent files.",
+   "checklist": [
+    "Review changes to LineGenerator and its methods",
+    "Check interactions with Line class in src/black.lines",
+    "Ensure compatibility with Mode and Feature from src/black.mode",
+    "Verify any changes do not affect the output format"
+   ]
+  },
+  "src/black/lines.py": {
+   "source": "ai",
+   "headline": "Critical Line Class and Append Method Dependencies",
+   "what_breaks": [
+    "src/black/__init__.py \u2014 relies on Line class",
+    "src/black/linegen.py \u2014 uses Line for line generation",
+    "src/black/trans.py \u2014 depends on Line for transformations"
+   ],
+   "why": "The Line class is fundamental for managing line elements and comments, directly impacting multiple modules. The append method modifies the line structure, affecting how other components interact with lines.",
+   "checklist": [
+    "Review changes to Line class and append method",
+    "Check interactions with BracketTracker and whitespace functions",
+    "Ensure compatibility with dependent modules like linegen and trans"
+   ]
+  },
+  "src/black/trans.py": {
+   "source": "ai",
+   "headline": "Guard note for src/black/trans.py edits",
+   "what_breaks": [
+    "src/black/linegen.py \u2014 relies on transformers defined here",
+    "src/black/__init__.py \u2014 imports functionality from this module",
+    "src/black/nodes.py \u2014 uses node types and functions defined here"
+   ],
+   "why": "This file contains critical transformer functions that are directly used by src/black/linegen.py. Any changes to these transformers can affect the behavior of multiple dependent files.",
+   "checklist": [
+    "Review hug_power_op for dependencies on token types",
+    "Check interactions with Line and Mode classes from black.lines",
+    "Ensure no changes break the CannotTransform exception handling"
+   ]
+  },
+  "src/blib2to3/pytree.py": {
+   "source": "ai",
+   "headline": "Edit with caution: Base class impacts multiple modules",
+   "what_breaks": [
+    "src/black/__init__.py \u2014 imports Base class",
+    "src/black/nodes.py \u2014 relies on Node subclassing Base",
+    "src/blib2to3/pgen2/driver.py \u2014 uses functionality of Base"
+   ],
+   "why": "The Base class is an abstract foundation for Node and Leaf, which are critical for the parse tree structure. Changes here can affect multiple dependent files that rely on the behavior and properties defined in this class.",
+   "checklist": [
+    "Review changes to Base class methods and properties",
+    "Check for impacts on Node and Leaf subclasses in src/black/nodes.py",
+    "Ensure compatibility with Grammar from blib2to3.pgen2.grammar"
+   ]
+  },
+  "src/blib2to3/pgen2/parse.py": {
+   "source": "ai",
+   "headline": "Guard note for parse.py edits",
+   "what_breaks": [
+    "src/blib2to3/pgen2/driver.py \u2014 relies on Parser class",
+    "src/black/parsing.py \u2014 relies on Grammar and Node classes"
+   ],
+   "why": "This file contains the core parsing logic that interacts with the Grammar class. Changes here can impact multiple dependent files that rely on parsing functionality.",
+   "checklist": [
+    "Review changes to the Recorder class methods.",
+    "Check interactions with Grammar and Node from blib2to3.pytree.",
+    "Ensure stack_copy and backtrack logic remains intact."
+   ]
+  },
+  "src/black/parsing.py": {
+   "source": "ai",
+   "headline": "Guard note for parsing.py edits",
+   "what_breaks": [
+    "src/black/__init__.py \u2014 imports InvalidInput and lib2to3_parse",
+    "src/black/report.py \u2014 relies on lib2to3_parse for reporting",
+    "src/black/debug.py \u2014 uses InvalidInput for error handling"
+   ],
+   "why": "This file contains critical parsing functionality that affects multiple components. Changes to the classes or functions here could lead to widespread issues in dependent files.",
+   "checklist": [
+    "Review changes to InvalidInput class for error handling implications.",
+    "Check modifications to get_grammars for grammar parsing logic.",
+    "Ensure lib2to3_parse maintains expected input/output behavior."
+   ]
+  },
+  "src/black/strings.py": {
+   "source": "ai",
+   "headline": "Key string formatting functions in strings.py",
+   "what_breaks": [
+    "src/black/nodes.py \u2014 relies on string normalization functions",
+    "src/black/lines.py \u2014 uses lines_with_leading_tabs_expanded",
+    "src/black/trans.py \u2014 depends on regex patterns defined here"
+   ],
+   "why": "This file contains essential string manipulation functions that are directly used by multiple other modules. Changes here can affect how strings are processed throughout the codebase, especially in formatting and normalization tasks.",
+   "checklist": [
+    "Review changes to sub_twice and its impact on string normalization.",
+    "Check lines_with_leading_tabs_expanded for any changes in line handling.",
+    "Ensure regex patterns like STRING_PREFIX_RE and UNICODE_ESCAPE_RE remain intact."
+   ]
+  },
+  "src/blib2to3/pgen2/token.py": {
+   "source": "ai",
+   "headline": "Token Constants in pgen2 Module",
+   "what_breaks": [
+    "src/blib2to3/pgen2/grammar.py \u2014 relies on token constants for parsing",
+    "src/blib2to3/pgen2/tokenize.py \u2014 uses token constants for tokenization",
+    "src/black/__init__.py \u2014 depends on token constants for formatting"
+   ],
+   "why": "This file defines essential token constants used across multiple modules. Changes here can directly affect parsing and tokenization functionalities.",
+   "checklist": [
+    "Review all token constants for accuracy and completeness",
+    "Check dependencies in grammar.py and tokenize.py for impacts",
+    "Ensure any added tokens are reflected in tok_name dictionary"
+   ]
+  },
+  "src/blib2to3/pgen2/grammar.py": {
+   "source": "ai",
+   "headline": "Guard note for grammar.py edits",
+   "what_breaks": [
+    "src/blib2to3/pytree.py \u2014 relies on Grammar class for parsing",
+    "src/blib2to3/pygram.py \u2014 depends on Grammar for grammar tables",
+    "src/blib2to3/pgen2/driver.py \u2014 uses Grammar for parsing engine",
+    "src/blib2to3/pgen2/parse.py \u2014 accesses Grammar instance variables"
+   ],
+   "why": "The Grammar class is central to the parsing functionality in this module. Changes to its structure or methods could disrupt multiple dependent files that rely on its implementation.",
+   "checklist": [
+    "Review changes to the Grammar class and its methods.",
+    "Check for impacts on the load() and report() methods.",
+    "Ensure any modifications to instance variables are reflected in dependent files.",
+    "Verify compatibility with subclasses in conv and pgen modules."
+   ]
+  }
+ },
+ "unblock": {
+  "src/black/__init__.py": {
+   "source": "ai",
+   "headline": "Frequent Rework of Formatting Logic",
+   "diagnosis": "The file src/black/__init__.py is undergoing repeated changes primarily related to formatting options and handling edge cases. The commit messages indicate a recurring theme of fixing issues with command-line options and output behavior, suggesting that the formatting logic is not robust enough to handle various scenarios.",
+   "plan": [
+    "Conduct a thorough review of the formatting logic to identify edge cases that are not currently handled, especially related to command-line options like --skip-source-first-line and --quiet.",
+    "Implement comprehensive unit tests for each command-line option and edge case identified, ensuring that all scenarios are covered to prevent future regressions.",
+    "Refactor the relevant sections of the code to improve clarity and maintainability, focusing on reducing complexity and potential hidden coupling with other modules.",
+    "Establish a code review process that emphasizes testing and validation of formatting changes before merging, to minimize the likelihood of introducing new issues."
+   ],
+   "owner_hint": "Ownership should be shared among the core team to reduce bus factor."
+  },
+  "src/black/mode.py": {
+   "source": "ai",
+   "headline": "Frequent Parentheses Rework in Mode.py",
+   "diagnosis": "The recurring theme in the commit messages indicates a focus on removing redundant parentheses and adjusting formatting for expressions. This suggests that the code's handling of parentheses is inconsistent, leading to multiple fixes and reworks across various expressions.",
+   "plan": [
+    "Conduct a comprehensive review of all expressions in mode.py to identify and standardize the use of parentheses.",
+    "Implement a set of guidelines for parentheses usage in expressions to prevent future inconsistencies.",
+    "Create unit tests that specifically check for correct parentheses usage and formatting in mode.py to catch issues early.",
+    "Review and refactor related files that depend on mode.py to ensure they align with the new guidelines and tests."
+   ],
+   "owner_hint": "Ownership should be shared among the team to reduce bus factor."
+  },
+  "src/black/comments.py": {
+   "source": "ai",
+   "headline": "Frequent Rework on Comment Handling Logic",
+   "diagnosis": "The recurring theme in the commit messages highlights issues related to handling comments, specifically those involving `# fmt: skip` and `# fmt: off` directives. The code sections dealing with comment parsing and formatting are frequently modified, indicating that they are prone to bugs or edge cases that are not being adequately addressed.",
+   "plan": [
+    "Conduct a thorough review of the comment handling logic, focusing on the ProtoComment class and related functions that process `# fmt: skip` and `# fmt: off` directives.",
+    "Identify and document all edge cases that have led to recent crashes and reworks, ensuring that these scenarios are covered in unit tests.",
+    "Refactor the comment handling logic to simplify and clarify the code structure, reducing complexity and potential for bugs.",
+    "Implement comprehensive unit tests for all identified edge cases to ensure stability and prevent future regressions."
+   ],
+   "owner_hint": "Ownership should be shared among the team to mitigate bus factor risks."
+  },
+  "src/black/nodes.py": {
+   "source": "ai",
+   "headline": "Frequent Reworks in Node Handling Logic",
+   "diagnosis": "The recurring theme in the commit messages indicates ongoing issues with handling specific syntax and whitespace in the node transformations. This suggests that the logic for parsing and managing nodes is not robust enough, leading to multiple fixes and adjustments over time.",
+   "plan": [
+    "Conduct a thorough review of the node transformation logic, especially focusing on whitespace handling and comment parsing as highlighted in recent commits.",
+    "Implement comprehensive unit tests that cover edge cases related to lambda expressions, comments, and type parameters to ensure stability.",
+    "Refactor the relevant sections of the code to improve clarity and maintainability, particularly around the handling of standalone comments and type parameters.",
+    "Establish a code review process that emphasizes the importance of testing for changes in this file to prevent future regressions."
+   ],
+   "owner_hint": "Ownership should be shared among the team to reduce bus factor."
+  },
+  "src/blib2to3/pgen2/tokenize.py": {
+   "source": "ai",
+   "headline": "Frequent Rework of Tokenization Logic",
+   "diagnosis": "The file 'tokenize.py' is undergoing frequent rework due to ongoing changes in tokenization rules and support for new Python features. Commit messages indicate a recurring theme of fixing bugs related to f-strings and enhancing compatibility with recent PEPs, which suggests instability in the tokenization logic.",
+   "plan": [
+    "Conduct a thorough review of the recent commits focusing on f-string handling and PEP compliance to identify common issues.",
+    "Create a comprehensive test suite that covers all edge cases related to tokenization, especially for f-strings and new PEPs.",
+    "Refactor the tokenization logic to isolate and modularize the handling of different token types, reducing interdependencies.",
+    "Establish a clear ownership of the tokenization logic to ensure accountability and reduce the bus factor, potentially assigning a single engineer to maintain this part of the code."
+   ],
+   "owner_hint": "Assign a dedicated engineer to oversee the tokenization logic."
+  },
+  "src/black/linegen.py": {
+   "source": "ai",
+   "headline": "Frequent Rework on Parentheses Handling",
+   "diagnosis": "The commit history indicates a recurring theme of fixing issues related to redundant parentheses and formatting errors, particularly with comments and specific expressions. This suggests that the logic for handling parentheses in various contexts is prone to errors, leading to frequent rework.",
+   "plan": [
+    "Conduct a thorough review of the parentheses handling logic in linegen.py, focusing on areas mentioned in the commit messages, such as comparison expressions and list concatenations.",
+    "Implement comprehensive unit tests targeting edge cases related to parentheses, especially those involving comments and formatting directives like `# fmt: skip`.",
+    "Refactor the relevant sections of code to simplify the logic and reduce complexity, ensuring that the handling of parentheses is consistent and robust.",
+    "Engage with the team to establish clearer guidelines for parentheses usage and formatting to prevent similar issues in the future."
+   ],
+   "owner_hint": "Ownership should be shared among the team to mitigate bus factor risks."
+  },
+  "src/black/lines.py": {
+   "source": "ai",
+   "headline": "Frequent formatting issues in lines.py",
+   "diagnosis": "The recurring theme in the commit messages indicates persistent formatting issues related to comments, line breaks, and tuple handling. The code in 'src/black/lines.py' is heavily involved in managing line formatting, which is likely causing the frequent reworks due to its complexity and interdependencies.",
+   "plan": [
+    "Conduct a thorough review of the 'append' method in the Line class to identify potential edge cases that may lead to formatting inconsistencies.",
+    "Implement comprehensive unit tests targeting the specific formatting scenarios mentioned in the recent commit messages, especially those related to comments and line breaks.",
+    "Refactor the Line class to simplify its logic where possible, focusing on reducing complexity and improving clarity, particularly around comment handling and tuple management.",
+    "Engage with the authors of the recent commits to gather insights on their experiences and challenges faced, ensuring that their feedback informs the refactoring process."
+   ],
+   "owner_hint": "Ownership should be shared among the team to reduce bus factor."
+  },
+  "src/black/trans.py": {
+   "source": "ai",
+   "headline": "Frequent Reworks in String Processing Logic",
+   "diagnosis": "The commit history indicates a recurring theme of issues related to string processing, particularly around handling edge cases and redundant operations. The specific parts of the code that are frequently touched include string merging, splitting, and handling parentheses, which suggests a lack of stability in the current implementation.",
+   "plan": [
+    "Conduct a thorough code review of the string processing functions to identify common failure points and edge cases that are not being handled correctly.",
+    "Implement comprehensive unit tests that cover various scenarios of string transformations, particularly focusing on the edge cases highlighted in recent commits.",
+    "Refactor the string processing logic to simplify and clarify the handling of parentheses and string merging/splitting, reducing complexity and potential for errors.",
+    "Establish a more rigorous code review process for changes to the string processing logic to ensure that new commits do not introduce regressions."
+   ],
+   "owner_hint": "Ownership should be clearly defined within the team to ensure accountability."
+  },
+  "src/blib2to3/pytree.py": {
+   "source": "ai",
+   "headline": "Frequent Rework of Parse Tree Logic",
+   "diagnosis": "The recurring theme in the commit messages indicates ongoing issues with performance and state management in the parse tree, particularly around node handling and tree traversal. The code changes frequently touch on optimizing node operations and maintaining state, which suggests that the underlying architecture may be flawed or insufficiently documented.",
+   "plan": [
+    "Conduct a thorough review of the Base class and its methods to identify potential architectural flaws that could lead to performance issues.",
+    "Create detailed documentation for the parse tree structure and its expected behaviors to aid future developers in understanding the design.",
+    "Implement unit tests specifically targeting the node handling and tree traversal methods to ensure their correctness and performance under various conditions.",
+    "Schedule a team review session to discuss findings and gather insights from the 20 distinct authors who have contributed to the file."
+   ],
+   "owner_hint": "Ownership should be shared among the team to mitigate bus factor risks."
+  },
+  "src/blib2to3/pgen2/parse.py": {
+   "source": "ai",
+   "headline": "Frequent Rework on Parser Functionality",
+   "diagnosis": "The commit history indicates a recurring theme of bug fixes and improvements related to the parser's functionality, particularly in handling syntax and grammar. The code touches on critical areas such as the handling of nodes and the stack management within the parser, which may be contributing to the instability.",
+   "plan": [
+    "Conduct a thorough review of the recent parser-related commits to identify common issues and patterns in the bugs being fixed.",
+    "Implement comprehensive unit tests specifically targeting the parser functions, especially those highlighted in recent commits (e.g., handling of match/case and type keywords).",
+    "Refactor the stack management and node handling logic to simplify the code and reduce potential sources of error, ensuring that changes are well-documented.",
+    "Establish a code review process focused on parser changes to ensure that future modifications are scrutinized for potential impacts on functionality."
+   ],
+   "owner_hint": "Ownership should be shared among the team members familiar with the parser's architecture."
+  },
+  "src/black/parsing.py": {
+   "source": "ai",
+   "headline": "Frequent Rework of Parsing Logic",
+   "diagnosis": "The commit history indicates a recurring theme of improving error handling and readability in the parsing logic. Specific issues such as parse errors and AST safety checks are frequently addressed, suggesting that the current implementation is prone to misunderstandings or bugs.",
+   "plan": [
+    "Conduct a thorough review of the error handling mechanisms in the parsing logic, particularly focusing on the InvalidInput class and its usage.",
+    "Identify and document common parse errors and their causes, using insights from recent commits related to parse error readability and handling.",
+    "Implement comprehensive unit tests that cover edge cases for parsing and AST validation, ensuring that all recent changes are validated against expected outcomes.",
+    "Establish a code review checklist that emphasizes clarity and robustness in error handling for future commits to the parsing.py file."
+   ],
+   "owner_hint": "Ownership should be shared among the team, with a focus on those who frequently modify parsing.py."
+  },
+  "src/black/strings.py": {
+   "source": "ai",
+   "headline": "Frequent rework on string handling logic",
+   "diagnosis": "The commit history indicates repeated fixes related to string formatting and escape sequences, particularly in f-strings and unicode handling. The recurring themes in the commit messages suggest that the logic for normalizing and processing strings is prone to edge cases and bugs.",
+   "plan": [
+    "Conduct a thorough review of the string handling functions, focusing on 'normalize_string_quotes', 'normalize_fstring_quotes', and 'sub_twice' to identify potential flaws in their logic.",
+    "Implement comprehensive unit tests that cover various edge cases for string formatting, particularly focusing on f-strings and unicode escape sequences.",
+    "Refactor the string handling code to improve clarity and reduce complexity, ensuring that each function has a single responsibility.",
+    "Establish a code review process that emphasizes string handling logic to catch potential issues before they are merged."
+   ],
+   "owner_hint": "The team responsible for string formatting features should take ownership."
+  },
+  "src/blib2to3/pgen2/token.py": {
+   "source": "ai",
+   "headline": "Frequent Rework of Token Constants File",
+   "diagnosis": "The recurring theme in the commit messages indicates a focus on adding support for new Python features (e.g., PEP 798, PEP 701) and cleaning up the codebase. The token constants file is frequently touched due to its foundational role in the parsing process, which is affected by changes in language specifications and syntax detection.",
+   "plan": [
+    "Conduct a thorough review of the token constants to ensure they align with the latest Python PEPs and language features.",
+    "Establish a clear documentation process for any changes made to token constants to prevent future confusion and rework.",
+    "Implement automated tests that validate the token constants against the expected behavior for various Python versions, ensuring compatibility.",
+    "Assign a dedicated owner for the token constants file to streamline future changes and maintain consistency."
+   ],
+   "owner_hint": "Assign a single engineer to oversee changes to the token constants."
+  },
+  "src/blib2to3/pgen2/grammar.py": {
+   "source": "ai",
+   "headline": "Frequent Rework of Grammar Class Implementation",
+   "diagnosis": "The recurring theme in the commit messages indicates ongoing enhancements and adaptations to the Grammar class, particularly around support for new Python features like PEP 701 and pattern matching. The complexity of the grammar structures and their integration with other modules appears to be a significant source of instability.",
+   "plan": [
+    "Conduct a thorough review of the Grammar class and its dependencies to identify areas of complexity and potential refactoring opportunities.",
+    "Establish a clear set of requirements for the Grammar class to ensure that new features like PEP 701 and pattern matching are implemented consistently.",
+    "Create a suite of unit tests that cover the core functionalities of the Grammar class to catch regressions early in the development process.",
+    "Engage with the authors of recent commits to gather insights on their challenges and experiences, fostering a collaborative approach to stabilize the implementation."
+   ],
+   "owner_hint": "Consider assigning a dedicated team member to oversee the Grammar class's evolution."
+  }
+ },
+ "ask": {
+  "which files are most fragile?": {
+   "answer": "The most fragile files in the codebase are src/black/__init__.py, src/black/mode.py, and src/black/comments.py, with magnitudes of 8.4, 7.4, and 7.1 respectively. These files have a high risk of breaking when changes are made, as indicated by their blast scores and overall fragility ratings.",
+   "files": [
+    "src/black/__init__.py",
+    "src/black/mode.py",
+    "src/black/comments.py"
+   ],
+   "dropped": 0
+  },
+  "where is hidden coupling?": {
+   "answer": "Hidden coupling exists between the following files: src/blib2to3/pgen2/pgen.py and src/blib2to3/pytree.py, src/blib2to3/pgen2/literals.py and src/blib2to3/pgen2/tokenize.py, src/blib2to3/pgen2/parse.py and src/blib2to3/pgen2/pgen.py, src/blib2to3/pgen2/literals.py and src/blib2to3/pgen2/pgen.py, src/blib2to3/pgen2/literals.py and src/blib2to3/pytree.py, src/black/brackets.py and src/black/trans.py, src/blib2to3/pgen2/driver.py and src/blib2to3/pgen2/literals.py, src/blib2to3/pgen2/literals.py and src/blib2to3/pgen2/parse.py, src/blib2to3/pgen2/conv.py and src/blib2to3/pgen2/tokenize.py, src/blib2to3/pgen2/literals.py and src/blib2to3/pgen2/token.py.",
+   "files": [
+    "src/blib2to3/pgen2/pgen.py",
+    "src/blib2to3/pytree.py",
+    "src/blib2to3/pgen2/literals.py",
+    "src/blib2to3/pgen2/tokenize.py",
+    "src/blib2to3/pgen2/parse.py",
+    "src/blib2to3/pgen2/driver.py",
+    "src/black/brackets.py",
+    "src/black/trans.py",
+    "src/blib2to3/pgen2/conv.py",
+    "src/blib2to3/pgen2/token.py"
+   ],
+   "dropped": 0
+  },
+  "what would break if i refactor the core?": {
+   "answer": "Refactoring the core files could potentially break several components due to their high fragility scores. The most fragile files include 'src/black/__init__.py', 'src/black/mode.py', and 'src/black/comments.py', which have high blast scores indicating they are likely to break with changes. Additionally, there are multiple co-change pairs that suggest interdependencies, particularly between files like 'src/blib2to3/pgen2/pgen.py' and 'src/blib2to3/pytree.py', which have a history of co-changes.",
+   "files": [
+    "src/black/__init__.py",
+    "src/black/mode.py",
+    "src/black/comments.py",
+    "src/blib2to3/pgen2/pgen.py",
+    "src/blib2to3/pytree.py"
+   ],
+   "dropped": 0
+  }
+ }
+}

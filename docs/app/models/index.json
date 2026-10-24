@@ -1,0 +1,58 @@
+[
+ {
+  "slug": "burntsushi__ripgrep",
+  "name": "BurntSushi/ripgrep",
+  "summary": {
+   "files": 81,
+   "edges": 159,
+   "cochange_pairs": 9,
+   "ghost_edges": 2,
+   "bus_factor_files": 23,
+   "languages": {
+    "rust": 80,
+    "ruby": 1
+   }
+  },
+  "commits": 2236,
+  "has_snapshots": true
+ },
+ {
+  "slug": "fastapi__fastapi",
+  "name": "fastapi/fastapi",
+  "summary": {
+   "files": 67,
+   "edges": 125,
+   "cochange_pairs": 27,
+   "ghost_edges": 17,
+   "bus_factor_files": 26
+  },
+  "commits": 7932,
+  "has_snapshots": true
+ },
+ {
+  "slug": "psf__black",
+  "name": "psf/black",
+  "summary": {
+   "files": 56,
+   "edges": 125,
+   "cochange_pairs": 63,
+   "ghost_edges": 39,
+   "bus_factor_files": 11
+  },
+  "commits": 2442,
+  "has_snapshots": true
+ },
+ {
+  "slug": "textualize__rich",
+  "name": "Textualize/rich",
+  "summary": {
+   "files": 109,
+   "edges": 436,
+   "cochange_pairs": 265,
+   "ghost_edges": 241,
+   "bus_factor_files": 38
+  },
+  "commits": 3387,
+  "has_snapshots": true
+ }
+]

@@ -16,9 +16,9 @@
 
 <!-- To show an inline player: edit this README on github.com, drag docs/richter-demo.mp4 onto this line, and delete the thumbnail link below. -->
 
-[![Richter demo video — 94 seconds](docs/demo-thumbnail.jpg)](docs/richter-demo.mp4)
+[![Richter demo video — 94 seconds](docs/demo-thumbnail.jpg)](https://asil-eng.github.io/richter/)
 
-<sub>94 seconds · click to play · narration is AI-generated (OpenAI TTS)</sub>
+<sub>94 seconds · click to play (opens the video player) · narration is AI-generated (OpenAI TTS)</sub>
 
 ---
 
@@ -253,7 +253,7 @@ cd backend
 - **Project name:** Richter — measure the magnitude of risk in any codebase
 - **Short description:** Richter ingests a public GitHub repo and predicts what breaks when you change a file (blast radius), where work keeps getting reworked (fix-heavy churn), and which files are secretly coupled (co-change with no import link). It fuses these into one magnitude score shown as a seismic hazard map and a 3D code city with time-travel, and writes guard notes and unblock plans with an LLM. It helps engineers and reviewers touch risky code safely.
 - **Team:** Muhammed Asil Pari ([@asil-eng](https://github.com/asil-eng))
-- **Working demo:** Local; see [Run it](#-run-it). The four demo repos load without the backend or an API key. Video: [docs/richter-demo.mp4](docs/richter-demo.mp4).
+- **Working demo:** Local; see [Run it](#-run-it). The four demo repos load without the backend or an API key. Video: [asil-eng.github.io/richter](https://asil-eng.github.io/richter/).
 - **Technology stack:** Python 3 + FastAPI, GitPython, `ast` + per-language import resolvers, networkx (backend); React 19 + Vite + TypeScript, d3-force, three.js (frontend); OpenAI `gpt-4o-mini` (notes, ask-the-repo).
 
 ### Run the project

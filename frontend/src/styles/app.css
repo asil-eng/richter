@@ -204,25 +204,12 @@ kbd {
   display: block;
   width: 100%;
 }
-.repos,
 .views {
   display: flex;
   align-items: stretch;
   border-right: 1px solid var(--line);
   flex: none;
 }
-/* repo tabs absorb any shortage of width and scroll inside their own strip */
-.repos {
-  flex: 0 1 auto;
-  min-width: 0;
-  overflow-x: auto;
-  scrollbar-width: none;
-  mask-image: linear-gradient(90deg, #000 calc(100% - 24px), transparent);
-}
-.repos::-webkit-scrollbar {
-  display: none;
-}
-.repo-tab,
 .view-tab {
   position: relative;
   padding: 0 var(--s-4);
@@ -234,15 +221,10 @@ kbd {
   gap: 6px;
   transition: color var(--t-fast), background var(--t-fast);
 }
-.repo-tab-owner {
-  color: var(--text-3);
-}
-.repo-tab:hover,
 .view-tab:hover:not(:disabled) {
   color: var(--text);
   background: rgba(170, 196, 204, 0.03);
 }
-.repo-tab::after,
 .view-tab::after {
   content: '';
   position: absolute;
@@ -254,16 +236,11 @@ kbd {
   transform: scaleX(0);
   transition: transform var(--t-med) var(--ease-out);
 }
-.repo-tab.is-on,
 .view-tab.is-on {
   color: var(--text);
 }
-.repo-tab.is-on::after,
 .view-tab.is-on::after {
   transform: scaleX(1);
-}
-.repo-tab.is-on .repo-tab-owner {
-  color: var(--text-3);
 }
 .view-tab {
   letter-spacing: 0.08em;
@@ -346,6 +323,160 @@ kbd {
   50% {
     opacity: 0.35;
   }
+}
+
+/* ============================================================ repo picker */
+.picker {
+  position: relative;
+  flex: 0 1 auto;
+  min-width: 0;
+  border-right: 1px solid var(--line);
+}
+.picker-btn {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  padding: 0 var(--s-4);
+  max-width: 100%;
+  transition: background var(--t-fast);
+}
+.picker-btn:hover,
+.picker.is-open .picker-btn {
+  background: rgba(170, 196, 204, 0.05);
+}
+.picker-label {
+  font-size: var(--fs-9);
+  letter-spacing: 0.08em;
+  color: var(--text-3);
+}
+.picker-name {
+  font-size: var(--fs-12);
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+.picker-owner {
+  color: var(--text-3);
+}
+.picker-count {
+  font-size: var(--fs-9);
+  color: var(--text-2);
+  border: 1px solid var(--line-2);
+  padding: 0 5px;
+  line-height: 16px;
+}
+.picker-chev {
+  color: var(--text-2);
+  flex: none;
+  transition: transform var(--t-med) var(--ease-out);
+}
+.picker.is-open .picker-chev {
+  transform: rotate(180deg);
+}
+.picker-pop {
+  position: fixed;
+  top: calc(var(--topbar-h) - 1px);
+  left: var(--rail-l);
+  width: 420px;
+  max-width: calc(100vw - 32px);
+  background: var(--bg-2);
+  border: 1px solid var(--line-3);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.6);
+  z-index: 20;
+  animation: fade-up 220ms var(--ease-out);
+}
+.picker-search {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  padding: 0 var(--s-3);
+  height: 42px;
+  border-bottom: 1px solid var(--line-2);
+}
+.picker-search-icon {
+  color: var(--orange);
+  font-size: 16px;
+}
+.picker-search input {
+  flex: 1;
+  min-width: 0;
+  background: none;
+  border: 0;
+  outline: 0;
+  font-size: var(--fs-12);
+}
+.picker-search input::placeholder {
+  color: var(--text-3);
+}
+.picker-list {
+  list-style: none;
+  margin: 0;
+  padding: 4px 0;
+  max-height: min(420px, 60vh);
+  overflow-y: auto;
+}
+.picker-row {
+  position: relative;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  row-gap: 2px;
+  text-align: left;
+  padding: 8px var(--s-3) 8px calc(var(--s-3) + 6px);
+}
+.picker-row::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 6px;
+  bottom: 6px;
+  width: 2px;
+  background: var(--orange);
+  opacity: 0;
+}
+.picker-row.is-cursor {
+  background: rgba(170, 196, 204, 0.06);
+}
+.picker-row.is-current::before {
+  opacity: 1;
+}
+.picker-row-name {
+  font-size: var(--fs-12);
+  color: var(--text);
+}
+.picker-row-meta {
+  grid-column: 1;
+  font-size: var(--fs-10);
+  color: var(--text-3);
+}
+.picker-tag {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  align-self: center;
+  font-size: var(--fs-9);
+  letter-spacing: 0.06em;
+  color: var(--amber);
+  border: 1px solid rgba(255, 176, 46, 0.4);
+  padding: 1px 6px;
+}
+.picker-empty {
+  padding: var(--s-3);
+  color: var(--text-3);
+  font-size: var(--fs-11);
+}
+.picker-foot {
+  display: flex;
+  gap: var(--s-4);
+  padding: 8px var(--s-3);
+  border-top: 1px solid var(--line-2);
+  font-size: var(--fs-10);
+  color: var(--text-3);
+}
+.picker-foot kbd {
+  margin-right: 3px;
 }
 
 /* ============================================================ left rail */
@@ -1206,6 +1337,35 @@ kbd {
   color: var(--text-3);
 }
 
+/* ============================================================ empty repo */
+.stage-empty {
+  grid-column: 1 / -1;
+  display: grid;
+  place-items: center;
+}
+.no-python {
+  max-width: 560px;
+  padding: var(--s-8);
+  border: 1px solid var(--line-2);
+  background: var(--bg-1);
+  animation: fade-up 500ms var(--ease-out);
+}
+.no-python-title {
+  font-family: var(--font-head);
+  font-weight: 700;
+  font-stretch: 85%;
+  font-size: 24px;
+  line-height: 1.2;
+  margin-bottom: var(--s-3);
+}
+.no-python p {
+  color: var(--text-2);
+  line-height: 1.6;
+}
+.no-python code {
+  color: var(--amber);
+}
+
 /* ============================================================ timeline */
 .stage-city .ask {
   bottom: 92px;
@@ -1415,7 +1575,6 @@ kbd {
 .view-tab .short {
   display: none;
 }
-.repo-tab,
 .view-tab {
   white-space: nowrap;
 }
@@ -1424,10 +1583,6 @@ kbd {
     --rail-l: 272px;
     --rail-r: 344px;
   }
-  .repo-tab-owner {
-    display: none;
-  }
-  .repo-tab,
   .view-tab {
     padding: 0 var(--s-3);
   }

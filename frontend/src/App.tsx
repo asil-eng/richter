@@ -103,7 +103,21 @@ export default function App() {
         onAnalyzed={onAnalyzed}
         cityReady
       />
-      {model && slug && (
+      {model && slug && model.nodes.length === 0 && (
+        <main className="stage stage-empty">
+          <div className="no-python">
+            <div className="label">NO SIGNAL</div>
+            <div className="no-python-title">{model.repo.name} has no Python files to analyze</div>
+            <p>
+              Richter reads imports with Python's <code>ast</code> today, so repos in other languages produce an empty
+              graph. Its {model.repo.commits.toLocaleString()} commits were read, but no <code>.py</code> files were found
+              outside tests/, docs/ and examples/.
+            </p>
+            <p className="muted">Pick another repo from the REPO menu, or analyze a Python project.</p>
+          </div>
+        </main>
+      )}
+      {model && slug && model.nodes.length > 0 && (
         <>
           <LeftRail model={model} selected={selected} onSelect={select} layers={layers} setLayers={setLayers} />
           <main className={`stage stage-${view}`} key={slug}>

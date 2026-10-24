@@ -4,6 +4,13 @@ Record each meaningful project change during the event, newest first. Update thi
 
 ## Event build log
 
+## 2026-10-24T22:57:03+05:30 — Searchable repo picker + empty state for non-Python repos
+
+- Changed: Added `frontend/src/components/RepoPicker.tsx`: one REPO button (current repo, count, chevron) opening a dropdown with search (multi-term), per-repo files/commits and a TIME-TRAVEL tag, keyboard navigation (/ to open from anywhere, arrows, Enter, Esc) and click-outside close; replaces the scrolling tab strip in `TopBar.tsx` (old tab CSS removed). `App.tsx`: repos with zero analyzable Python files show a NO SIGNAL panel instead of the rails and views; the picker labels them 'no Python files'.
+- Why: Participant asked for a dropdown with search instead of a growing row of tabs. While testing, opening a non-Python repo (0 files) crashed the page with 'Reduce of empty array with no initial value'.
+- Validation: Playwright: open picker, search 'star' -> 1 row, Enter selects Kludex/starlette, '/' opens, Esc and outside click close, no-match message shown. Zero-file repo now renders the NO SIGNAL panel with no page errors (previously threw). `tsc -b` and `oxlint` clean.
+- Limitations: None identified in these checks.
+
 ## 2026-10-24T22:51:34+05:30 — Visible background grid
 
 - Changed: `frontend/src/styles/app.css`: background instrument grid raised from 1.8% opacity with a top fade to a two-level grid (minor 32px at 4%, major 128px at 8.5%), no fade.

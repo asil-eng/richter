@@ -1,0 +1,14 @@
+{
+ "headline": "Edit with caution: Base class impacts multiple modules",
+ "what_breaks": [
+  "src/black/__init__.py \u2014 imports Base class",
+  "src/black/nodes.py \u2014 relies on Node subclassing Base",
+  "src/blib2to3/pgen2/driver.py \u2014 uses functionality of Base"
+ ],
+ "why": "The Base class is an abstract foundation for Node and Leaf, which are critical for the parse tree structure. Changes here can affect multiple dependent files that rely on the behavior and properties defined in this class.",
+ "checklist": [
+  "Review changes to Base class methods and properties",
+  "Check for impacts on Node and Leaf subclasses in src/black/nodes.py",
+  "Ensure compatibility with Grammar from blib2to3.pgen2.grammar"
+ ]
+}

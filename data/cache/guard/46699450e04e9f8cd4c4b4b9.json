@@ -1,0 +1,15 @@
+{
+ "headline": "Key encoders and utilities for FastAPI",
+ "what_breaks": [
+  "fastapi/routing.py \u2014 relies on jsonable_encoder",
+  "fastapi/exception_handlers.py \u2014 relies on jsonable_encoder",
+  "fastapi/openapi/docs.py \u2014 relies on jsonable_encoder",
+  "fastapi/openapi/utils.py \u2014 relies on jsonable_encoder"
+ ],
+ "why": "This file defines crucial encoding functions and mappings used across FastAPI. Changes here can impact how data is serialized and deserialized in various components.",
+ "checklist": [
+  "Review changes to jsonable_encoder and decimal_encoder functions",
+  "Ensure compatibility with Pydantic v1 and v2 in encoder functions",
+  "Check the impact of any modifications on dependent files listed"
+ ]
+}

@@ -1,0 +1,433 @@
+{
+ "head": "7a0a3f0b286c6c865cf4398ea0e957a87b8bffa4",
+ "model": "gpt-4o-mini",
+ "guard": {
+  "fastapi/routing.py": {
+   "source": "ai",
+   "headline": "Key dependencies for fastapi/routing.py",
+   "what_breaks": [
+    "fastapi/__init__.py \u2014 relies on routing functionalities",
+    "fastapi/utils.py \u2014 uses routing utilities",
+    "fastapi/applications.py \u2014 depends on routing for app structure",
+    "fastapi/openapi/utils.py \u2014 requires routing for API documentation"
+   ],
+   "why": "This file serves as a core routing mechanism for the FastAPI framework, directly impacting how requests are handled and responses are generated. Changes here can affect multiple components that rely on routing behavior and structure.",
+   "checklist": [
+    "Review changes to request_response function and its dependencies.",
+    "Check interactions with starlette.routing for compatibility.",
+    "Ensure any modifications to routing logic are reflected in dependent files.",
+    "Verify that imports from fastapi.dependencies.utils are intact."
+   ]
+  },
+  "fastapi/_compat/v2.py": {
+   "source": "ai",
+   "headline": "Guard Note for fastapi/_compat/v2.py Modifications",
+   "what_breaks": [
+    "fastapi/openapi/models.py \u2014 relies on GenerateJsonSchema",
+    "fastapi/params.py \u2014 relies on evaluate_forwardref",
+    "fastapi/datastructures.py \u2014 relies on PydanticUndefined"
+   ],
+   "why": "This file contains critical compatibility functions and classes that are essential for the integration with Pydantic. Changes here can affect multiple components relying on the JSON schema generation and parameter evaluation.",
+   "checklist": [
+    "Review changes to GenerateJsonSchema for impact on JSON schema generation.",
+    "Check evaluate_forwardref for any alterations in parameter handling.",
+    "Ensure compatibility with Pydantic versions referenced in comments."
+   ]
+  },
+  "fastapi/openapi/models.py": {
+   "source": "ai",
+   "headline": "Key Models for OpenAPI Specification",
+   "what_breaks": [
+    "fastapi/params.py \u2014 relies on BaseModelWithConfig",
+    "fastapi/security/base.py \u2014 relies on EmailStr",
+    "fastapi/openapi/utils.py \u2014 relies on Info and Schema classes"
+   ],
+   "why": "This file defines critical data models used throughout FastAPI's OpenAPI implementation. Changes to these models can impact multiple components that depend on them for validation and schema generation.",
+   "checklist": [
+    "Review changes to BaseModelWithConfig and its subclasses.",
+    "Check for any modifications to EmailStr and its validation logic.",
+    "Ensure compatibility with dependent files like fastapi/params.py and fastapi/security/base.py.",
+    "Update any relevant documentation related to OpenAPI models."
+   ]
+  },
+  "fastapi/dependencies/utils.py": {
+   "source": "ai",
+   "headline": "Ensure multipart dependency is correctly installed",
+   "what_breaks": [
+    "fastapi/routing.py \u2014 relies on dependencies defined in this file",
+    "fastapi/openapi/utils.py \u2014 uses models and utilities from this file"
+   ],
+   "why": "This file contains critical dependency management functions that are essential for routing and OpenAPI generation. Any changes could impact multiple components that rely on these utilities for proper operation.",
+   "checklist": [
+    "Verify changes to ensure_multipart_is_installed function logic",
+    "Check for impacts on Dependant and DependencyCacheKey classes",
+    "Review imports from fastapi._compat for any modifications",
+    "Ensure compatibility with BackgroundTasks and async context managers"
+   ]
+  },
+  "fastapi/encoders.py": {
+   "source": "ai",
+   "headline": "Key encoders and utilities for FastAPI",
+   "what_breaks": [
+    "fastapi/routing.py \u2014 relies on jsonable_encoder",
+    "fastapi/exception_handlers.py \u2014 relies on jsonable_encoder",
+    "fastapi/openapi/docs.py \u2014 relies on jsonable_encoder",
+    "fastapi/openapi/utils.py \u2014 relies on jsonable_encoder"
+   ],
+   "why": "This file defines crucial encoding functions and mappings used across FastAPI. Changes here can impact how data is serialized and deserialized in various components.",
+   "checklist": [
+    "Review changes to jsonable_encoder and decimal_encoder functions",
+    "Ensure compatibility with Pydantic v1 and v2 in encoder functions",
+    "Check the impact of any modifications on dependent files listed"
+   ]
+  },
+  "fastapi/security/oauth2.py": {
+   "source": "ai",
+   "headline": "OAuth2PasswordRequestForm Dependency Class",
+   "what_breaks": [
+    "fastapi/dependencies/utils.py \u2014 relies on OAuth2PasswordRequestForm",
+    "fastapi/security/__init__.py \u2014 imports OAuth2PasswordRequestForm"
+   ],
+   "why": "This file contains the OAuth2PasswordRequestForm class, which is crucial for handling OAuth2 password flow. Changes here can affect multiple dependent files that rely on this class for authentication functionality.",
+   "checklist": [
+    "Review changes to the OAuth2PasswordRequestForm class methods",
+    "Check the import statements in fastapi/dependencies/utils.py for dependencies",
+    "Ensure compatibility with fastapi/security/__init__.py where it's imported"
+   ]
+  },
+  "fastapi/utils.py": {
+   "source": "ai",
+   "headline": "Key Utility Functions in fastapi/utils.py",
+   "what_breaks": [
+    "fastapi/routing.py \u2014 relies on generate_unique_id()",
+    "fastapi/dependencies/utils.py \u2014 relies on create_model_field()",
+    "fastapi/applications.py \u2014 relies on is_body_allowed_for_status_code()"
+   ],
+   "why": "This file contains critical utility functions that are directly used by multiple core components in FastAPI. Changes here could affect routing, dependency injection, and application behavior, leading to widespread issues.",
+   "checklist": [
+    "Review changes to is_body_allowed_for_status_code() for impact on response handling.",
+    "Check modifications in create_model_field() for compatibility with Pydantic models.",
+    "Ensure generate_unique_id() maintains consistent operation ID generation."
+   ]
+  },
+  "fastapi/__init__.py": {
+   "source": "ai",
+   "headline": "Key imports for FastAPI framework functionality",
+   "what_breaks": [
+    "fastapi/utils.py \u2014 relies on FastAPI class",
+    "fastapi/telemetry/_asgi.py \u2014 relies on HTTPException class"
+   ],
+   "why": "This file serves as the main entry point for the FastAPI framework, aggregating essential components. Changes here can impact multiple dependent files and their functionality.",
+   "checklist": [
+    "Verify changes to FastAPI class in applications.py",
+    "Check for updates in HTTPException and WebSocketException in exceptions.py",
+    "Ensure param_functions imports remain consistent with their definitions",
+    "Review any modifications to APIRouter in routing.py"
+   ]
+  },
+  "fastapi/params.py": {
+   "source": "ai",
+   "headline": "Guard note for fastapi/params.py edits",
+   "what_breaks": [
+    "fastapi/routing.py \u2014 relies on Param class for route parameters",
+    "fastapi/dependencies/utils.py \u2014 uses Param for dependency injection",
+    "fastapi/openapi/utils.py \u2014 depends on Param for OpenAPI schema generation"
+   ],
+   "why": "This file contains the Param class, which is crucial for defining API parameter types and their validation. Changes here can affect routing, dependency injection, and OpenAPI documentation generation across multiple files.",
+   "checklist": [
+    "Review changes to the Param class constructor and its attributes.",
+    "Check for any modifications to the ParamTypes Enum.",
+    "Ensure compatibility with fastapi/routing.py and fastapi/dependencies/utils.py."
+   ]
+  },
+  "fastapi/exceptions.py": {
+   "source": "ai",
+   "headline": "Key exceptions for FastAPI error handling",
+   "what_breaks": [
+    "fastapi/telemetry/_api.py \u2014 relies on HTTPException",
+    "fastapi/security/oauth2.py \u2014 relies on HTTPException",
+    "fastapi/routing.py \u2014 relies on HTTPException",
+    "fastapi/responses.py \u2014 relies on HTTPException"
+   ],
+   "why": "The HTTPException and WebSocketException classes are critical for error handling in FastAPI. Changes to these classes can affect how errors are communicated to clients across multiple dependent modules.",
+   "checklist": [
+    "Review modifications to HTTPException and WebSocketException constructors.",
+    "Ensure that any changes maintain compatibility with existing error handling patterns.",
+    "Check for updates in the documentation links provided in the class docstrings.",
+    "Verify that the examples remain accurate and functional after changes."
+   ]
+  },
+  "fastapi/applications.py": {
+   "source": "ai",
+   "headline": "Key Dependencies for FastAPI Class",
+   "what_breaks": [
+    "fastapi/__init__.py \u2014 relies on FastAPI class",
+    "fastapi/routing.py \u2014 depends on BaseRoute from FastAPI",
+    "fastapi/exception_handlers.py \u2014 uses HTTPException from FastAPI"
+   ],
+   "why": "The FastAPI class is the main entry point for creating FastAPI applications, making it crucial for the framework's functionality. Changes to this class can impact routing, exception handling, and middleware integration across multiple files.",
+   "checklist": [
+    "Review changes to the FastAPI class constructor and its parameters.",
+    "Check for modifications in telemetry handling and debug options.",
+    "Ensure compatibility with routes defined in fastapi/routing.py.",
+    "Verify interactions with exception handlers in fastapi/exception_handlers.py."
+   ]
+  },
+  "fastapi/openapi/utils.py": {
+   "source": "ai",
+   "headline": "Key Functions and Classes in utils.py",
+   "what_breaks": [
+    "fastapi/applications.py \u2014 relies on OpenAPI and routing",
+    "fastapi/dependencies/models.py \u2014 uses Dependant and related functions",
+    "fastapi/openapi/models.py \u2014 depends on OpenAPI structure",
+    "fastapi/utils.py \u2014 utilizes utility functions for operations"
+   ],
+   "why": "This file contains critical functions and data structures for OpenAPI dependency handling, which are essential for routing and request validation. Changes here can affect how dependencies are resolved and how OpenAPI schemas are generated across the application.",
+   "checklist": [
+    "Review changes to _get_openapi_dependency_data function for impact on dependencies.",
+    "Check modifications to _OpenAPIDependencyData dataclass for data integrity.",
+    "Ensure any updates to validation_error_definition and validation_error_response_definition align with OpenAPI standards.",
+    "Verify interactions with imported modules, especially fastapi.dependencies.models."
+   ]
+  },
+  "fastapi/logger.py": {
+   "source": "ai",
+   "headline": "Logger Configuration in FastAPI",
+   "what_breaks": [
+    "fastapi/openapi/models.py \u2014 relies on logger for error reporting",
+    "fastapi/dependencies/utils.py \u2014 uses logger for dependency resolution logs",
+    "fastapi/telemetry/_runtime.py \u2014 depends on logger for telemetry data"
+   ],
+   "why": "This file establishes the logging configuration for the FastAPI framework. Changes here can impact error handling and telemetry across multiple dependent modules.",
+   "checklist": [
+    "Review logging levels and handlers in this file.",
+    "Check for any changes in logger name usage across imports.",
+    "Ensure consistency with logging practices in dependent files.",
+    "Confirm that logger initialization does not introduce performance issues."
+   ]
+  },
+  "fastapi/types.py": {
+   "source": "ai",
+   "headline": "Key Types and Imports in fastapi/types.py",
+   "what_breaks": [
+    "fastapi/_compat/v2.py \u2014 relies on DecoratedCallable",
+    "fastapi/dependencies/models.py \u2014 relies on ModelNameMap",
+    "fastapi/encoders.py \u2014 relies on UnionType"
+   ],
+   "why": "This file defines critical type aliases and imports that are utilized across multiple modules in FastAPI. Changes here could disrupt type consistency and functionality in dependent files.",
+   "checklist": [
+    "Review changes to DecoratedCallable and its usage.",
+    "Ensure ModelNameMap remains compatible with dependent models.",
+    "Verify that UnionType is correctly referenced in encoders."
+   ]
+  }
+ },
+ "unblock": {
+  "fastapi/routing.py": {
+   "source": "ai",
+   "headline": "Frequent Fixes Indicate Underlying Issues",
+   "diagnosis": "The recurring theme in the commit messages highlights numerous bug fixes related to parameter handling and endpoint behavior. This suggests that the code in `fastapi/routing.py` may be overly complex or poorly structured, leading to frequent regressions and misunderstandings in how parameters and dependencies are managed.",
+   "plan": [
+    "Conduct a detailed code review of the parameter handling logic in `fastapi/routing.py`, focusing on the methods related to `iter_route_contexts()` and `include_router()`.",
+    "Identify and document the specific areas of the code that are causing confusion or errors, particularly around the handling of query, header, and cookie parameters.",
+    "Propose refactoring strategies to simplify the parameter management logic, potentially breaking down complex functions into smaller, more manageable pieces.",
+    "Implement unit tests that cover the identified problematic areas to ensure that future changes do not introduce similar issues."
+   ],
+   "owner_hint": "Ownership should be assigned to a core team member familiar with routing and dependency injection."
+  },
+  "fastapi/_compat/v2.py": {
+   "source": "ai",
+   "headline": "Frequent Reworks on Compatibility Layer",
+   "diagnosis": "The file fastapi/_compat/v2.py is undergoing frequent changes, primarily due to ongoing adjustments for compatibility with Pydantic v2. The recurring theme in the commit messages indicates a struggle with maintaining compatibility and fixing issues related to Pydantic's evolving API.",
+   "plan": [
+    "Conduct a thorough review of all recent changes to identify specific areas in the code that are causing compatibility issues with Pydantic v2.",
+    "Establish a clear set of guidelines for how to handle Pydantic's deprecations and changes, ensuring that future modifications are consistent and well-documented.",
+    "Create a dedicated test suite that specifically targets the compatibility layer to catch issues early in the development process.",
+    "Assign a single owner or a small team to maintain this file, ensuring that changes are made with a comprehensive understanding of the dependencies and implications."
+   ],
+   "owner_hint": "Ownership should be centralized to reduce bus factor and improve accountability."
+  },
+  "fastapi/openapi/models.py": {
+   "source": "ai",
+   "headline": "Frequent Reworks in OpenAPI Models",
+   "diagnosis": "The file 'fastapi/openapi/models.py' is undergoing continuous rework primarily due to compatibility issues with Pydantic versions and type handling. The commit history reveals a pattern of dropping support for older versions and upgrading internal types, indicating instability in the model's structure.",
+   "plan": [
+    "Conduct a thorough review of all recent changes related to Pydantic compatibility to identify specific breaking changes that require adjustments in the OpenAPI models.",
+    "Establish a comprehensive suite of tests that cover various Pydantic versions to ensure backward compatibility and catch issues early in the development cycle.",
+    "Refactor the code to isolate the parts that frequently change due to Pydantic updates, potentially creating a wrapper or adapter layer to manage version differences more gracefully.",
+    "Engage with the community to gather feedback on the changes and ensure that the model meets user needs without frequent breaking changes."
+   ],
+   "owner_hint": "Ownership should be shared among the core team to mitigate bus factor risks."
+  },
+  "fastapi/dependencies/utils.py": {
+   "source": "ai",
+   "headline": "Frequent Reworks in Form Handling Logic",
+   "diagnosis": "The recent commit messages indicate a recurring theme of fixing and enhancing form handling, particularly around optional and nullable fields. This suggests that the current implementation may have underlying issues or complexities that are not well understood or documented, leading to frequent modifications.",
+   "plan": [
+    "Conduct a thorough review of the form handling logic in utils.py, focusing on the areas related to optional and nullable fields.",
+    "Identify any patterns or common errors in the recent commits to understand the root causes of the issues being addressed.",
+    "Engage with the authors of the recent commits to gather insights on their experiences and challenges with the current implementation.",
+    "Document the findings and propose a refactor of the form handling logic to simplify and clarify its behavior, reducing the need for future reworks."
+   ],
+   "owner_hint": "Ownership should be shared among the core team to mitigate bus factor."
+  },
+  "fastapi/encoders.py": {
+   "source": "ai",
+   "headline": "Frequent Rework on Pydantic Compatibility Issues",
+   "diagnosis": "The recurring theme in the commit messages indicates ongoing issues with Pydantic compatibility, particularly with the transition from version 1 to version 2. The specific parts of the code that are frequently modified include the `jsonable_encoder` function and the handling of `Decimal` types, which are causing multiple bug fixes and adjustments.",
+   "plan": [
+    "Conduct a thorough review of the `jsonable_encoder` function to identify all dependencies on Pydantic v1 and v2 features.",
+    "Implement a comprehensive test suite that covers all edge cases related to `Decimal` encoding and Pydantic model compatibility.",
+    "Establish clear guidelines for handling deprecations and version transitions in the codebase to minimize future reworks.",
+    "Assign a dedicated team member to monitor Pydantic updates and ensure timely adjustments in the codebase."
+   ],
+   "owner_hint": "Ownership should be assigned to a single engineer to reduce bus factor."
+  },
+  "fastapi/security/oauth2.py": {
+   "source": "ai",
+   "headline": "Frequent Rework of OAuth2 Security Components",
+   "diagnosis": "The OAuth2 security components are undergoing frequent changes, primarily due to typos, documentation updates, and minor bug fixes. This indicates a lack of clarity in the initial implementation and documentation, leading to ongoing adjustments.",
+   "plan": [
+    "Conduct a thorough review of the OAuth2PasswordRequestForm class and its associated documentation to identify and correct any unclear or ambiguous sections.",
+    "Establish a clear set of guidelines for commit messages to ensure that changes are well-documented and easily traceable, reducing the need for future reworks.",
+    "Implement automated tests to cover the critical functionalities of the OAuth2 components, ensuring that any changes do not introduce new issues.",
+    "Organize a code review session with the team to discuss the recent changes and gather feedback on potential improvements to the OAuth2 implementation."
+   ],
+   "owner_hint": "The team responsible for the OAuth2 implementation should take ownership of these changes."
+  },
+  "fastapi/utils.py": {
+   "source": "ai",
+   "headline": "Frequent Rework of FastAPI Utils File",
+   "diagnosis": "The file fastapi/utils.py is undergoing frequent rework primarily due to ongoing changes in Pydantic support and internal type management. The recurring theme in the commit messages indicates a struggle to maintain compatibility with both Pydantic v1 and v2, leading to multiple fixes and refactors.",
+   "plan": [
+    "Conduct a thorough review of all recent commits to identify specific areas of instability related to Pydantic compatibility.",
+    "Create a dedicated compatibility layer or abstraction to handle differences between Pydantic v1 and v2, minimizing direct code changes in fastapi/utils.py.",
+    "Implement comprehensive unit tests targeting the create_model_field function and other critical areas to ensure stability during future changes.",
+    "Establish a clear deprecation policy for Pydantic v1 support, ensuring all team members are aware of the timeline and implications."
+   ],
+   "owner_hint": "Ownership should be assigned to a single engineer to reduce bus factor."
+  },
+  "fastapi/__init__.py": {
+   "source": "ai",
+   "headline": "Frequent Rework of fastapi/__init__.py",
+   "diagnosis": "The commit history indicates a pattern of frequent version releases without significant changes to the core functionality of fastapi/__init__.py. The recurring theme in the commit messages suggests that the file is being updated primarily for versioning purposes, leading to unnecessary rework.",
+   "plan": [
+    "Review the necessity of version updates in fastapi/__init__.py and establish a clear guideline for when to increment the version.",
+    "Consolidate version release commits to reduce noise in the commit history, potentially batching changes into fewer commits.",
+    "Implement a review process for changes made to fastapi/__init__.py to ensure that only meaningful updates are made.",
+    "Engage with the authors to clarify expectations around versioning and the impact of frequent changes on the codebase."
+   ],
+   "owner_hint": "Ownership should be shared among the three distinct authors to distribute the bus factor."
+  },
+  "fastapi/params.py": {
+   "source": "ai",
+   "headline": "Frequent Rework of Parameter Handling Code",
+   "diagnosis": "The recurring theme in the commit messages indicates ongoing adjustments to parameter handling, particularly regarding Pydantic integration and validation options. The code related to the `Param` class and its initialization parameters is often the focal point of these changes, suggesting instability in how parameters are defined and validated.",
+   "plan": [
+    "Conduct a code review focusing on the `Param` class and its initialization parameters to identify potential design flaws or areas of confusion.",
+    "Establish clear guidelines for parameter handling and validation that align with the latest Pydantic features, ensuring backward compatibility where necessary.",
+    "Implement comprehensive unit tests specifically targeting the `Param` class and its interactions with request parameters to catch issues early in the development cycle.",
+    "Schedule regular review sessions to assess the impact of changes on dependent files and gather feedback from the team to continuously improve the parameter handling approach."
+   ],
+   "owner_hint": "The ownership of this code should be assigned to a dedicated team member to reduce the bus factor."
+  },
+  "fastapi/exceptions.py": {
+   "source": "ai",
+   "headline": "Frequent Rework of HTTPException Class",
+   "diagnosis": "The HTTPException class in fastapi/exceptions.py is undergoing frequent changes, primarily due to evolving type annotations and dependency updates. The recurring theme in commit messages indicates a focus on improving type safety and documentation, which may lead to instability in its implementation.",
+   "plan": [
+    "Conduct a code review of the HTTPException class to identify areas that frequently change and assess their stability.",
+    "Establish a set of clear guidelines for type annotations and documentation practices to minimize future reworks.",
+    "Implement comprehensive unit tests that cover various scenarios of the HTTPException class to ensure its reliability during changes.",
+    "Schedule regular code audits to monitor the impact of changes on dependent files and ensure consistency across the codebase."
+   ],
+   "owner_hint": "The team responsible for the HTTPException class should be clearly defined to reduce the bus factor."
+  },
+  "fastapi/applications.py": {
+   "source": "ai",
+   "headline": "Frequent Reworks in FastAPI Applications",
+   "diagnosis": "The recurring theme in the commit messages indicates a focus on deprecating old parameters and enhancing OpenTelemetry support. This suggests that the code is undergoing significant changes to improve its architecture and telemetry capabilities, leading to instability and frequent reworks.",
+   "plan": [
+    "Conduct a thorough review of the recent changes related to OpenTelemetry and deprecated parameters to identify potential areas of instability.",
+    "Establish a clear deprecation policy and timeline for removing old features to minimize disruptions in the codebase.",
+    "Implement comprehensive testing around the affected areas, particularly focusing on telemetry and routing functionalities to ensure stability.",
+    "Engage with the community to gather feedback on the changes and identify any pain points that may lead to further reworks."
+   ],
+   "owner_hint": "Ownership should be shared among the core maintainers to distribute the bus factor."
+  },
+  "fastapi/openapi/utils.py": {
+   "source": "ai",
+   "headline": "Frequent Rework on OpenAPI Parameter Handling",
+   "diagnosis": "The file 'fastapi/openapi/utils.py' is undergoing frequent rework primarily due to ongoing changes and enhancements related to query, header, and cookie parameter models. This is evidenced by multiple recent commits aimed at adding support for these parameters, alongside bug fixes and performance improvements.",
+   "plan": [
+    "Conduct a thorough review of the recent commits to identify specific areas of the code that are causing instability or confusion, particularly around parameter handling.",
+    "Establish a clear set of guidelines and documentation for implementing changes related to OpenAPI parameter models to minimize misunderstandings and errors.",
+    "Implement a robust testing framework specifically targeting the functionalities related to query, header, and cookie parameters to catch issues early in the development process.",
+    "Assign a dedicated team member to oversee changes in this area, ensuring consistency and reducing the likelihood of conflicting changes."
+   ],
+   "owner_hint": "Ownership should be assigned to a single developer to reduce bus factor."
+  },
+  "fastapi/logger.py": {
+   "source": "ai",
+   "headline": "Frequent Logger Refactoring Issues",
+   "diagnosis": "The recent commit message indicates a refactor of the logging system, suggesting ongoing issues with its implementation. The lack of multiple authors and the singular focus on logging in the commit history points to a potential lack of consensus or clarity on how logging should be handled.",
+   "plan": [
+    "Conduct a code review session with the author to discuss the objectives of the logging refactor and gather feedback from other team members.",
+    "Establish clear logging guidelines and standards that define how logging should be implemented across the project.",
+    "Implement unit tests for the logging functionality to ensure that changes do not introduce regressions or unexpected behavior.",
+    "Document the logging strategy and any changes made during the refactor to provide clarity for future contributions."
+   ],
+   "owner_hint": "The current author is the sole owner, increasing risk if they leave."
+  },
+  "fastapi/types.py": {
+   "source": "ai",
+   "headline": "Frequent Type Updates Cause Rework",
+   "diagnosis": "The recurring theme in the commit messages indicates ongoing adjustments to type annotations and compatibility with newer Python and Pydantic versions. This suggests that the file is not stable, leading to frequent rework as dependencies and language features evolve.",
+   "plan": [
+    "Conduct a thorough review of all type annotations in fastapi/types.py to ensure they are consistent and aligned with current Python and Pydantic standards.",
+    "Establish a clear guideline for type updates to minimize future changes, including documentation on when and how to modify types.",
+    "Implement a comprehensive set of unit tests specifically targeting the type-related functionalities to catch issues early in the development cycle.",
+    "Schedule regular code reviews focused on type changes to ensure that any modifications are necessary and well-justified."
+   ],
+   "owner_hint": "Ownership should be shared among the two authors to distribute the bus factor."
+  }
+ },
+ "ask": {
+  "which files are most fragile?": {
+   "answer": "The most fragile files in the codebase are fastapi/routing.py, fastapi/_compat/v2.py, and fastapi/openapi/models.py, with magnitudes of 7.8 and 7.5 respectively. These files have a high risk of breaking when changes are made, indicated by their blast scores of 7 and 22. Additionally, they have a significant amount of churn, with fastapi/routing.py having 193 commits, suggesting frequent modifications.",
+   "files": [
+    "fastapi/routing.py",
+    "fastapi/_compat/v2.py",
+    "fastapi/openapi/models.py"
+   ],
+   "dropped": 0
+  },
+  "where is hidden coupling?": {
+   "answer": "Hidden coupling exists between the following files: fastapi/security/api_key.py and fastapi/security/oauth2.py (17 commits), fastapi/security/oauth2.py and fastapi/security/open_id_connect_url.py (17 commits), fastapi/security/api_key.py and fastapi/security/http.py (16 commits), fastapi/security/http.py and fastapi/security/oauth2.py (16 commits), fastapi/security/api_key.py and fastapi/security/open_id_connect_url.py (15 commits), fastapi/security/http.py and fastapi/security/open_id_connect_url.py (15 commits), fastapi/dependencies/utils.py and fastapi/_compat/__init__.py (6 commits), fastapi/applications.py and fastapi/security/base.py (4 commits), fastapi/routing.py and fastapi/security/base.py (4 commits), fastapi/routing.py and fastapi/openapi/constants.py (4 commits.",
+   "files": [
+    "fastapi/security/api_key.py",
+    "fastapi/security/oauth2.py",
+    "fastapi/security/open_id_connect_url.py",
+    "fastapi/security/http.py",
+    "fastapi/dependencies/utils.py",
+    "fastapi/_compat/__init__.py",
+    "fastapi/applications.py",
+    "fastapi/security/base.py",
+    "fastapi/routing.py",
+    "fastapi/openapi/constants.py"
+   ],
+   "dropped": 0
+  },
+  "what would break if i refactor the core?": {
+   "answer": "Refactoring the core of the FastAPI codebase could potentially break several files, particularly those marked as 'blast'. The files most at risk include fastapi/routing.py, fastapi/_compat/v2.py, and fastapi/openapi/models.py, which have high blast counts of 7, 22, and 22 respectively. Additionally, fastapi/dependencies/utils.py and fastapi/encoders.py also have significant blast risks, indicating that changes in the core could lead to issues in these files.",
+   "files": [
+    "fastapi/routing.py",
+    "fastapi/_compat/v2.py",
+    "fastapi/openapi/models.py",
+    "fastapi/dependencies/utils.py",
+    "fastapi/encoders.py"
+   ],
+   "dropped": 0
+  }
+ }
+}

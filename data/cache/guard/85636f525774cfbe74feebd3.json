@@ -1,0 +1,15 @@
+{
+ "headline": "Logger Configuration in FastAPI",
+ "what_breaks": [
+  "fastapi/openapi/models.py \u2014 relies on logger for error reporting",
+  "fastapi/dependencies/utils.py \u2014 uses logger for dependency resolution logs",
+  "fastapi/telemetry/_runtime.py \u2014 depends on logger for telemetry data"
+ ],
+ "why": "This file establishes the logging configuration for the FastAPI framework. Changes here can impact error handling and telemetry across multiple dependent modules.",
+ "checklist": [
+  "Review logging levels and handlers in this file.",
+  "Check for any changes in logger name usage across imports.",
+  "Ensure consistency with logging practices in dependent files.",
+  "Confirm that logger initialization does not introduce performance issues."
+ ]
+}

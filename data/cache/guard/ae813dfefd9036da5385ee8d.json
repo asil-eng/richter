@@ -1,0 +1,14 @@
+{
+ "headline": "Guard Note for fastapi/_compat/v2.py Modifications",
+ "what_breaks": [
+  "fastapi/openapi/models.py \u2014 relies on GenerateJsonSchema",
+  "fastapi/params.py \u2014 relies on evaluate_forwardref",
+  "fastapi/datastructures.py \u2014 relies on PydanticUndefined"
+ ],
+ "why": "This file contains critical compatibility functions and classes that are essential for the integration with Pydantic. Changes here can affect multiple components relying on the JSON schema generation and parameter evaluation.",
+ "checklist": [
+  "Review changes to GenerateJsonSchema for impact on JSON schema generation.",
+  "Check evaluate_forwardref for any alterations in parameter handling.",
+  "Ensure compatibility with Pydantic versions referenced in comments."
+ ]
+}

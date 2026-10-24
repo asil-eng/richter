@@ -1,0 +1,13 @@
+{
+ "headline": "OAuth2PasswordRequestForm Dependency Class",
+ "what_breaks": [
+  "fastapi/dependencies/utils.py \u2014 relies on OAuth2PasswordRequestForm",
+  "fastapi/security/__init__.py \u2014 imports OAuth2PasswordRequestForm"
+ ],
+ "why": "This file contains the OAuth2PasswordRequestForm class, which is crucial for handling OAuth2 password flow. Changes here can affect multiple dependent files that rely on this class for authentication functionality.",
+ "checklist": [
+  "Review changes to the OAuth2PasswordRequestForm class methods",
+  "Check the import statements in fastapi/dependencies/utils.py for dependencies",
+  "Ensure compatibility with fastapi/security/__init__.py where it's imported"
+ ]
+}

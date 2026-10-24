@@ -43,11 +43,39 @@ export async function loadSnapshots(slug: string): Promise<Snapshots | null> {
   }
 }
 
-export const fetchNote = (slug: string, file: string, kind: 'guard' | 'unblock') =>
-  postJSON<Note>('/api/note', { slug, file, kind })
+// Precomputed AI notes (data/notes/<slug>.json) back the static demo when the API is
+// unreachable or has no key. Live API answers always take priority.
+interface NotesBundle {
+  guard: Record<string, Note>
+  unblock: Record<string, Note>
+  ask: Record<string, AskResult>
+}
+const bundles = new Map<string, Promise<NotesBundle | null>>()
+function notesBundle(slug: string) {
+  if (!bundles.has(slug)) bundles.set(slug, getJSON<NotesBundle>(`/notes/${slug}.json`).catch(() => null))
+  return bundles.get(slug)!
+}
+const normalize = (q: string) => q.toLowerCase().split(/\s+/).filter(Boolean).join(' ')
 
-export const askRepo = (slug: string, question: string) =>
-  postJSON<AskResult>('/api/ask', { slug, question })
+export async function fetchNote(slug: string, file: string, kind: 'guard' | 'unblock'): Promise<Note> {
+  try {
+    return await postJSON<Note>('/api/note', { slug, file, kind })
+  } catch (e) {
+    const hit = (await notesBundle(slug))?.[kind][file]
+    if (hit) return { ...hit, cached: true }
+    throw e
+  }
+}
+
+export async function askRepo(slug: string, question: string): Promise<AskResult> {
+  try {
+    return await postJSON<AskResult>('/api/ask', { slug, question })
+  } catch (e) {
+    const hit = (await notesBundle(slug))?.ask[normalize(question)]
+    if (hit) return { ...hit, cached: true }
+    throw e
+  }
+}
 
 export interface Job {
   id: string

@@ -1,0 +1,15 @@
+{
+ "headline": "Guard Note for rich/_unicode_data/__init__.py",
+ "what_breaks": [
+  "rich/cells.py \u2014 relies on load() returning CellTable",
+  "rich/_unicode_data/_versions.py \u2014 VERSIONS must be correctly defined",
+  "rich/_unicode_data/unicode*.py \u2014 dynamic imports depend on version strings"
+ ],
+ "why": "This file is crucial for loading Unicode data into the CellTable. Any changes to version handling or the load function can affect multiple dependent files.",
+ "checklist": [
+  "Verify changes to load() do not alter CellTable structure",
+  "Ensure VERSIONS in _versions.py remains accurate and complete",
+  "Test dynamic imports for all defined Unicode versions",
+  "Check for any changes in the behavior of _parse_version()"
+ ]
+}

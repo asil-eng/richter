@@ -1,0 +1,13 @@
+{
+ "headline": "Critical version data for Unicode handling",
+ "what_breaks": [
+  "rich/_unicode_data/__init__.py \u2014 relies on VERSIONS for version management"
+ ],
+ "why": "This file contains the VERSIONS tuple that is crucial for managing Unicode versions across the rich library. Any changes to this data could impact all modules that depend on Unicode versioning.",
+ "checklist": [
+  "Verify the integrity of the VERSIONS tuple format.",
+  "Ensure all version strings are correctly formatted and valid.",
+  "Check for any dependencies in rich/_unicode_data/__init__.py that may be affected.",
+  "Document any changes made to the VERSIONS data."
+ ]
+}

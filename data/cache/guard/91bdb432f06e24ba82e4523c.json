@@ -1,0 +1,14 @@
+{
+ "headline": "Guard note for rich/traceback.py edits",
+ "what_breaks": [
+  "rich/console.py \u2014 relies on Console class for output",
+  "rich/_extension.py \u2014 may depend on traceback formatting",
+  "rich/logging.py \u2014 integrates with traceback for error logging"
+ ],
+ "why": "This file is critical for handling and formatting tracebacks in the Rich library. Changes here can affect how exceptions are displayed across multiple components that rely on this functionality.",
+ "checklist": [
+  "Review changes to the install function and its parameters",
+  "Check impact on Console and its options in rich/console.py",
+  "Ensure compatibility with traceback handling in rich/logging.py"
+ ]
+}

@@ -1,0 +1,15 @@
+{
+ "headline": "Key components of rich/live.py",
+ "what_breaks": [
+  "rich/console.py \u2014 relies on Console class for rendering",
+  "rich/jupyter.py \u2014 uses JupyterMixin for Jupyter support",
+  "rich/live_render.py \u2014 Live class depends on LiveRender for updates"
+ ],
+ "why": "This file is central to the live display functionality, which is heavily dependent on the Console and JupyterMixin classes. Changes here can affect the rendering and updating behavior across multiple components in the rich library.",
+ "checklist": [
+  "Verify changes to Live class constructor parameters",
+  "Check interactions with Console and JupyterMixin classes",
+  "Ensure thread safety in _RefreshThread class",
+  "Review any modifications to refresh logic in Live class"
+ ]
+}

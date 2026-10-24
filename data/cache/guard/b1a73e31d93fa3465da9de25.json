@@ -1,0 +1,16 @@
+{
+ "headline": "Key exceptions for FastAPI error handling",
+ "what_breaks": [
+  "fastapi/telemetry/_api.py \u2014 relies on HTTPException",
+  "fastapi/security/oauth2.py \u2014 relies on HTTPException",
+  "fastapi/routing.py \u2014 relies on HTTPException",
+  "fastapi/responses.py \u2014 relies on HTTPException"
+ ],
+ "why": "The HTTPException and WebSocketException classes are critical for error handling in FastAPI. Changes to these classes can affect how errors are communicated to clients across multiple dependent modules.",
+ "checklist": [
+  "Review modifications to HTTPException and WebSocketException constructors.",
+  "Ensure that any changes maintain compatibility with existing error handling patterns.",
+  "Check for updates in the documentation links provided in the class docstrings.",
+  "Verify that the examples remain accurate and functional after changes."
+ ]
+}

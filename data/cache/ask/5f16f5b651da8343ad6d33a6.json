@@ -1,0 +1,10 @@
+{
+ "answer": "Refactoring the core of the FastAPI codebase could potentially break several files, particularly those marked as 'blast'. The files most at risk include fastapi/routing.py, fastapi/_compat/v2.py, and fastapi/openapi/models.py, which have high blast counts of 7, 22, and 22 respectively. Additionally, fastapi/dependencies/utils.py and fastapi/encoders.py also have significant blast risks, indicating that changes in the core could lead to issues in these files.",
+ "files": [
+  "fastapi/routing.py",
+  "fastapi/_compat/v2.py",
+  "fastapi/openapi/models.py",
+  "fastapi/dependencies/utils.py",
+  "fastapi/encoders.py"
+ ]
+}

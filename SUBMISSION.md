@@ -9,7 +9,7 @@ Complete this file during the hackathon and use it to prepare your submission th
 - **Code repository URL:** https://github.com/asil-eng/richter
 - **Final submitted implementation commit SHA:** TODO — participant to record at submission
 - **Working demo URL or local demo steps:** Local — `cd frontend && npm install && npm run dev`, open http://localhost:5173. The three demo repos load without the backend; start `cd backend && .venv/bin/uvicorn richter.api:app --port 8000` for notes, ask-the-repo and analyzing new repos.
-- **Demo access requirements:** None for the demo repos. `OPENAI_API_KEY` in `.env` enables AI notes and ask-the-repo.
+- **Demo access requirements:** None for the demo repos (precomputed AI notes included). `OPENAI_API_KEY` in `.env` enables notes for other files and free-form questions.
 
 ## Participants
 
@@ -27,7 +27,7 @@ Participate solo or in a team of up to 4. Remove unused rows.
 - **Start command:** `cd backend && .venv/bin/uvicorn richter.api:app --port 8000` and `cd frontend && npm run dev`
 - **Demo walkthrough:** (1) rich loads with its report card (grade D, M 6.5). (2) Press `2` for the risk map, click `cells.py` in the hottest list → blast-radius cascade over 88 dependents. (3) Toggle *Ghost edges*. (4) Press `3` for the code city, press ▶ on the timeline to watch 2019→2026. (5) Switch to fastapi/black in the top bar. (6) With a key: ask “which files are most fragile?”.
 - **Checks performed and results:** backend `pytest` 12 passed; frontend `tsc -b` clean, `npm run build` succeeds, `oxlint src` 0 warnings; UI driven in headless Chrome via Playwright for every view with no page errors.
-- **Known limitations or incomplete features:** Python repos only; AI notes/ask untested end-to-end without an API key (rule-based fallback verified); fix detection is a commit-message regex; first ingest of large repos is slow. See README → Scope and limitations.
+- **Known limitations or incomplete features:** Python repos only; free-form ask-the-repo needs an API key (suggested questions and 14 files per demo repo are precomputed); fix detection is a commit-message regex; first ingest of large repos is slow. See README → Scope and limitations.
 - **Libraries, APIs, and public datasets used:** FastAPI, GitPython, networkx, NumPy/SciPy, React, Vite, d3-force, three.js, IBM Plex Mono and Archivo (Fontsource), OpenAI API; demo data derived from public repos Textualize/rich, fastapi/fastapi, psf/black.
 - **AI usage record:** [AI_USAGE.md](AI_USAGE.md)
 - **Development change log:** [CHANGELOG.md](CHANGELOG.md)

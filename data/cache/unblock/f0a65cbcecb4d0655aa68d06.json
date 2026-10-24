@@ -1,0 +1,11 @@
+{
+ "headline": "Frequent Rework on OpenAPI Parameter Handling",
+ "diagnosis": "The file 'fastapi/openapi/utils.py' is undergoing frequent rework primarily due to ongoing changes and enhancements related to query, header, and cookie parameter models. This is evidenced by multiple recent commits aimed at adding support for these parameters, alongside bug fixes and performance improvements.",
+ "plan": [
+  "Conduct a thorough review of the recent commits to identify specific areas of the code that are causing instability or confusion, particularly around parameter handling.",
+  "Establish a clear set of guidelines and documentation for implementing changes related to OpenAPI parameter models to minimize misunderstandings and errors.",
+  "Implement a robust testing framework specifically targeting the functionalities related to query, header, and cookie parameters to catch issues early in the development process.",
+  "Assign a dedicated team member to oversee changes in this area, ensuring consistency and reducing the likelihood of conflicting changes."
+ ],
+ "owner_hint": "Ownership should be assigned to a single developer to reduce bus factor."
+}

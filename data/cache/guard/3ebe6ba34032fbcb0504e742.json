@@ -1,0 +1,14 @@
+{
+ "headline": "Guard note for fastapi/params.py edits",
+ "what_breaks": [
+  "fastapi/routing.py \u2014 relies on Param class for route parameters",
+  "fastapi/dependencies/utils.py \u2014 uses Param for dependency injection",
+  "fastapi/openapi/utils.py \u2014 depends on Param for OpenAPI schema generation"
+ ],
+ "why": "This file contains the Param class, which is crucial for defining API parameter types and their validation. Changes here can affect routing, dependency injection, and OpenAPI documentation generation across multiple files.",
+ "checklist": [
+  "Review changes to the Param class constructor and its attributes.",
+  "Check for any modifications to the ParamTypes Enum.",
+  "Ensure compatibility with fastapi/routing.py and fastapi/dependencies/utils.py."
+ ]
+}

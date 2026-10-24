@@ -1,0 +1,14 @@
+{
+ "headline": "Console class dependencies and structure",
+ "what_breaks": [
+  "rich/text.py \u2014 relies on Console for rendering text",
+  "rich/segment.py \u2014 depends on Console for segment management",
+  "rich/color.py \u2014 uses Console for color management"
+ ],
+ "why": "This file serves as a core component for rendering in the Rich library, heavily utilized by multiple modules. Changes here can affect the rendering capabilities and overall output of the console interface.",
+ "checklist": [
+  "Review changes to ConsoleOptions and ConsoleDimensions classes",
+  "Check interactions with rich/text.py and rich/segment.py",
+  "Ensure compatibility with existing ColorSystem implementations"
+ ]
+}

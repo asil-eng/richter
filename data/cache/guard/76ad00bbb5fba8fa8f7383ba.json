@@ -1,0 +1,14 @@
+{
+ "headline": "Guard note for rich/pretty.py edits",
+ "what_breaks": [
+  "rich/console.py \u2014 relies on Console class",
+  "rich/_inspect.py \u2014 uses inspect functions",
+  "rich/_extension.py \u2014 depends on RichRenderable"
+ ],
+ "why": "This file serves as a core utility for rendering objects in Rich. Changes here could impact multiple components that rely on its rendering capabilities.",
+ "checklist": [
+  "Review changes to functions like _ipy_display_hook and _is_dataclass_repr",
+  "Check interactions with RichRenderable in rich/_extension.py",
+  "Ensure compatibility with Console class in rich/console.py"
+ ]
+}

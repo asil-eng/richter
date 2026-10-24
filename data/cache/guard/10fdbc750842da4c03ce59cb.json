@@ -1,0 +1,14 @@
+{
+ "headline": "Node/Leaf Utility Functions in Black",
+ "what_breaks": [
+  "src/black/__init__.py \u2014 relies on core functionality from this file",
+  "src/black/parsing.py \u2014 uses Node/Leaf transformations defined here",
+  "src/black/strings.py \u2014 depends on string manipulation utilities from this file"
+ ],
+ "why": "This file contains critical utility functions for Node/Leaf transformations used throughout the Black codebase. Changes here can affect multiple components that rely on these transformations for parsing and formatting.",
+ "checklist": [
+  "Review changes to the Visitor class and its visit method",
+  "Check for modifications to token definitions and their usage",
+  "Ensure compatibility with dependent files like parsing.py and strings.py"
+ ]
+}

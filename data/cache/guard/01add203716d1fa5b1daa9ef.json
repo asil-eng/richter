@@ -1,0 +1,14 @@
+{
+ "headline": "Guard note for src/black/trans.py edits",
+ "what_breaks": [
+  "src/black/linegen.py \u2014 relies on transformers defined here",
+  "src/black/__init__.py \u2014 imports functionality from this module",
+  "src/black/nodes.py \u2014 uses node types and functions defined here"
+ ],
+ "why": "This file contains critical transformer functions that are directly used by src/black/linegen.py. Any changes to these transformers can affect the behavior of multiple dependent files.",
+ "checklist": [
+  "Review hug_power_op for dependencies on token types",
+  "Check interactions with Line and Mode classes from black.lines",
+  "Ensure no changes break the CannotTransform exception handling"
+ ]
+}

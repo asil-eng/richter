@@ -1,0 +1,14 @@
+{
+ "headline": "Key Types and Imports in fastapi/types.py",
+ "what_breaks": [
+  "fastapi/_compat/v2.py \u2014 relies on DecoratedCallable",
+  "fastapi/dependencies/models.py \u2014 relies on ModelNameMap",
+  "fastapi/encoders.py \u2014 relies on UnionType"
+ ],
+ "why": "This file defines critical type aliases and imports that are utilized across multiple modules in FastAPI. Changes here could disrupt type consistency and functionality in dependent files.",
+ "checklist": [
+  "Review changes to DecoratedCallable and its usage.",
+  "Ensure ModelNameMap remains compatible with dependent models.",
+  "Verify that UnionType is correctly referenced in encoders."
+ ]
+}

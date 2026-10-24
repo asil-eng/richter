@@ -13,7 +13,7 @@ Richter reads a GitHub repo's import graph and its whole git history. It shows w
 Tools for visualizing code already exist ([CodeScene](https://codescene.com)'s hotspot analysis, [CodeCity](https://wettel.github.io/codecity.html), [Gource](https://gource.io)). Richter goes further: it **predicts the blast radius** of a change and **tells you what to do about it**.
 
 - **Blast-radius cascade.** Click any file and Richter follows the imports *backwards* through the whole graph: every file that depends on it, directly or through other files. The result plays out as an animated shockwave, colored by how many import hops each dependent is away (red → orange → amber).
-- **Guard notes and unblock plans.** For any file, an LLM (`gpt-4o-mini`) writes a short note: *"touch carefully: here's what breaks and why"* or *"why this keeps getting reworked, and how to unblock it."* The note is based only on that file's metrics, the files that depend on it, and a short code excerpt. These are notes, not code. Responses are cached on disk, so a demo replays instantly. Without an API key you get a clearly labelled rule-based note instead.
+- **Guard notes and unblock plans.** For any file, an LLM (`gpt-4o-mini`) writes a short note: *"touch carefully: here's what breaks and why"* or *"why this keeps getting reworked, and how to unblock it."* The note is based only on that file's metrics, the files that depend on it, and a short code excerpt. These are notes, not code. Responses are cached on disk, and the demo repos ship precomputed AI notes for their 14 riskiest files, so the demo shows real AI output even without a key. For any other file, no key means a clearly labelled rule-based note instead.
 - **Time-travel.** Scrub through the repo's whole history and watch the 3D city grow and redden as rework builds up. The demo repos have 28 precomputed snapshots, each scored by the same engine.
 - **Ghost edges (hidden coupling).** These are pairs of files that are repeatedly committed together but never import each other. In fastapi, the `security/*` modules (`api_key.py`, `oauth2.py`, `http.py`, `open_id_connect_url.py`) changed together up to 17 times with no import between them.
 
@@ -110,6 +110,7 @@ Optional: `cp .env.example .env` and set `OPENAI_API_KEY` to enable AI guard not
 cd backend
 .venv/bin/python -m richter.cli analyze https://github.com/owner/repo [--include-tests]
 .venv/bin/python -m richter.cli snapshots https://github.com/owner/repo
+.venv/bin/python -m richter.cli notes https://github.com/owner/repo      # precompute AI notes (needs key)
 .venv/bin/python -m richter.cli backtest https://github.com/owner/repo   # needs snapshots
 .venv/bin/python -m pytest -q                  # 12 tests
 ```
@@ -119,7 +120,7 @@ Keys: `1` graph · `2` risk map · `3` city · `Esc` clear selection.
 ## Scope and limitations
 
 - **Works on Python today.** Import parsing uses Python's `ast` module. Everything after the parser is language-agnostic (graph, git stats, scoring, views), so other languages need only a new import parser, for example one built on [tree-sitter](https://tree-sitter.github.io).
-- **AI notes need a key.** No AI responses are committed yet. The demo shows the labelled rule-based fallback until `OPENAI_API_KEY` is set, and ask-the-repo returns a clear error without a key.
+- **AI notes need a key for anything outside the bundle.** The demo repos include precomputed `gpt-4o-mini` notes (14 files each) and answers to the three suggested questions. Other files fall back to a labelled rule-based note, and free-form questions need `OPENAI_API_KEY`.
 - **Fix detection** is a regex over commit messages (`fix`, `bug`, `revert`, `hotfix`, `regression`, `crash`, `broken`).
 - **Importance only counts imports inside the repo.** A library's public entry points look less central than they really are, because their callers live outside the repo.
 - **First ingest** of a large repo is slow (about 4 minutes for fastapi's 7,932 commits), because rename detection fetches file contents on demand. Later runs reuse the clone.
@@ -146,7 +147,7 @@ Keys: `1` graph · `2` risk map · `3` city · `Esc` clear selection.
 
 ### Current status
 
-- Working features: ingest, import + git parsers, risk engine, JSON model, FastAPI, 2D graph with blast-radius cascade, risk map, ghost-edge and bus-factor layers, report card, 3D code city, time-travel (precomputed for rich, fastapi, black), ask-the-repo with path validation, guard notes and unblock plans (rule-based fallback verified; AI path untested without a key).
+- Working features: ingest, import + git parsers, risk engine, JSON model, FastAPI, 2D graph with blast-radius cascade, risk map, ghost-edge and bus-factor layers, report card, 3D code city, time-travel (precomputed for rich, fastapi, black), ask-the-repo with path validation, guard notes and unblock plans (AI path verified with gpt-4o-mini; rule-based fallback verified).
 - Known limitations: see [Scope and limitations](#scope-and-limitations).
 - Libraries, APIs, and public datasets used: [FastAPI](https://fastapi.tiangolo.com), [GitPython](https://github.com/gitpython-developers/GitPython), [networkx](https://networkx.org), [NumPy](https://numpy.org)/[SciPy](https://scipy.org) (PageRank), [React](https://react.dev), [Vite](https://vite.dev), [d3-force](https://d3js.org/d3-force), [three.js](https://threejs.org), [IBM Plex Mono](https://github.com/IBM/plex) and [Archivo](https://github.com/Omnibus-Type/Archivo) via Fontsource, [OpenAI API](https://platform.openai.com). Demo data is derived from the public repositories [Textualize/rich](https://github.com/Textualize/rich), [fastapi/fastapi](https://github.com/fastapi/fastapi) and [psf/black](https://github.com/psf/black).
 

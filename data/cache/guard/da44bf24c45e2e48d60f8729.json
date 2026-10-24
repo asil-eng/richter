@@ -1,0 +1,14 @@
+{
+ "headline": "Key imports for FastAPI framework functionality",
+ "what_breaks": [
+  "fastapi/utils.py \u2014 relies on FastAPI class",
+  "fastapi/telemetry/_asgi.py \u2014 relies on HTTPException class"
+ ],
+ "why": "This file serves as the main entry point for the FastAPI framework, aggregating essential components. Changes here can impact multiple dependent files and their functionality.",
+ "checklist": [
+  "Verify changes to FastAPI class in applications.py",
+  "Check for updates in HTTPException and WebSocketException in exceptions.py",
+  "Ensure param_functions imports remain consistent with their definitions",
+  "Review any modifications to APIRouter in routing.py"
+ ]
+}

@@ -1,0 +1,14 @@
+{
+ "headline": "Key Utility Functions in fastapi/utils.py",
+ "what_breaks": [
+  "fastapi/routing.py \u2014 relies on generate_unique_id()",
+  "fastapi/dependencies/utils.py \u2014 relies on create_model_field()",
+  "fastapi/applications.py \u2014 relies on is_body_allowed_for_status_code()"
+ ],
+ "why": "This file contains critical utility functions that are directly used by multiple core components in FastAPI. Changes here could affect routing, dependency injection, and application behavior, leading to widespread issues.",
+ "checklist": [
+  "Review changes to is_body_allowed_for_status_code() for impact on response handling.",
+  "Check modifications in create_model_field() for compatibility with Pydantic models.",
+  "Ensure generate_unique_id() maintains consistent operation ID generation."
+ ]
+}

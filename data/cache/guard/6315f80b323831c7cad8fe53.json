@@ -1,0 +1,15 @@
+{
+ "headline": "Key Dependencies for FastAPI Class",
+ "what_breaks": [
+  "fastapi/__init__.py \u2014 relies on FastAPI class",
+  "fastapi/routing.py \u2014 depends on BaseRoute from FastAPI",
+  "fastapi/exception_handlers.py \u2014 uses HTTPException from FastAPI"
+ ],
+ "why": "The FastAPI class is the main entry point for creating FastAPI applications, making it crucial for the framework's functionality. Changes to this class can impact routing, exception handling, and middleware integration across multiple files.",
+ "checklist": [
+  "Review changes to the FastAPI class constructor and its parameters.",
+  "Check for modifications in telemetry handling and debug options.",
+  "Ensure compatibility with routes defined in fastapi/routing.py.",
+  "Verify interactions with exception handlers in fastapi/exception_handlers.py."
+ ]
+}

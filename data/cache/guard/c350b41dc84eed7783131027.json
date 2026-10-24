@@ -1,0 +1,16 @@
+{
+ "headline": "Key Functions and Classes in utils.py",
+ "what_breaks": [
+  "fastapi/applications.py \u2014 relies on OpenAPI and routing",
+  "fastapi/dependencies/models.py \u2014 uses Dependant and related functions",
+  "fastapi/openapi/models.py \u2014 depends on OpenAPI structure",
+  "fastapi/utils.py \u2014 utilizes utility functions for operations"
+ ],
+ "why": "This file contains critical functions and data structures for OpenAPI dependency handling, which are essential for routing and request validation. Changes here can affect how dependencies are resolved and how OpenAPI schemas are generated across the application.",
+ "checklist": [
+  "Review changes to _get_openapi_dependency_data function for impact on dependencies.",
+  "Check modifications to _OpenAPIDependencyData dataclass for data integrity.",
+  "Ensure any updates to validation_error_definition and validation_error_response_definition align with OpenAPI standards.",
+  "Verify interactions with imported modules, especially fastapi.dependencies.models."
+ ]
+}

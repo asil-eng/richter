@@ -1,0 +1,14 @@
+{
+ "headline": "Token Constants in pgen2 Module",
+ "what_breaks": [
+  "src/blib2to3/pgen2/grammar.py \u2014 relies on token constants for parsing",
+  "src/blib2to3/pgen2/tokenize.py \u2014 uses token constants for tokenization",
+  "src/black/__init__.py \u2014 depends on token constants for formatting"
+ ],
+ "why": "This file defines essential token constants used across multiple modules. Changes here can directly affect parsing and tokenization functionalities.",
+ "checklist": [
+  "Review all token constants for accuracy and completeness",
+  "Check dependencies in grammar.py and tokenize.py for impacts",
+  "Ensure any added tokens are reflected in tok_name dictionary"
+ ]
+}

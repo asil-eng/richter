@@ -1,0 +1,17 @@
+{
+ "answer": "Hidden coupling is identified between the following files: rich/console.py and rich/color_triplet.py, rich/syntax.py and rich/color_triplet.py, and multiple instances involving rich/_unicode_data/unicode10-0-0.py with various other unicode files. These pairs have co-changed together in 5 commits each, indicating a potential risk if changes are made to one file affecting the other.",
+ "files": [
+  "rich/console.py",
+  "rich/color_triplet.py",
+  "rich/syntax.py",
+  "rich/_unicode_data/unicode10-0-0.py",
+  "rich/_unicode_data/unicode11-0-0.py",
+  "rich/_unicode_data/unicode12-0-0.py",
+  "rich/_unicode_data/unicode12-1-0.py",
+  "rich/_unicode_data/unicode13-0-0.py",
+  "rich/_unicode_data/unicode14-0-0.py",
+  "rich/_unicode_data/unicode15-0-0.py",
+  "rich/_unicode_data/unicode15-1-0.py",
+  "rich/_unicode_data/unicode16-0-0.py"
+ ]
+}

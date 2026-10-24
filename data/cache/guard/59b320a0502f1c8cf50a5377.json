@@ -1,0 +1,13 @@
+{
+ "headline": "Guard note for parse.py edits",
+ "what_breaks": [
+  "src/blib2to3/pgen2/driver.py \u2014 relies on Parser class",
+  "src/black/parsing.py \u2014 relies on Grammar and Node classes"
+ ],
+ "why": "This file contains the core parsing logic that interacts with the Grammar class. Changes here can impact multiple dependent files that rely on parsing functionality.",
+ "checklist": [
+  "Review changes to the Recorder class methods.",
+  "Check interactions with Grammar and Node from blib2to3.pytree.",
+  "Ensure stack_copy and backtrack logic remains intact."
+ ]
+}

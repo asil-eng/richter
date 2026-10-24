@@ -1,0 +1,15 @@
+{
+ "headline": "Key configurations for Black behavior",
+ "what_breaks": [
+  "src/black/__init__.py \u2014 relies on TargetVersion and Feature enums",
+  "src/black/nodes.py \u2014 depends on VERSION_TO_FEATURES mapping",
+  "src/black/parsing.py \u2014 uses features defined in this file"
+ ],
+ "why": "This file defines critical enums and mappings that configure Black's behavior based on Python versions and features. Changes here can impact multiple components that rely on these configurations for functionality.",
+ "checklist": [
+  "Review changes to TargetVersion and Feature enums",
+  "Verify updates to VERSION_TO_FEATURES mapping for accuracy",
+  "Check for any impacts on dependent files like nodes.py and parsing.py",
+  "Ensure consistency in feature flags and their usage across the codebase"
+ ]
+}

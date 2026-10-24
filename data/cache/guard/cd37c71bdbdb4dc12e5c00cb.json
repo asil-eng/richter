@@ -1,0 +1,16 @@
+{
+ "headline": "Guard note for grammar.py edits",
+ "what_breaks": [
+  "src/blib2to3/pytree.py \u2014 relies on Grammar class for parsing",
+  "src/blib2to3/pygram.py \u2014 depends on Grammar for grammar tables",
+  "src/blib2to3/pgen2/driver.py \u2014 uses Grammar for parsing engine",
+  "src/blib2to3/pgen2/parse.py \u2014 accesses Grammar instance variables"
+ ],
+ "why": "The Grammar class is central to the parsing functionality in this module. Changes to its structure or methods could disrupt multiple dependent files that rely on its implementation.",
+ "checklist": [
+  "Review changes to the Grammar class and its methods.",
+  "Check for impacts on the load() and report() methods.",
+  "Ensure any modifications to instance variables are reflected in dependent files.",
+  "Verify compatibility with subclasses in conv and pgen modules."
+ ]
+}

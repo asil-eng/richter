@@ -1,0 +1,14 @@
+{
+ "headline": "Guard note for rich/text.py modifications",
+ "what_breaks": [
+  "rich/console.py \u2014 relies on Text class",
+  "rich/segment.py \u2014 relies on Span class",
+  "rich/palette.py \u2014 relies on Style class"
+ ],
+ "why": "This file contains the Text and Span classes, which are fundamental for text rendering and styling in the Rich library. Changes here could affect multiple components that depend on these classes for their functionality.",
+ "checklist": [
+  "Review changes to the Text and Span classes for impact on dependent files.",
+  "Check for any modifications in style handling that may affect rich/palette.py.",
+  "Ensure that any regex changes do not break whitespace handling in text segments."
+ ]
+}

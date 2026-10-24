@@ -1,0 +1,14 @@
+{
+ "headline": "Guard note for rich/color.py edits",
+ "what_breaks": [
+  "rich/console.py \u2014 relies on ColorSystem and ColorType",
+  "rich/style.py \u2014 depends on color definitions from this file",
+  "rich/palette.py \u2014 uses ANSI_COLOR_NAMES for color mapping"
+ ],
+ "why": "This file defines essential color systems and types used throughout the Rich library. Changes here can impact color rendering in multiple dependent modules.",
+ "checklist": [
+  "Review changes to ColorSystem and ColorType classes",
+  "Ensure ANSI_COLOR_NAMES remains consistent with terminal standards",
+  "Check for any direct usage in rich/console.py, rich/style.py, and rich/palette.py"
+ ]
+}

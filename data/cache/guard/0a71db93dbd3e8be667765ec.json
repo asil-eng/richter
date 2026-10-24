@@ -1,0 +1,14 @@
+{
+ "headline": "Guard note for parsing.py edits",
+ "what_breaks": [
+  "src/black/__init__.py \u2014 imports InvalidInput and lib2to3_parse",
+  "src/black/report.py \u2014 relies on lib2to3_parse for reporting",
+  "src/black/debug.py \u2014 uses InvalidInput for error handling"
+ ],
+ "why": "This file contains critical parsing functionality that affects multiple components. Changes to the classes or functions here could lead to widespread issues in dependent files.",
+ "checklist": [
+  "Review changes to InvalidInput class for error handling implications.",
+  "Check modifications to get_grammars for grammar parsing logic.",
+  "Ensure lib2to3_parse maintains expected input/output behavior."
+ ]
+}

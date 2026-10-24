@@ -1,0 +1,16 @@
+{
+ "headline": "Key dependencies for fastapi/routing.py",
+ "what_breaks": [
+  "fastapi/__init__.py \u2014 relies on routing functionalities",
+  "fastapi/utils.py \u2014 uses routing utilities",
+  "fastapi/applications.py \u2014 depends on routing for app structure",
+  "fastapi/openapi/utils.py \u2014 requires routing for API documentation"
+ ],
+ "why": "This file serves as a core routing mechanism for the FastAPI framework, directly impacting how requests are handled and responses are generated. Changes here can affect multiple components that rely on routing behavior and structure.",
+ "checklist": [
+  "Review changes to request_response function and its dependencies.",
+  "Check interactions with starlette.routing for compatibility.",
+  "Ensure any modifications to routing logic are reflected in dependent files.",
+  "Verify that imports from fastapi.dependencies.utils are intact."
+ ]
+}

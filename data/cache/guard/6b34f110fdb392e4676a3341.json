@@ -1,0 +1,14 @@
+{
+ "headline": "Ensure multipart dependency is correctly installed",
+ "what_breaks": [
+  "fastapi/routing.py \u2014 relies on dependencies defined in this file",
+  "fastapi/openapi/utils.py \u2014 uses models and utilities from this file"
+ ],
+ "why": "This file contains critical dependency management functions that are essential for routing and OpenAPI generation. Any changes could impact multiple components that rely on these utilities for proper operation.",
+ "checklist": [
+  "Verify changes to ensure_multipart_is_installed function logic",
+  "Check for impacts on Dependant and DependencyCacheKey classes",
+  "Review imports from fastapi._compat for any modifications",
+  "Ensure compatibility with BackgroundTasks and async context managers"
+ ]
+}

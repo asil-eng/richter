@@ -1,0 +1,8 @@
+{
+ "answer": "The most fragile files in the codebase are src/black/__init__.py, src/black/mode.py, and src/black/comments.py, with magnitudes of 8.4, 7.4, and 7.1 respectively. These files have a high risk of breaking when changes are made, as indicated by their blast scores and overall fragility ratings.",
+ "files": [
+  "src/black/__init__.py",
+  "src/black/mode.py",
+  "src/black/comments.py"
+ ]
+}

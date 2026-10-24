@@ -1,0 +1,14 @@
+{
+ "headline": "Guard Note for src/black/__init__.py Edits",
+ "what_breaks": [
+  "src/blackd/__init__.py \u2014 relies on black.cache and black.files",
+  "src/black/concurrency.py \u2014 relies on black.cache and black.output",
+  "scripts/generate_schema.py \u2014 relies on black.files and black.report"
+ ],
+ "why": "This file serves as a central module for Black's functionality, impacting multiple dependent files. Changes here could disrupt the cache mechanism, file handling, and output generation across the project.",
+ "checklist": [
+  "Review changes to classes/functions: WriteBack, read_pyproject_toml",
+  "Ensure imports from black.cache and black.files remain intact",
+  "Verify compatibility with dependent files like src/blackd/__init__.py"
+ ]
+}

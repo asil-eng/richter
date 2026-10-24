@@ -1,0 +1,15 @@
+{
+ "headline": "ProtoComment and generate_comments are critical",
+ "what_breaks": [
+  "src/black/__init__.py \u2014 relies on comments functionality",
+  "src/black/lines.py \u2014 uses ProtoComment for comment handling",
+  "src/black/linegen.py \u2014 depends on generate_comments for processing"
+ ],
+ "why": "This file handles comment parsing and generation, which is foundational for other components. Changes here could disrupt how comments are processed across multiple files, affecting overall functionality.",
+ "checklist": [
+  "Review changes to ProtoComment class for data integrity",
+  "Ensure generate_comments function maintains expected output format",
+  "Check interactions with imported constants from black.nodes",
+  "Confirm compatibility with dependent files like lines.py and linegen.py"
+ ]
+}

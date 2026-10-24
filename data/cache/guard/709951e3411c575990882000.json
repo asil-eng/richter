@@ -1,0 +1,15 @@
+{
+ "headline": "LineGenerator class for code formatting",
+ "what_breaks": [
+  "src/black/__init__.py \u2014 imports LineGenerator",
+  "src/black.lines \u2014 relies on Line class",
+  "src/black.mode \u2014 uses Mode and Feature classes"
+ ],
+ "why": "The LineGenerator class is crucial for generating reformatted Line objects, which are essential for the code formatting functionality. Changes to this class could impact how lines of code are processed and emitted across multiple dependent files.",
+ "checklist": [
+  "Review changes to LineGenerator and its methods",
+  "Check interactions with Line class in src/black.lines",
+  "Ensure compatibility with Mode and Feature from src/black.mode",
+  "Verify any changes do not affect the output format"
+ ]
+}

@@ -1,0 +1,14 @@
+{
+ "headline": "Guard note for rich/style.py edits",
+ "what_breaks": [
+  "rich/console.py \u2014 relies on Style for terminal styles",
+  "rich/text.py \u2014 uses Style for text formatting",
+  "rich/table.py \u2014 depends on Style for table cell styling"
+ ],
+ "why": "The Style class is integral for defining terminal styles across multiple modules. Changes to its attributes or methods can affect how styles are rendered in the console and other components.",
+ "checklist": [
+  "Review changes to the Style class and its attributes.",
+  "Check for any modifications to the _Bit descriptor behavior.",
+  "Ensure compatibility with dependent files like rich/console.py and rich/text.py."
+ ]
+}

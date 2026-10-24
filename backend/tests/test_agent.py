@@ -3,11 +3,11 @@ import pytest
 from richter import agent
 
 MODEL = {
-    "repo": {"name": "demo"}, "summary": {},
+    "repo": {"name": "demo", "head": "abc123"}, "summary": {},
     "nodes": [
-        {"id": "pkg/core.py", "magnitude": 0.9, "structural": 0.9, "human": 0.9, "blast_size": 1,
+        {"id": "pkg/core.py", "importance": 1.0, "magnitude": 0.9, "structural": 0.9, "human": 0.9, "blast_size": 1,
          "blast": [[1, 1]], "churn": 20, "fixes": 8, "fix_ratio": 0.36, "authors": 1, "bus_factor": True},
-        {"id": "pkg/app.py", "magnitude": 0.2, "structural": 0.0, "human": 0.5, "blast_size": 0,
+        {"id": "pkg/app.py", "importance": 0.0, "magnitude": 0.2, "structural": 0.0, "human": 0.5, "blast_size": 0,
          "blast": [], "churn": 3, "fixes": 0, "fix_ratio": 0.1, "authors": 2, "bus_factor": False},
     ],
     "cochange": [],

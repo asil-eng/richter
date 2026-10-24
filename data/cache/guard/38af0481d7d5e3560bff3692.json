@@ -1,0 +1,14 @@
+{
+ "headline": "Guard Note for rich/syntax.py Modifications",
+ "what_breaks": [
+  "rich/segment.py \u2014 relies on Segment and Segments classes",
+  "rich/console.py \u2014 depends on Console and related types",
+  "rich/markdown.py \u2014 uses styles defined in this file"
+ ],
+ "why": "This file contains critical style definitions and segment handling that are directly used by multiple components. Changes here can affect the rendering and behavior of syntax highlighting across the Rich library.",
+ "checklist": [
+  "Review changes to ANSI_LIGHT and ANSI_DARK styles",
+  "Check for impacts on Segment and Segments classes in rich/segment.py",
+  "Ensure compatibility with Console and ConsoleOptions in rich/console.py"
+ ]
+}

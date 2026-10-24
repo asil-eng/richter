@@ -4,6 +4,13 @@ Record each meaningful project change during the event, newest first. Update thi
 
 ## Event build log
 
+## 2026-10-24T22:10:07+05:30 — Real AI notes: sharper prompts, portable cache, offline bundle
+
+- Changed: `backend/richter/agent.py`: cache keyed on repo HEAD + file/question instead of prompt text (prompts contain local-clone excerpts, so the committed cache must hit on other machines); dependents passed most-important-first; prompts demand file-specific checklists and name classes/functions; ask summary labels every column (fixes a misread of the bus-factor flag). Added `precompute_notes` + `richter.cli notes <url>` writing `data/notes/<slug>.json`. Frontend `data.ts` falls back to that bundle when the API is unreachable. Committed AI notes (guard + unblock for 14 files per demo repo) and answers to the 3 suggested questions, plus `data/cache/`.
+- Why: With a key available, the demo should show real AI output — and keep showing it offline.
+- Validation: `pytest` 12 passed; `tsc -b` and `oxlint` clean. 84 AI notes + 9 answers generated, 0 invented paths dropped. Spot-checked notes against code (fastapi routing.py cites request_response/starlette; black __init__.py plan cites recurring CLI-option fixes). Playwright: ask + note with live API and with backend stopped both render `AI · GPT-4O-MINI · CACHED`; no errors. Scanned data/notes and data/cache for key strings: none.
+- Limitations: First prompt version misread the bus-factor column; fixed by labelling columns, earlier outputs discarded. Free-form questions beyond the 3 suggestions need a key.
+
 ## 2026-10-24T22:01:06+05:30 — Backtest: magnitude vs later fixes
 
 - Changed: Added `backend/richter/backtest.py` and `richter.cli backtest <url> [--cutoff]`: scores a repo at the snapshot nearest a history cutoff and measures the share of later fix-commit touches landing in the top 10% by magnitude, against churn-only and random baselines. README gains a Backtest section with the results.

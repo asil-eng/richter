@@ -18,10 +18,28 @@ def main() -> None:
     s = sub.add_parser("snapshots", help="precompute time-travel frames to data/snapshots/<slug>.json")
     s.add_argument("url")
     s.add_argument("--frames", type=int, default=28)
+    nt = sub.add_parser("notes", help="precompute AI notes for the demo bundle (needs OPENAI_API_KEY)")
+    nt.add_argument("url")
+    nt.add_argument("--top", type=int, default=12)
     b = sub.add_parser("backtest", help="does magnitude at a past snapshot predict later fixes?")
     b.add_argument("url")
     b.add_argument("--cutoff", type=float, default=0.6, help="fraction of history treated as the past")
     args = ap.parse_args()
+
+    if args.cmd == "notes":
+        import json
+
+        from .agent import precompute_notes
+        from .ingest import REPOS_DIR, repo_slug
+        from .pipeline import MODELS_DIR
+
+        slug = repo_slug(args.url)
+        model = json.loads((MODELS_DIR / f"{slug}.json").read_text())
+        root = REPOS_DIR / slug
+        bundle = precompute_notes(model, slug, root if root.exists() else None, top=args.top)
+        ai = sum(n.get("source") == "ai" for k in ("guard", "unblock") for n in bundle[k].values())
+        print(f"{slug}: {len(bundle['guard'])} files, {ai} AI notes, {len(bundle['ask'])} answers")
+        return
 
     if args.cmd == "backtest":
         from .backtest import backtest

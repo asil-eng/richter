@@ -1,0 +1,15 @@
+{
+ "headline": "Key Models for OpenAPI Specification",
+ "what_breaks": [
+  "fastapi/params.py \u2014 relies on BaseModelWithConfig",
+  "fastapi/security/base.py \u2014 relies on EmailStr",
+  "fastapi/openapi/utils.py \u2014 relies on Info and Schema classes"
+ ],
+ "why": "This file defines critical data models used throughout FastAPI's OpenAPI implementation. Changes to these models can impact multiple components that depend on them for validation and schema generation.",
+ "checklist": [
+  "Review changes to BaseModelWithConfig and its subclasses.",
+  "Check for any modifications to EmailStr and its validation logic.",
+  "Ensure compatibility with dependent files like fastapi/params.py and fastapi/security/base.py.",
+  "Update any relevant documentation related to OpenAPI models."
+ ]
+}

@@ -1,0 +1,8 @@
+{
+ "answer": "The most fragile files in the codebase are fastapi/routing.py, fastapi/_compat/v2.py, and fastapi/openapi/models.py, with magnitudes of 7.8 and 7.5 respectively. These files have a high risk of breaking when changes are made, indicated by their blast scores of 7 and 22. Additionally, they have a significant amount of churn, with fastapi/routing.py having 193 commits, suggesting frequent modifications.",
+ "files": [
+  "fastapi/routing.py",
+  "fastapi/_compat/v2.py",
+  "fastapi/openapi/models.py"
+ ]
+}

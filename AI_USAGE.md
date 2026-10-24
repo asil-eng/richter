@@ -18,6 +18,7 @@ No participant AI usage has been recorded yet. Replace the placeholder row as yo
 | 2026-10-24T21:55+05:30 | Claude Code (Claude Opus 5.5) | Design pass: laptop layout + render-safe refs | Screen-by-screen design review and fixes | Pending participant review | build + lint clean; screenshots reviewed |
 | 2026-10-24T22:00+05:30 | Claude Code (Claude Opus 5.5) | README, demo media, submission draft | Wrote README and SUBMISSION drafts; recorded and encoded demo GIFs/screenshots | Pending participant review | Figures cross-checked against generated models |
 | 2026-10-24T22:01+05:30 | Claude Code (Claude Opus 5.5) | Backtest: magnitude vs later fixes | Designed and ran the backtest; wrote README section with the unflattering comparison included | Pending participant review | Results reproduced via CLI |
+| 2026-10-24T22:10+05:30 | Claude Code (Claude Opus 5.5) | Real AI notes: sharper prompts, portable cache, offline bundle | Improved agent prompts and caching, generated and reviewed AI notes, added offline fallback | Pending participant review | pytest 12 passed; live + offline UI checks |
 
 ## Template preparation
 

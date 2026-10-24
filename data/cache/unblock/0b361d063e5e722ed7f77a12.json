@@ -1,0 +1,11 @@
+{
+ "headline": "Frequent Rework on Comment Handling Logic",
+ "diagnosis": "The recurring theme in the commit messages highlights issues related to handling comments, specifically those involving `# fmt: skip` and `# fmt: off` directives. The code sections dealing with comment parsing and formatting are frequently modified, indicating that they are prone to bugs or edge cases that are not being adequately addressed.",
+ "plan": [
+  "Conduct a thorough review of the comment handling logic, focusing on the ProtoComment class and related functions that process `# fmt: skip` and `# fmt: off` directives.",
+  "Identify and document all edge cases that have led to recent crashes and reworks, ensuring that these scenarios are covered in unit tests.",
+  "Refactor the comment handling logic to simplify and clarify the code structure, reducing complexity and potential for bugs.",
+  "Implement comprehensive unit tests for all identified edge cases to ensure stability and prevent future regressions."
+ ],
+ "owner_hint": "Ownership should be shared among the team to mitigate bus factor risks."
+}

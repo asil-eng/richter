@@ -1,0 +1,14 @@
+{
+ "headline": "Guard Note for rich/cells.py Modifications",
+ "what_breaks": [
+  "rich/console.py \u2014 relies on cell_len for rendering text",
+  "rich/_unicode_data/__init__.py \u2014 uses load_cell_table for unicode data",
+  "rich/text.py \u2014 depends on character cell size calculations"
+ ],
+ "why": "This file is critical for calculating character widths in terminal displays. Changes here can affect text rendering across multiple components that rely on accurate cell measurements.",
+ "checklist": [
+  "Review changes to get_character_cell_size and cell_len functions",
+  "Check impacts on load_cell_table in rich/_unicode_data/__init__.py",
+  "Ensure compatibility with rich/console.py's text rendering logic"
+ ]
+}

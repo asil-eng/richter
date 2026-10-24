@@ -1,0 +1,14 @@
+{
+ "headline": "Critical Line Class and Append Method Dependencies",
+ "what_breaks": [
+  "src/black/__init__.py \u2014 relies on Line class",
+  "src/black/linegen.py \u2014 uses Line for line generation",
+  "src/black/trans.py \u2014 depends on Line for transformations"
+ ],
+ "why": "The Line class is fundamental for managing line elements and comments, directly impacting multiple modules. The append method modifies the line structure, affecting how other components interact with lines.",
+ "checklist": [
+  "Review changes to Line class and append method",
+  "Check interactions with BracketTracker and whitespace functions",
+  "Ensure compatibility with dependent modules like linegen and trans"
+ ]
+}

@@ -1,0 +1,428 @@
+{
+ "head": "ce51a2f8bf326878a94a382cb7102c85824f7e04",
+ "model": "gpt-4o-mini",
+ "guard": {
+  "rich/console.py": {
+   "source": "ai",
+   "headline": "Console class dependencies and structure",
+   "what_breaks": [
+    "rich/text.py \u2014 relies on Console for rendering text",
+    "rich/segment.py \u2014 depends on Console for segment management",
+    "rich/color.py \u2014 uses Console for color management"
+   ],
+   "why": "This file serves as a core component for rendering in the Rich library, heavily utilized by multiple modules. Changes here can affect the rendering capabilities and overall output of the console interface.",
+   "checklist": [
+    "Review changes to ConsoleOptions and ConsoleDimensions classes",
+    "Check interactions with rich/text.py and rich/segment.py",
+    "Ensure compatibility with existing ColorSystem implementations"
+   ]
+  },
+  "rich/cells.py": {
+   "source": "ai",
+   "headline": "Guard Note for rich/cells.py Modifications",
+   "what_breaks": [
+    "rich/console.py \u2014 relies on cell_len for rendering text",
+    "rich/_unicode_data/__init__.py \u2014 uses load_cell_table for unicode data",
+    "rich/text.py \u2014 depends on character cell size calculations"
+   ],
+   "why": "This file is critical for calculating character widths in terminal displays. Changes here can affect text rendering across multiple components that rely on accurate cell measurements.",
+   "checklist": [
+    "Review changes to get_character_cell_size and cell_len functions",
+    "Check impacts on load_cell_table in rich/_unicode_data/__init__.py",
+    "Ensure compatibility with rich/console.py's text rendering logic"
+   ]
+  },
+  "rich/text.py": {
+   "source": "ai",
+   "headline": "Guard note for rich/text.py modifications",
+   "what_breaks": [
+    "rich/console.py \u2014 relies on Text class",
+    "rich/segment.py \u2014 relies on Span class",
+    "rich/palette.py \u2014 relies on Style class"
+   ],
+   "why": "This file contains the Text and Span classes, which are fundamental for text rendering and styling in the Rich library. Changes here could affect multiple components that depend on these classes for their functionality.",
+   "checklist": [
+    "Review changes to the Text and Span classes for impact on dependent files.",
+    "Check for any modifications in style handling that may affect rich/palette.py.",
+    "Ensure that any regex changes do not break whitespace handling in text segments."
+   ]
+  },
+  "rich/segment.py": {
+   "source": "ai",
+   "headline": "Guard note for rich/segment.py edits",
+   "what_breaks": [
+    "rich/console.py \u2014 relies on Segment for rendering text",
+    "rich/text.py \u2014 uses Segment for styled text representation",
+    "rich/jupyter.py \u2014 depends on Segment for output formatting"
+   ],
+   "why": "The Segment class is integral to text rendering across multiple modules. Changes here could disrupt how text is displayed in the console and other components.",
+   "checklist": [
+    "Review changes to Segment class and its properties",
+    "Check interactions with cell_len and get_character_cell_size functions",
+    "Ensure backward compatibility with Console and other importers",
+    "Verify that control codes are handled correctly in Segment"
+   ]
+  },
+  "rich/pretty.py": {
+   "source": "ai",
+   "headline": "Guard note for rich/pretty.py edits",
+   "what_breaks": [
+    "rich/console.py \u2014 relies on Console class",
+    "rich/_inspect.py \u2014 uses inspect functions",
+    "rich/_extension.py \u2014 depends on RichRenderable"
+   ],
+   "why": "This file serves as a core utility for rendering objects in Rich. Changes here could impact multiple components that rely on its rendering capabilities.",
+   "checklist": [
+    "Review changes to functions like _ipy_display_hook and _is_dataclass_repr",
+    "Check interactions with RichRenderable in rich/_extension.py",
+    "Ensure compatibility with Console class in rich/console.py"
+   ]
+  },
+  "rich/table.py": {
+   "source": "ai",
+   "headline": "Column class dependencies and implications",
+   "what_breaks": [
+    "rich/box.py \u2014 relies on box constants for table edges",
+    "rich/style.py \u2014 uses Style and StyleType for styling",
+    "rich/padding.py \u2014 requires Padding and PaddingDimensions for cell padding"
+   ],
+   "why": "The Column class is central to the table structure, and its attributes directly influence how tables are rendered. Changes to its dependencies could break the rendering of tables across the entire application.",
+   "checklist": [
+    "Review changes to rich/box.py for edge constants",
+    "Check rich/style.py for any style-related modifications",
+    "Examine rich/padding.py for padding behavior adjustments"
+   ]
+  },
+  "rich/style.py": {
+   "source": "ai",
+   "headline": "Guard note for rich/style.py edits",
+   "what_breaks": [
+    "rich/console.py \u2014 relies on Style for terminal styles",
+    "rich/text.py \u2014 uses Style for text formatting",
+    "rich/table.py \u2014 depends on Style for table cell styling"
+   ],
+   "why": "The Style class is integral for defining terminal styles across multiple modules. Changes to its attributes or methods can affect how styles are rendered in the console and other components.",
+   "checklist": [
+    "Review changes to the Style class and its attributes.",
+    "Check for any modifications to the _Bit descriptor behavior.",
+    "Ensure compatibility with dependent files like rich/console.py and rich/text.py."
+   ]
+  },
+  "rich/traceback.py": {
+   "source": "ai",
+   "headline": "Guard note for rich/traceback.py edits",
+   "what_breaks": [
+    "rich/console.py \u2014 relies on Console class for output",
+    "rich/_extension.py \u2014 may depend on traceback formatting",
+    "rich/logging.py \u2014 integrates with traceback for error logging"
+   ],
+   "why": "This file is critical for handling and formatting tracebacks in the Rich library. Changes here can affect how exceptions are displayed across multiple components that rely on this functionality.",
+   "checklist": [
+    "Review changes to the install function and its parameters",
+    "Check impact on Console and its options in rich/console.py",
+    "Ensure compatibility with traceback handling in rich/logging.py"
+   ]
+  },
+  "rich/syntax.py": {
+   "source": "ai",
+   "headline": "Guard Note for rich/syntax.py Modifications",
+   "what_breaks": [
+    "rich/segment.py \u2014 relies on Segment and Segments classes",
+    "rich/console.py \u2014 depends on Console and related types",
+    "rich/markdown.py \u2014 uses styles defined in this file"
+   ],
+   "why": "This file contains critical style definitions and segment handling that are directly used by multiple components. Changes here can affect the rendering and behavior of syntax highlighting across the Rich library.",
+   "checklist": [
+    "Review changes to ANSI_LIGHT and ANSI_DARK styles",
+    "Check for impacts on Segment and Segments classes in rich/segment.py",
+    "Ensure compatibility with Console and ConsoleOptions in rich/console.py"
+   ]
+  },
+  "rich/panel.py": {
+   "source": "ai",
+   "headline": "Panel class dependencies and implications",
+   "what_breaks": [
+    "rich/align.py \u2014 relies on AlignMethod for title alignment",
+    "rich/box.py \u2014 uses Box and ROUNDED for border design",
+    "rich/text.py \u2014 depends on Text and TextType for titles and subtitles",
+    "rich/padding.py \u2014 utilizes Padding and PaddingDimensions for layout"
+   ],
+   "why": "The Panel class is a core component that manages the rendering of console panels, directly impacting how content is displayed. Changes to its dependencies could alter the visual output and functionality of multiple dependent files.",
+   "checklist": [
+    "Review changes to AlignMethod in rich/align.py",
+    "Check updates to Box and ROUNDED in rich/box.py",
+    "Ensure compatibility with Text and TextType in rich/text.py",
+    "Validate any modifications to Padding and PaddingDimensions in rich/padding.py"
+   ]
+  },
+  "rich/color.py": {
+   "source": "ai",
+   "headline": "Guard note for rich/color.py edits",
+   "what_breaks": [
+    "rich/console.py \u2014 relies on ColorSystem and ColorType",
+    "rich/style.py \u2014 depends on color definitions from this file",
+    "rich/palette.py \u2014 uses ANSI_COLOR_NAMES for color mapping"
+   ],
+   "why": "This file defines essential color systems and types used throughout the Rich library. Changes here can impact color rendering in multiple dependent modules.",
+   "checklist": [
+    "Review changes to ColorSystem and ColorType classes",
+    "Ensure ANSI_COLOR_NAMES remains consistent with terminal standards",
+    "Check for any direct usage in rich/console.py, rich/style.py, and rich/palette.py"
+   ]
+  },
+  "rich/live.py": {
+   "source": "ai",
+   "headline": "Key components of rich/live.py",
+   "what_breaks": [
+    "rich/console.py \u2014 relies on Console class for rendering",
+    "rich/jupyter.py \u2014 uses JupyterMixin for Jupyter support",
+    "rich/live_render.py \u2014 Live class depends on LiveRender for updates"
+   ],
+   "why": "This file is central to the live display functionality, which is heavily dependent on the Console and JupyterMixin classes. Changes here can affect the rendering and updating behavior across multiple components in the rich library.",
+   "checklist": [
+    "Verify changes to Live class constructor parameters",
+    "Check interactions with Console and JupyterMixin classes",
+    "Ensure thread safety in _RefreshThread class",
+    "Review any modifications to refresh logic in Live class"
+   ]
+  },
+  "rich/_unicode_data/_versions.py": {
+   "source": "ai",
+   "headline": "Critical version data for Unicode handling",
+   "what_breaks": [
+    "rich/_unicode_data/__init__.py \u2014 relies on VERSIONS for version management"
+   ],
+   "why": "This file contains the VERSIONS tuple that is crucial for managing Unicode versions across the rich library. Any changes to this data could impact all modules that depend on Unicode versioning.",
+   "checklist": [
+    "Verify the integrity of the VERSIONS tuple format.",
+    "Ensure all version strings are correctly formatted and valid.",
+    "Check for any dependencies in rich/_unicode_data/__init__.py that may be affected.",
+    "Document any changes made to the VERSIONS data."
+   ]
+  },
+  "rich/_unicode_data/__init__.py": {
+   "source": "ai",
+   "headline": "Guard Note for rich/_unicode_data/__init__.py",
+   "what_breaks": [
+    "rich/cells.py \u2014 relies on load() returning CellTable",
+    "rich/_unicode_data/_versions.py \u2014 VERSIONS must be correctly defined",
+    "rich/_unicode_data/unicode*.py \u2014 dynamic imports depend on version strings"
+   ],
+   "why": "This file is crucial for loading Unicode data into the CellTable. Any changes to version handling or the load function can affect multiple dependent files.",
+   "checklist": [
+    "Verify changes to load() do not alter CellTable structure",
+    "Ensure VERSIONS in _versions.py remains accurate and complete",
+    "Test dynamic imports for all defined Unicode versions",
+    "Check for any changes in the behavior of _parse_version()"
+   ]
+  }
+ },
+ "unblock": {
+  "rich/console.py": {
+   "source": "ai",
+   "headline": "Frequent Typing and Structural Issues in Console",
+   "diagnosis": "The file 'rich/console.py' is undergoing frequent reworks primarily due to typing issues and structural changes. The recurring commit messages indicate a focus on fixing typing errors, optimizing imports, and refactoring code, suggesting a lack of stability in the type definitions and overall structure.",
+   "plan": [
+    "Conduct a thorough review of all typing definitions in 'rich/console.py' to ensure they align with the expected types and are consistent across the codebase.",
+    "Identify and address the structural issues highlighted in the commit messages, particularly focusing on the optimization of imports and the removal of unused functions.",
+    "Establish a more robust testing strategy to catch typing and structural issues before they lead to rework, including unit tests that cover edge cases.",
+    "Engage with the authors of the recent commits to gather insights on the challenges they faced, ensuring that their experiences inform future development practices."
+   ],
+   "owner_hint": "Ownership should be shared among the core contributors to 'rich/console.py' to mitigate bus factor risks."
+  },
+  "rich/cells.py": {
+   "source": "ai",
+   "headline": "Frequent Rework of Cell Width Calculation Logic",
+   "diagnosis": "The file rich/cells.py is undergoing frequent rework primarily due to issues related to character cell width calculations, as indicated by the recurring themes in commit messages such as 'fix for infinite loop in split_graphemes', 'Fix ZWJ and edge cases', and 'more defensive condition'. The complexity of handling various Unicode characters and edge cases is leading to multiple fixes and refinements.",
+   "plan": [
+    "Conduct a thorough review of the character cell width calculation logic, focusing on the get_character_cell_size function and its handling of edge cases.",
+    "Implement comprehensive unit tests that cover all Unicode ranges and edge cases mentioned in the commit messages to ensure robustness.",
+    "Refactor the code to simplify the logic where possible, especially in areas identified as problematic in recent commits.",
+    "Establish a code review process specifically for changes to this file to ensure that any modifications are scrutinized for potential impacts on functionality."
+   ],
+   "owner_hint": "Assign ownership to a single developer to reduce bus factor."
+  },
+  "rich/text.py": {
+   "source": "ai",
+   "headline": "Frequent Reworks in rich/text.py",
+   "diagnosis": "The file rich/text.py is undergoing frequent reworks primarily due to issues related to whitespace handling and style management. The recurring themes in the commit messages indicate a lack of clarity and consistency in how text styles and whitespace are processed, leading to multiple fixes and reverts.",
+   "plan": [
+    "Conduct a thorough review of the whitespace handling logic, particularly around the soft_wrap functionality, to ensure it aligns with expected behavior.",
+    "Standardize the handling of text styles across the file and related modules, ensuring that all components respect the text.style attribute consistently.",
+    "Implement comprehensive unit tests that cover edge cases for both whitespace handling and style application to prevent future regressions.",
+    "Establish a clear documentation guideline for any changes made to rich/text.py to improve clarity and reduce the need for subsequent fixes."
+   ],
+   "owner_hint": "Ownership should be shared among the team to mitigate bus factor risks."
+  },
+  "rich/segment.py": {
+   "source": "ai",
+   "headline": "Frequent Reworks in Segment Class Functionality",
+   "diagnosis": "The commit history indicates a recurring focus on fixing and improving the handling of segments, particularly related to splitting cells and associated tests. The frequent mentions of 'split cells' and 'test fixes' suggest that there are underlying issues with how segments are processed or represented, leading to multiple revisions.",
+   "plan": [
+    "Conduct a thorough review of the Segment class, focusing on the cell_length property and its interaction with text and control codes.",
+    "Identify and document all test cases related to segment splitting and cell length calculations to ensure comprehensive coverage.",
+    "Refactor the segment handling logic to simplify the splitting mechanism and improve clarity, potentially reducing the need for fixes.",
+    "Implement additional unit tests to cover edge cases that may not have been previously considered, particularly around control codes and their impact on segment rendering."
+   ],
+   "owner_hint": "The segment functionality should be primarily owned by the original author or a designated team member familiar with the rendering process."
+  },
+  "rich/pretty.py": {
+   "source": "ai",
+   "headline": "Frequent Fixes Indicate Instability in Dataclass Handling",
+   "diagnosis": "The commit history shows a recurring theme of issues related to dataclass handling, with multiple fixes addressing missing fields, typing errors, and formatting issues. This suggests that the implementation is fragile and may not be robust against changes or new Python versions.",
+   "plan": [
+    "Conduct a thorough review of all recent commits related to dataclass handling to identify common patterns in the errors being fixed.",
+    "Refactor the dataclass handling logic in rich/pretty.py to ensure it adheres to the latest Python standards, particularly focusing on compatibility with Python 3.13.",
+    "Implement comprehensive unit tests specifically targeting dataclass scenarios to prevent future regressions and ensure stability.",
+    "Establish a code review process that includes checks for dataclass-related changes to catch potential issues before they are committed."
+   ],
+   "owner_hint": "Assign a dedicated team member to oversee dataclass-related changes to reduce bus factor."
+  },
+  "rich/table.py": {
+   "source": "ai",
+   "headline": "Frequent Rework of Table Functionality",
+   "diagnosis": "The file 'rich/table.py' is undergoing repeated changes primarily related to column highlighting and padding adjustments. The commit messages indicate a focus on fixing rendering issues and enhancing functionality, suggesting that the current implementation may be unstable or not fully meeting requirements.",
+   "plan": [
+    "Conduct a thorough review of the Column class and its associated methods to identify the root causes of the rendering and highlighting issues.",
+    "Establish clear requirements for table rendering and column behavior, ensuring that all edge cases are documented and tested.",
+    "Implement a comprehensive suite of unit tests specifically targeting the highlighting and padding functionalities to catch regressions early.",
+    "Assign a dedicated owner to the table rendering logic to ensure accountability and reduce the bus factor."
+   ],
+   "owner_hint": "A single engineer should be responsible for the table rendering logic."
+  },
+  "rich/style.py": {
+   "source": "ai",
+   "headline": "Frequent Reworks in Style Class Functionality",
+   "diagnosis": "The commit history shows a pattern of frequent fixes and reworks related to the `Style` class and its attributes. Specifically, changes to function names, type fixes, and cache management indicate ongoing issues with the implementation and understanding of the class's functionality.",
+   "plan": [
+    "Conduct a thorough review of the `Style` class to identify inconsistencies in attribute handling and method definitions.",
+    "Implement a comprehensive set of unit tests targeting the `Style` class to ensure all attributes and methods behave as expected.",
+    "Refactor the caching mechanism to improve performance and clarity, ensuring it aligns with the intended use cases.",
+    "Establish a code review process focused on changes to the `Style` class to catch potential issues before they are merged."
+   ],
+   "owner_hint": "Assign a dedicated team member to oversee changes to the Style class."
+  },
+  "rich/traceback.py": {
+   "source": "ai",
+   "headline": "Frequent Rework of Traceback Rendering Features",
+   "diagnosis": "The commit history indicates a recurring theme of adjustments to the traceback rendering functionality, particularly around locals and exception handling. The frequent fixes and simplifications suggest that the current implementation is either overly complex or not meeting the intended requirements.",
+   "plan": [
+    "Conduct a thorough review of the recent commit messages to identify specific pain points related to locals rendering and exception handling.",
+    "Analyze the `_iter_syntax_lines` function and its interactions with other components to determine if its complexity contributes to the issues.",
+    "Engage with the authors of the recent commits to gather insights on the challenges they faced and potential areas for improvement.",
+    "Establish a set of clear requirements for the traceback rendering functionality to guide future development and reduce the need for rework."
+   ],
+   "owner_hint": "Assign a dedicated team member to oversee the traceback rendering feature."
+  },
+  "rich/syntax.py": {
+   "source": "ai",
+   "headline": "Frequent Rework on Padding Property Implementation",
+   "diagnosis": "The commit history indicates a recurring focus on the 'padding property', with multiple commits addressing its implementation and related fixes. This suggests that the padding functionality in 'rich/syntax.py' is either poorly defined or has inconsistent behavior, leading to ongoing revisions.",
+   "plan": [
+    "Conduct a thorough review of all recent commits related to 'padding property' to identify specific issues and inconsistencies.",
+    "Refactor the padding implementation in 'rich/syntax.py' to ensure clarity and consistency in its behavior across different contexts.",
+    "Add comprehensive unit tests specifically targeting the padding functionality to prevent future regressions.",
+    "Engage with the authors of the recent commits to gather insights on their challenges and ensure alignment on the expected behavior of the padding property."
+   ],
+   "owner_hint": "Ownership should be shared among the authors of recent padding-related commits."
+  },
+  "rich/panel.py": {
+   "source": "ai",
+   "headline": "Panel Class Rework Recurrence",
+   "diagnosis": "The Panel class has undergone multiple fixes and updates, particularly regarding its title and subtitle handling. The recurring theme in commit messages indicates issues with missing parameters and style attributes, leading to confusion and bugs.",
+   "plan": [
+    "Conduct a thorough review of the Panel class's title and subtitle handling logic to identify inconsistencies.",
+    "Standardize the handling of optional parameters in the Panel class, ensuring all are correctly documented and default values are set appropriately.",
+    "Implement comprehensive unit tests focusing on the title, subtitle, and style parameters to catch future regressions.",
+    "Establish a code review process specifically for changes to the Panel class to ensure clarity and adherence to the design."
+   ],
+   "owner_hint": "Assign a dedicated owner for the Panel class to reduce bus factor."
+  },
+  "rich/color.py": {
+   "source": "ai",
+   "headline": "Frequent Reworks in Color System Implementation",
+   "diagnosis": "The recurring theme in the commit messages indicates ongoing issues with the color handling logic, particularly around performance optimizations and type compliance. The use of decorators like `functools.lru_cache` has been reverted multiple times, suggesting instability in caching behavior or unexpected side effects.",
+   "plan": [
+    "Conduct a thorough review of the ColorSystem and ColorType classes to identify any inconsistencies or performance bottlenecks.",
+    "Investigate the impact of the lru_cache decorator on instance methods and determine if its removal resolves existing issues or if an alternative caching strategy is needed.",
+    "Implement comprehensive unit tests specifically targeting the color downgrade functionality and the new US spelling of 'gray' to ensure stability.",
+    "Establish a code review process focused on changes to the color.py file to catch potential issues before they are merged."
+   ],
+   "owner_hint": "The ColorSystem and ColorType classes should be owned by a dedicated team member to reduce bus factor."
+  },
+  "rich/live.py": {
+   "source": "ai",
+   "headline": "Frequent Rework of Live Functionality",
+   "diagnosis": "The commit history indicates a recurring theme of issues related to the live display functionality, particularly around threading and refresh mechanisms. Frequent fixes for deadlocks, double progress, and thread safety suggest that the implementation is fragile and prone to errors.",
+   "plan": [
+    "Conduct a thorough code review of the `_RefreshThread` and `Live` class to identify potential race conditions and deadlock scenarios.",
+    "Implement comprehensive unit tests focused on the threading behavior and refresh logic to ensure stability under various conditions.",
+    "Refactor the threading model if necessary, possibly considering alternatives to improve thread safety and reduce complexity.",
+    "Establish a clear ownership of the live functionality to ensure accountability for future changes and maintenance."
+   ],
+   "owner_hint": "Assign a dedicated engineer to oversee the live display feature."
+  },
+  "rich/_unicode_data/_versions.py": {
+   "source": "ai",
+   "headline": "Frequent Rework of Version Management Code",
+   "diagnosis": "The file '_versions.py' is being reworked due to unclear handling of version strings, as indicated by the commit message 'f string path'. The lack of clarity in how versioning is managed may lead to inconsistencies and confusion in dependent files.",
+   "plan": [
+    "Review the current implementation of version management in '_versions.py' to identify potential areas of confusion or error.",
+    "Establish a clear versioning strategy and document it, ensuring that all contributors understand how to update versions correctly.",
+    "Implement automated tests that validate version changes and their impact on dependent files to catch issues early.",
+    "Encourage collaboration or code reviews from other team members to reduce the bus factor and improve code quality."
+   ],
+   "owner_hint": "The current author is the sole owner, increasing risk of knowledge silos."
+  },
+  "rich/_unicode_data/__init__.py": {
+   "source": "ai",
+   "headline": "Frequent Typing and Versioning Fixes",
+   "diagnosis": "The commit history shows a recurring theme of issues related to typing and versioning in the `rich/_unicode_data/__init__.py` file. The presence of multiple commits focused on typing fixes and version parsing indicates that these areas are problematic and require further attention.",
+   "plan": [
+    "Conduct a thorough review of the typing annotations in the `load` function and `_parse_version` to ensure they are accurate and consistent with the expected types.",
+    "Investigate the version parsing logic in `_parse_version` to identify edge cases that may lead to ValueErrors, and implement additional validation or error handling.",
+    "Set up a comprehensive suite of unit tests specifically targeting the typing and version parsing functionalities to catch future issues before they reach the commit stage.",
+    "Consider refactoring the version handling logic to simplify the code and reduce the likelihood of errors, potentially involving more robust libraries for version management."
+   ],
+   "owner_hint": "The sole author of the file is responsible for addressing these issues."
+  }
+ },
+ "ask": {
+  "which files are most fragile?": {
+   "answer": "The most fragile files in the codebase are rich/console.py, rich/cells.py, and rich/text.py, with magnitudes of 8.2, 7.8, and 7.5 respectively. These files have high blast risk and significant churn, indicating that they are likely to break with changes and have undergone many commits.",
+   "files": [
+    "rich/console.py",
+    "rich/cells.py",
+    "rich/text.py"
+   ],
+   "dropped": 0
+  },
+  "where is hidden coupling?": {
+   "answer": "Hidden coupling is identified between the following files: rich/console.py and rich/color_triplet.py, rich/syntax.py and rich/color_triplet.py, and multiple instances involving rich/_unicode_data/unicode10-0-0.py with various other unicode files. These pairs have co-changed together in 5 commits each, indicating a potential risk if changes are made to one file affecting the other.",
+   "files": [
+    "rich/console.py",
+    "rich/color_triplet.py",
+    "rich/syntax.py",
+    "rich/_unicode_data/unicode10-0-0.py",
+    "rich/_unicode_data/unicode11-0-0.py",
+    "rich/_unicode_data/unicode12-0-0.py",
+    "rich/_unicode_data/unicode12-1-0.py",
+    "rich/_unicode_data/unicode13-0-0.py",
+    "rich/_unicode_data/unicode14-0-0.py",
+    "rich/_unicode_data/unicode15-0-0.py",
+    "rich/_unicode_data/unicode15-1-0.py",
+    "rich/_unicode_data/unicode16-0-0.py"
+   ],
+   "dropped": 0
+  },
+  "what would break if i refactor the core?": {
+   "answer": "Refactoring the core files in this codebase could potentially break several components due to their high fragility and interdependencies. Notably, files like rich/console.py, rich/cells.py, and rich/text.py have significant blast risk, meaning changes here could lead to failures in other parts of the system. Additionally, the presence of ghost edges and high cochange pairs indicates that these files are closely linked and changes in one could impact others.",
+   "files": [
+    "rich/console.py",
+    "rich/cells.py",
+    "rich/text.py"
+   ],
+   "dropped": 0
+  }
+ }
+}

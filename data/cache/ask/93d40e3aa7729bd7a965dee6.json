@@ -1,0 +1,8 @@
+{
+ "answer": "The most fragile files in the codebase are rich/console.py, rich/cells.py, and rich/text.py, with magnitudes of 8.2, 7.8, and 7.5 respectively. These files have high blast risk and significant churn, indicating that they are likely to break with changes and have undergone many commits.",
+ "files": [
+  "rich/console.py",
+  "rich/cells.py",
+  "rich/text.py"
+ ]
+}

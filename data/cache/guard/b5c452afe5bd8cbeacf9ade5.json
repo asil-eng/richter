@@ -1,0 +1,15 @@
+{
+ "headline": "Guard note for rich/segment.py edits",
+ "what_breaks": [
+  "rich/console.py \u2014 relies on Segment for rendering text",
+  "rich/text.py \u2014 uses Segment for styled text representation",
+  "rich/jupyter.py \u2014 depends on Segment for output formatting"
+ ],
+ "why": "The Segment class is integral to text rendering across multiple modules. Changes here could disrupt how text is displayed in the console and other components.",
+ "checklist": [
+  "Review changes to Segment class and its properties",
+  "Check interactions with cell_len and get_character_cell_size functions",
+  "Ensure backward compatibility with Console and other importers",
+  "Verify that control codes are handled correctly in Segment"
+ ]
+}

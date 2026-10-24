@@ -1,0 +1,14 @@
+{
+ "headline": "Key string formatting functions in strings.py",
+ "what_breaks": [
+  "src/black/nodes.py \u2014 relies on string normalization functions",
+  "src/black/lines.py \u2014 uses lines_with_leading_tabs_expanded",
+  "src/black/trans.py \u2014 depends on regex patterns defined here"
+ ],
+ "why": "This file contains essential string manipulation functions that are directly used by multiple other modules. Changes here can affect how strings are processed throughout the codebase, especially in formatting and normalization tasks.",
+ "checklist": [
+  "Review changes to sub_twice and its impact on string normalization.",
+  "Check lines_with_leading_tabs_expanded for any changes in line handling.",
+  "Ensure regex patterns like STRING_PREFIX_RE and UNICODE_ESCAPE_RE remain intact."
+ ]
+}

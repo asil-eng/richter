@@ -1,0 +1,11 @@
+{
+ "headline": "Frequent Reworks in OpenAPI Models",
+ "diagnosis": "The file 'fastapi/openapi/models.py' is undergoing continuous rework primarily due to compatibility issues with Pydantic versions and type handling. The commit history reveals a pattern of dropping support for older versions and upgrading internal types, indicating instability in the model's structure.",
+ "plan": [
+  "Conduct a thorough review of all recent changes related to Pydantic compatibility to identify specific breaking changes that require adjustments in the OpenAPI models.",
+  "Establish a comprehensive suite of tests that cover various Pydantic versions to ensure backward compatibility and catch issues early in the development cycle.",
+  "Refactor the code to isolate the parts that frequently change due to Pydantic updates, potentially creating a wrapper or adapter layer to manage version differences more gracefully.",
+  "Engage with the community to gather feedback on the changes and ensure that the model meets user needs without frequent breaking changes."
+ ],
+ "owner_hint": "Ownership should be shared among the core team to mitigate bus factor risks."
+}

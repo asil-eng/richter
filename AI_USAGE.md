@@ -41,6 +41,7 @@ No participant AI usage has been recorded yet. Replace the placeholder row as yo
 | 2026-10-25T00:47+05:30 | Claude Code (Claude Opus 5.5) | Hosted live demo + README overhaul | Static hosting mode, Pages build, README rewrite | Pending participant review | Live URL tested end to end; links validated |
 | 2026-10-25T04:07+05:30 | Claude Code (Claude Opus 5.5) | Full-screen canvas | Full-screen toggle | Pending participant review | Real-browser fullscreen test |
 | 2026-10-25T04:21+05:30 | Claude Code (Claude Opus 5.5) | Three large demo repos: excalidraw, hugo, textual | Selected, analyzed and verified three large demo repos | Pending participant review | Real-browser frame-rate test |
+| 2026-10-25T04:35+05:30 | Claude Code (Claude Opus 5.5) | Callout pointing first-time visitors to the code city | Code city callout | Pending participant review | Playwright interaction test |
 
 ## Template preparation
 

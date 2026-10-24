@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useLayoutEffect, useRef, useState } from 'react'
 import { pollJob, startAnalyze, STATIC } from '../lib/data'
 import type { Job } from '../lib/data'
 import type { RepoEntry, View } from '../lib/types'
@@ -27,6 +27,38 @@ export function TopBar({ repos, slug, onRepo, view, onView, onAnalyzed, cityRead
   const [url, setUrl] = useState('')
   const [job, setJob] = useState<Job | null>(null)
   const [err, setErr] = useState<string | null>(null)
+
+  // first-visit callout pointing at the CODE CITY tab; gone once the city is opened or dismissed
+  const cityTab = useRef<HTMLButtonElement>(null)
+  const [hintSeen, setHintSeen] = useState(() => {
+    try {
+      return localStorage.getItem('richter.cityHintSeen') === '1'
+    } catch {
+      return false
+    }
+  })
+  const [hintPos, setHintPos] = useState<{ x: number; y: number } | null>(null)
+  const dismissHint = () => {
+    setHintSeen(true)
+    try {
+      localStorage.setItem('richter.cityHintSeen', '1')
+    } catch {
+      /* storage unavailable: hint just reappears next visit */
+    }
+  }
+  // opening the city by any route (tab, key 3, callout) retires the hint; React's
+  // "adjust state while rendering" pattern, guarded so it runs once
+  if (view === 'city' && !hintSeen) dismissHint()
+  useLayoutEffect(() => {
+    const place = () => {
+      const r = cityTab.current?.getBoundingClientRect()
+      setHintPos(r ? { x: r.left + r.width / 2, y: r.bottom } : null)
+    }
+    place()
+    window.addEventListener('resize', place)
+    return () => window.removeEventListener('resize', place)
+  }, [repos, slug])
+  const showHint = !hintSeen && view !== 'city' && cityReady && hintPos
 
   const run = async () => {
     setErr(null)
@@ -64,7 +96,8 @@ export function TopBar({ repos, slug, onRepo, view, onView, onAnalyzed, cityRead
         {VIEWS.map((v) => (
           <button
             key={v.id}
-            className={`view-tab ${view === v.id ? 'is-on' : ''}`}
+            ref={v.id === 'city' ? cityTab : undefined}
+            className={`view-tab ${view === v.id ? 'is-on' : ''} ${v.id === 'city' && showHint ? 'is-beckon' : ''}`}
             onClick={() => onView(v.id)}
             disabled={v.id === 'city' && !cityReady}
           >
@@ -115,6 +148,21 @@ export function TopBar({ repos, slug, onRepo, view, onView, onAnalyzed, cityRead
           </>
         )}
       </form>
+      )}
+      {showHint && (
+        <div className="city-hint" style={{ left: hintPos.x, top: hintPos.y + 10 }}>
+          <button className="city-hint-go" onClick={() => onView('city')}>
+            <span className="city-hint-icon">▲</span>
+            <span>
+              <b>See this repo as a 3D city</b>
+              <small>towers = files · glow = risk · replay its history</small>
+            </span>
+            <span className="city-hint-arrow">→</span>
+          </button>
+          <button className="city-hint-x" onClick={dismissHint} aria-label="dismiss">
+            ✕
+          </button>
+        </div>
       )}
     </header>
   )

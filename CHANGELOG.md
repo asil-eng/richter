@@ -21,6 +21,13 @@ Record each meaningful project change during the event, newest first. Update thi
 
 ## Event build log
 
+## 2026-10-25T04:35:33+05:30 — Callout pointing first-time visitors to the code city
+
+- Changed: `TopBar.tsx`: on first visit, a callout anchored under the CODE CITY tab ('See this repo as a 3D city · towers = files · glow = risk · replay its history →') appears after the boot screen, with a pulsing tab outline; clicking opens the city, ✕ dismisses it. Opening the city by any route retires it (persisted in localStorage). Styles in `app.css`. Hosted demo rebuilt.
+- Why: Participant: visitors would not realise the code city exists unless told.
+- Validation: Playwright: callout shown on first load, click opens CODE CITY, not shown again after returning to the risk map or after reload; no page errors. `tsc -b`, `oxlint` clean.
+- Limitations: Hint state is per browser (localStorage); private windows show it again.
+
 ## 2026-10-25T04:21:16+05:30 — Three large demo repos: excalidraw, hugo, textual
 
 - Changed: Added models, 28-frame snapshots, precomputed AI notes and cache for excalidraw/excalidraw (TypeScript, 529 files, 2,810 imports), gohugoio/hugo (Go, 537 files, 7,687 imports) and Textualize/textual (Python, 249 files, 1,106 imports). Demo index now lists seven repos; README findings table and repo counts updated; hosted demo rebuilt.

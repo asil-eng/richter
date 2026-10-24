@@ -26,6 +26,8 @@
   p { color: var(--dim); margin: 0 0 22px; }
   video { width: 100%; display: block; border: 1px solid var(--line); background: #000; box-shadow: 0 24px 80px rgba(0,0,0,.6); }
   .foot { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; margin-top: 14px; font-size: 13px; color: var(--dim); }
+  .cta { display: inline-block; margin: 0 0 22px; padding: 12px 20px; background: var(--orange); color: #060809; font-weight: 700; letter-spacing: .06em; border: 0; }
+  .cta:hover { background: #ff8340; }
   a { color: var(--text); text-decoration: none; border-bottom: 1px solid var(--orange); }
 </style>
 </head>
@@ -34,10 +36,11 @@
     <div class="kicker">SEISMIC RISK ANALYSIS FOR CODE</div>
     <h1>RICHTER <em>demo</em></h1>
     <p>Measure the magnitude of risk in any codebase: blast radius, hidden coupling and rework hotspots.</p>
+    <a class="cta" href="app/">Open the live app →</a>
     <video src="richter-demo.mp4" poster="demo-thumbnail.jpg" controls playsinline preload="metadata"></video>
     <div class="foot">
       <span>94 seconds · narration is AI-generated (OpenAI TTS)</span>
-      <a href="https://github.com/asil-eng/richter">github.com/asil-eng/richter →</a>
+      <span><a href="app/">Live app</a> · <a href="https://github.com/asil-eng/richter">github.com/asil-eng/richter →</a></span>
     </div>
   </main>
 </body>

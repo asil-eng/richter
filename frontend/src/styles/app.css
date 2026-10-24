@@ -482,6 +482,23 @@ kbd {
   margin-right: 3px;
 }
 
+.analyze-demo {
+  justify-content: space-between;
+  padding-right: var(--s-4);
+  font-size: var(--fs-10);
+  letter-spacing: 0.08em;
+  color: var(--text-3);
+  text-decoration: none;
+  transition: background var(--t-fast);
+}
+.analyze-demo b {
+  color: var(--orange);
+  font-weight: 600;
+}
+.analyze-demo:hover {
+  background: rgba(255, 106, 26, 0.08);
+}
+
 /* ============================================================ left rail */
 .repo-name {
   font-family: var(--font-head);

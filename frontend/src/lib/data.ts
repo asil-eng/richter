@@ -1,5 +1,10 @@
 import type { AskResult, Note, RepoEntry, RiskModel, Snapshots } from './types'
 
+// Hosted demo (GitHub Pages): no backend, everything comes from the static data dir.
+export const STATIC = import.meta.env.VITE_STATIC === '1'
+const B = import.meta.env.BASE_URL // '/' locally, '/richter/app/' on Pages
+export class LiveOnly extends Error {}
+
 async function getJSON<T>(url: string): Promise<T> {
   const r = await fetch(url)
   if (!r.ok) throw new Error(`${r.status} ${url}`)
@@ -20,24 +25,26 @@ async function postJSON<T>(url: string, body: unknown): Promise<T> {
 // Demo data is served statically from data/ so the app runs without the backend;
 // the API is the fallback for freshly analyzed repos.
 export async function listRepos(): Promise<RepoEntry[]> {
+  if (STATIC) return getJSON<RepoEntry[]>(`${B}models/index.json`)
   try {
     return await getJSON<RepoEntry[]>('/api/repos')
   } catch {
-    return getJSON<RepoEntry[]>('/models/index.json')
+    return getJSON<RepoEntry[]>(`${B}models/index.json`)
   }
 }
 
 export async function loadModel(slug: string, fresh = false): Promise<RiskModel> {
   try {
-    return await getJSON<RiskModel>(`/models/${slug}.json${fresh ? `?t=${Date.now()}` : ''}`)
-  } catch {
+    return await getJSON<RiskModel>(`${B}models/${slug}.json${fresh ? `?t=${Date.now()}` : ''}`)
+  } catch (e) {
+    if (STATIC) throw e
     return getJSON<RiskModel>(`/api/model/${slug}`)
   }
 }
 
 export async function loadSnapshots(slug: string): Promise<Snapshots | null> {
   try {
-    return await getJSON<Snapshots>(`/snapshots/${slug}.json`)
+    return await getJSON<Snapshots>(`${B}snapshots/${slug}.json`)
   } catch {
     return null
   }
@@ -52,12 +59,17 @@ interface NotesBundle {
 }
 const bundles = new Map<string, Promise<NotesBundle | null>>()
 function notesBundle(slug: string) {
-  if (!bundles.has(slug)) bundles.set(slug, getJSON<NotesBundle>(`/notes/${slug}.json`).catch(() => null))
+  if (!bundles.has(slug)) bundles.set(slug, getJSON<NotesBundle>(`${B}notes/${slug}.json`).catch(() => null))
   return bundles.get(slug)!
 }
 const normalize = (q: string) => q.toLowerCase().split(/\s+/).filter(Boolean).join(' ')
 
 export async function fetchNote(slug: string, file: string, kind: 'guard' | 'unblock'): Promise<Note> {
+  if (STATIC) {
+    const hit = (await notesBundle(slug))?.[kind][file]
+    if (hit) return { ...hit, cached: true }
+    throw new LiveOnly('note')
+  }
   try {
     return await postJSON<Note>('/api/note', { slug, file, kind })
   } catch (e) {
@@ -68,6 +80,11 @@ export async function fetchNote(slug: string, file: string, kind: 'guard' | 'unb
 }
 
 export async function askRepo(slug: string, question: string, focus?: string): Promise<AskResult> {
+  if (STATIC) {
+    const hit = focus ? undefined : (await notesBundle(slug))?.ask[normalize(question)]
+    if (hit) return { ...hit, cached: true }
+    throw new LiveOnly('ask')
+  }
   try {
     return await postJSON<AskResult>('/api/ask', { slug, question, focus })
   } catch (e) {
@@ -85,5 +102,8 @@ export interface Job {
   slug?: string
 }
 
-export const startAnalyze = (url: string) => postJSON<Job>('/api/analyze', { url })
+export const startAnalyze = (url: string) => {
+  if (STATIC) throw new LiveOnly('analyze')
+  return postJSON<Job>('/api/analyze', { url })
+}
 export const pollJob = (id: string) => getJSON<Job>(`/api/jobs/${id}`)

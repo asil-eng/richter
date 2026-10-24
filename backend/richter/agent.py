@@ -287,7 +287,10 @@ def precompute_notes(model: dict, slug: str, repo_root: Path | None, top: int = 
     nodes = model["nodes"]
     hot = sorted(nodes, key=lambda n: -n["magnitude"])[:top]
     wide = sorted(nodes, key=lambda n: -n["blast_size"])[:3]
-    files = list(dict.fromkeys(n["id"] for n in hot + wide))
+    # also cover the inspector's START HERE picks (most reworked, riskiest single-author file)
+    reworked = sorted(nodes, key=lambda n: -n["fixes"])[:2]
+    lonely = sorted((n for n in nodes if n["bus_factor"]), key=lambda n: -n["magnitude"])[:2]
+    files = list(dict.fromkeys(n["id"] for n in hot + wide + reworked + lonely))
     jobs = [("guard", f) for f in files] + [("unblock", f) for f in files]
     with ThreadPoolExecutor(max_workers=6) as ex:
         notes = list(ex.map(lambda j: (j, (guard_note if j[0] == "guard" else unblock_plan)(

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { fetchNote } from '../lib/data'
+import { fetchNote, STATIC } from '../lib/data'
 import { descriptor, fmtM, heat, shortName } from '../lib/heat'
 import type { Note, RiskModel, Snapshots } from '../lib/types'
 import { Gauge, Meter } from './Gauge'
@@ -408,8 +408,12 @@ function AgentNote({ slug, file, kind }: { slug: string; file: string; kind: Kin
   if (err)
     return (
       <div className="note note-err">
-        <div className="label-dim">AGENT OFFLINE</div>
-        <p>Notes need the Richter API running (`uvicorn richter.api:app`). {err}</p>
+        <div className="label-dim">{STATIC ? 'NOT IN THE DEMO CACHE' : 'AGENT OFFLINE'}</div>
+        <p>
+          {STATIC
+            ? 'The hosted demo ships AI notes for each repo's riskiest files and every START HERE pick. Run Richter locally with an OpenAI key to generate notes for any file.'
+            : `Notes need the Richter API running (uvicorn richter.api:app). ${err}`}
+        </p>
       </div>
     )
   if (!note)

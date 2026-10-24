@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { pollJob, startAnalyze } from '../lib/data'
+import { pollJob, startAnalyze, STATIC } from '../lib/data'
 import type { Job } from '../lib/data'
 import type { RepoEntry, View } from '../lib/types'
 import { RepoPicker } from './RepoPicker'
@@ -75,6 +75,12 @@ export function TopBar({ repos, slug, onRepo, view, onView, onAnalyzed, cityRead
         ))}
       </nav>
 
+      {STATIC ? (
+        <a className="analyze analyze-demo" href="https://github.com/asil-eng/richter#-run-it" target="_blank" rel="noreferrer">
+          <span>LIVE DEMO · 4 REPOS</span>
+          <b>ANALYZE YOUR REPO →</b>
+        </a>
+      ) : (
       <form
         className={`analyze ${running ? 'is-running' : ''} ${err ? 'is-err' : ''}`}
         onSubmit={(e) => {
@@ -109,6 +115,7 @@ export function TopBar({ repos, slug, onRepo, view, onView, onAnalyzed, cityRead
           </>
         )}
       </form>
+      )}
     </header>
   )
 }

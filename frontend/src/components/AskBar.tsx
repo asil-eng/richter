@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { askRepo } from '../lib/data'
+import { askRepo, LiveOnly, STATIC } from '../lib/data'
 import { heat, shortName } from '../lib/heat'
 import type { AskResult, RiskModel } from '../lib/types'
 import { Seismo } from './Seismo'
@@ -35,7 +35,8 @@ export function AskBar({ slug, model, selected, onHighlight, onSelect }: Props) 
   const input = useRef<HTMLInputElement>(null)
   // the selected file is sent as context unless the user detaches it
   const [detached, setDetached] = useState<number | null>(null)
-  const focusNode = selected !== null && selected !== detached ? model.nodes[selected] : null
+  // the hosted demo only has precomputed whole-repo answers, so it never sends a focus
+  const focusNode = !STATIC && selected !== null && selected !== detached ? model.nodes[selected] : null
   const [askedAbout, setAskedAbout] = useState<string | null>(null)
 
   const suggestions = useMemo<Suggestion[]>(() => {
@@ -52,6 +53,7 @@ export function AskBar({ slug, model, selected, onHighlight, onSelect }: Props) 
     const wide = [...model.nodes].sort((a, b) => b.blast_size - a.blast_size)[0]
     const tags = ['FRAGILE', 'COUPLING', 'IMPACT']
     const out: Suggestion[] = CACHED.map((q, k) => ({ q, tag: tags[k], cached: true }))
+    if (STATIC) return out
     if (top) out.push({ q: `Why is ${shortName(top.id)} so risky?`, tag: 'FILE', cached: false })
     if (wide && wide !== top) out.push({ q: `What breaks if I change ${shortName(wide.id)}?`, tag: 'IMPACT', cached: false })
     return out
@@ -93,6 +95,11 @@ export function AskBar({ slug, model, selected, onHighlight, onSelect }: Props) 
       onHighlight(new Set(r.files.map((f) => idx.get(f)!).filter((i) => i !== undefined)))
     } catch (e) {
       const m = (e as Error).message
+      if (e instanceof LiveOnly) {
+        setErr('This hosted demo answers the ⚡ questions from a precomputed cache. Run Richter locally with an OpenAI key to ask anything, including questions about the selected file.')
+        onHighlight(new Set())
+        return
+      }
       setErr(
         m.includes('API key')
           ? 'Free-form questions need an OpenAI key (OPENAI_API_KEY in .env). The suggested questions marked ⚡ work without one.'
@@ -228,7 +235,9 @@ export function AskBar({ slug, model, selected, onHighlight, onSelect }: Props) 
           <span className="ask-dot" />
           ASK
         </span>
-        {focusNode ? (
+        {STATIC ? (
+          <span className="ask-ctx ask-ctx-repo" title="Hosted demo: precomputed answers">DEMO · ⚡ CACHED</span>
+        ) : focusNode ? (
           <span className="ask-ctx" title={`Questions are answered with ${focusNode.id} as context`}>
             <span className="ask-ctx-pin">◉</span>
             <span className="ask-ctx-file">{shortName(focusNode.id)}</span>

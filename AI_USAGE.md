@@ -22,6 +22,7 @@ No participant AI usage has been recorded yet. Replace the placeholder row as yo
 | 2026-10-24T22:25+05:30 | Claude Code (Claude Opus 5.5) | Readability pass | Readability pass on tokens, CSS and canvas labels | Pending participant review | tsc/lint clean; screenshots reviewed |
 | 2026-10-24T22:29+05:30 | Claude Code (Claude Opus 5.5) | Fix: long URL in Analyze shifted the whole UI sideways | Diagnosed and fixed top-bar overflow | Pending participant review | Playwright measurements at 4 widths |
 | 2026-10-24T22:34+05:30 | Claude Code (Claude Opus 5.5) | City: camera-facing district labels, clearer legend | Diagnosed folder/district question, fixed label orientation and HUD | Pending participant review | Screenshots from two camera angles |
+| 2026-10-24T22:36+05:30 | Claude Code (Claude Opus 5.5) | Revert camera-facing district labels | Reverted label orientation change on request | Pending participant review | tsc clean |
 
 ## Template preparation
 

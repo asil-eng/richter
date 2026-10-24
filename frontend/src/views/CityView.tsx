@@ -128,7 +128,7 @@ function labelTexture(text: string): { tex: THREE.CanvasTexture; aspect: number 
   c.width = w
   c.height = 64
   g.font = font
-  g.fillStyle = 'rgba(150,166,172,0.9)' // kept below the bloom threshold so text stays crisp
+  g.fillStyle = 'rgba(214,224,228,0.95)'
   g.textBaseline = 'middle'
   g.fillText(text, 12, 34)
   const tex = new THREE.CanvasTexture(c)
@@ -244,7 +244,6 @@ export function CityView({ model, snapshots, time, selected, highlight, onSelect
 
     // districts: raised plots with hairline outlines + flat labels
     const disposables: { dispose: () => void }[] = []
-    const labels: { mesh: THREE.Mesh; cx: number; cz: number; hw: number; hd: number; lh: number }[] = []
     for (const d of districts) {
       const plot = new THREE.Mesh(
         new THREE.BoxGeometry(d.w, 0.12, d.d),
@@ -266,11 +265,9 @@ export function CityView({ model, snapshots, time, selected, highlight, onSelect
         new THREE.PlaneGeometry(lh * aspect, lh),
         new THREE.MeshBasicMaterial({ map: tex, transparent: true, depthWrite: false }),
       )
-      label.rotation.order = 'YXZ'
       label.rotation.x = -Math.PI / 2
-      label.position.y = 0.14
+      label.position.set(d.x + (lh * aspect) / 2 + 0.2, 0.14, d.z + d.d + 0.3 + lh / 2)
       scene.add(label)
-      labels.push({ mesh: label, cx: d.x + d.w / 2, cz: d.z + d.d / 2, hw: d.w / 2, hd: d.d / 2, lh })
       disposables.push(tex)
     }
 
@@ -586,18 +583,6 @@ export function CityView({ model, snapshots, time, selected, highlight, onSelect
         hoverBox.position.set(t.x, 0.12, t.z)
         hoverBox.scale.set(t.w * 1.04, Math.max(0.01, t.h) * 1.01, t.w * 1.04)
       } else hoverBox.visible = false
-
-      // district labels lie on the ground but always read upright: each turns to face
-      // the camera and slides to the edge of its plot nearest the viewer
-      for (const L of labels) {
-        const a = Math.atan2(camera.position.x - L.cx, camera.position.z - L.cz)
-        const sa = Math.abs(Math.sin(a))
-        const ca = Math.abs(Math.cos(a))
-        const r = Math.min(sa > 1e-3 ? L.hw / sa : Infinity, ca > 1e-3 ? L.hd / ca : Infinity) + L.lh * 0.9
-        L.mesh.position.x = L.cx + Math.sin(a) * r
-        L.mesh.position.z = L.cz + Math.cos(a) * r
-        L.mesh.rotation.y = a
-      }
 
       controls.update()
       composer.render()

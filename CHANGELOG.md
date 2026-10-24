@@ -4,6 +4,13 @@ Record each meaningful project change during the event, newest first. Update thi
 
 ## Event build log
 
+## 2026-10-24T22:36:42+05:30 — Revert camera-facing district labels
+
+- Changed: Restored `frontend/src/views/CityView.tsx` to its version before commit 8da6b0c: district labels lie flat at a fixed position on each plot's front edge, original label brightness. The legend/HUD change from 8da6b0c is kept.
+- Why: Participant asked for the label change to be undone.
+- Validation: `git diff` shows only CityView.tsx reverted (17 lines removed, 2 restored); `tsc -b` clean.
+- Limitations: Labels read mirrored when the camera orbits to the far side, as before.
+
 ## 2026-10-24T22:34:54+05:30 — City: camera-facing district labels, clearer legend
 
 - Changed: `CityView.tsx`: district labels turn to face the camera every frame and sit on the plot edge nearest the viewer (they read mirrored/upside-down when orbiting); label color kept below the bloom threshold. `App.tsx` + `app.css`: HUD restructured into a wrapping row plus hint line; city legend now says DISTRICT = FOLDER WITH .PY FILES, with a tooltip noting tests/docs/examples are excluded by default.

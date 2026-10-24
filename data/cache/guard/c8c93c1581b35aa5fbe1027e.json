@@ -1,0 +1,16 @@
+{
+ "headline": "Key classes and functions in DOM module",
+ "what_breaks": [
+  "src/textual/message.py \u2014 relies on DOMNode",
+  "src/textual/app.py \u2014 relies on DOMNode",
+  "src/textual/widget.py \u2014 relies on DOMNode",
+  "src/textual/reactive.py \u2014 relies on Reactive"
+ ],
+ "why": "The DOMNode class is foundational for the Textual Document Object Model, affecting multiple components like Widgets and Screens. Changes to this file can disrupt the functionality of many dependent modules.",
+ "checklist": [
+  "Review changes to DOMNode class and its methods.",
+  "Check the implementation of check_identifiers function for validation logic.",
+  "Ensure that any modifications to exceptions like BadIdentifier do not affect error handling.",
+  "Verify the impact of changes on the ReactiveType and its usage."
+ ]
+}

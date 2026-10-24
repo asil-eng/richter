@@ -1,0 +1,8 @@
+{
+ "answer": "The most fragile files in this codebase are those with the highest magnitude scores. The top three are: 'tpl/template.go' with a magnitude of 7.3, 'helpers/path.go' with a magnitude of 7.1, and 'helpers/url.go' with a magnitude of 6.8. These files are likely to break if changes are made, indicating a higher risk.",
+ "files": [
+  "tpl/template.go",
+  "helpers/path.go",
+  "helpers/url.go"
+ ]
+}

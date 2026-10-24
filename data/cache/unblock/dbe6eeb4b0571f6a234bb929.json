@@ -1,0 +1,11 @@
+{
+ "headline": "Frequent Reworks of Copy Functions",
+ "diagnosis": "The file 'common/hugio/copy.go' has undergone multiple reworks, primarily focusing on the 'CopyDir' and 'CopyFile' functions. The recurring theme in the commit messages indicates issues with filesystem compatibility and error handling, particularly with non-OS filesystems.",
+ "plan": [
+  "Conduct a thorough review of the 'CopyFile' and 'CopyDir' functions to identify and document all edge cases related to different filesystem types.",
+  "Implement comprehensive unit tests for both functions, specifically targeting scenarios involving non-OS filesystems and error handling to ensure robustness.",
+  "Refactor the code to improve clarity and maintainability, possibly introducing helper functions for repeated logic in error handling.",
+  "Establish a code review process for future changes to 'common/hugio/copy.go' to ensure that any modifications are thoroughly vetted for potential issues."
+ ],
+ "owner_hint": "The current author is the sole owner, increasing risk if unavailable."
+}

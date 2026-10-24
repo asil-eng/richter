@@ -1,0 +1,14 @@
+{
+ "headline": "ETA class impacts progress estimation functionality",
+ "what_breaks": [
+  "src/textual/widgets/_progress_bar.py \u2014 relies on ETA for progress updates",
+  "src/textual/app.py \u2014 may utilize ETA for app-wide timing features",
+  "src/textual/widgets/__init__.py \u2014 imports ETA for widget integration"
+ ],
+ "why": "The ETA class is crucial for calculating speed and estimating time to arrival, which directly affects progress display in the application. Changes to its methods or properties could lead to incorrect progress reporting across multiple components.",
+ "checklist": [
+  "Review changes to the add_sample method for impact on sample management",
+  "Ensure reset logic is intact to prevent incorrect progress calculations",
+  "Check the speed property for any changes in speed calculation logic"
+ ]
+}

@@ -1,0 +1,14 @@
+{
+ "headline": "Guard note for expand_tabs.py edits",
+ "what_breaks": [
+  "src/textual/_cells.py \u2014 relies on cell_len function",
+  "src/textual/widgets/_input.py \u2014 uses expand_tabs_inline function",
+  "src/textual/document/_wrapped_document.py \u2014 depends on expand_text_tabs_from_widths function"
+ ],
+ "why": "This file contains critical functions for expanding tab characters in text. Changes here could affect multiple components that rely on proper text formatting.",
+ "checklist": [
+  "Review changes to get_tab_widths function for impact on cell_len usage.",
+  "Ensure expand_tabs_inline function maintains expected output format.",
+  "Check expand_text_tabs_from_widths for compatibility with Text instances."
+ ]
+}

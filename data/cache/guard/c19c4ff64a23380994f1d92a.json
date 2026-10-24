@@ -1,0 +1,14 @@
+{
+ "headline": "Key Functions in helpers/general.go",
+ "what_breaks": [
+  "deps/deps.go \u2014 relies on TCPListen() for network operations",
+  "resources/resource/resource_helpers.go \u2014 uses ReaderToString() for reading data",
+  "resources/page/permalinks.go \u2014 depends on GetTitleFunc() for title transformations"
+ ],
+ "why": "This file contains critical utility functions that are widely used across various components. Changes to these functions could lead to cascading failures in dependent files, affecting overall functionality.",
+ "checklist": [
+  "Review changes to TCPListen() for impact on network listeners.",
+  "Ensure ReaderToString() modifications do not alter expected string outputs.",
+  "Validate GetTitleFunc() to maintain title case transformations."
+ ]
+}

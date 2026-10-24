@@ -1,0 +1,18 @@
+{
+ "answer": "Hidden coupling is present between the following files: src/textual/layouts/vertical.py and src/textual/layouts/horizontal.py, which have 43 commits together; src/textual/widget.py and src/textual/css/constants.py with 35 commits; src/textual/widget.py and src/textual/scroll_view.py with 27 commits; src/textual/widgets/_checkbox.py and src/textual/widgets/_radio_button.py with 10 commits; and several demo files including src/textual/demo/demo_app.py with src/textual/demo/home.py, src/textual/demo/page.py, and others, showing multiple commits of interaction.",
+ "files": [
+  "src/textual/layouts/vertical.py",
+  "src/textual/layouts/horizontal.py",
+  "src/textual/widget.py",
+  "src/textual/css/constants.py",
+  "src/textual/scroll_view.py",
+  "src/textual/widgets/_checkbox.py",
+  "src/textual/widgets/_radio_button.py",
+  "src/textual/demo/demo_app.py",
+  "src/textual/demo/home.py",
+  "src/textual/demo/page.py",
+  "src/textual/demo/projects.py",
+  "src/textual/demo/widgets.py",
+  "src/textual/demo/data.py"
+ ]
+}

@@ -1,0 +1,16 @@
+{
+ "headline": "Guard Note for utils.ts Modifications",
+ "what_breaks": [
+  "packages/common/src/index.ts \u2014 relies on exported utility functions",
+  "packages/common/src/appEventBus.ts \u2014 may depend on event handling utilities",
+  "packages/common/src/random.ts \u2014 could use random-related utilities",
+  "packages/common/src/url.ts \u2014 might interact with URL-related functions"
+ ],
+ "why": "This file contains essential utility functions that are widely used across multiple modules. Changes here could lead to cascading failures in dependent files if not handled carefully.",
+ "checklist": [
+  "Review all exported functions for potential breaking changes.",
+  "Ensure any new utility functions are properly typed and documented.",
+  "Check for consistency in utility function behavior with existing code.",
+  "Consider the impact of changes on dependent files and their functionality."
+ ]
+}

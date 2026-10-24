@@ -1,0 +1,14 @@
+{
+ "headline": "Guard note for src/textual/geometry.py edits",
+ "what_breaks": [
+  "src/textual/app.py \u2014 relies on geometry for layout management",
+  "src/textual/color.py \u2014 may depend on geometry for color positioning",
+  "src/textual/widget.py \u2014 uses geometry for widget placement and sizing"
+ ],
+ "why": "This file contains critical classes and functions for managing terminal geometry, specifically the Offset class and the clamp function. Changes here can directly affect layout and rendering across multiple dependent files.",
+ "checklist": [
+  "Review changes to the Offset class and its properties",
+  "Ensure clamp function logic remains intact",
+  "Check for any impact on dependent files like app.py and widget.py"
+ ]
+}

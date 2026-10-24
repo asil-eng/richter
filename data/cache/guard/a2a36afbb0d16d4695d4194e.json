@@ -1,0 +1,15 @@
+{
+ "headline": "Key dependencies for textual.app.App class",
+ "what_breaks": [
+  "src/textual/dom.py \u2014 relies on App for rendering structure",
+  "src/textual/widget.py \u2014 depends on App for widget lifecycle",
+  "src/textual/_context.py \u2014 uses App for active application context"
+ ],
+ "why": "The App class is foundational for the Textual framework, serving as the base for all applications. Changes here can significantly impact the rendering and functionality of dependent modules.",
+ "checklist": [
+  "Review changes to the App class methods and properties.",
+  "Check interactions with active_app in _context.py.",
+  "Ensure compatibility with widget lifecycle in widget.py.",
+  "Verify DOM structure updates in dom.py."
+ ]
+}

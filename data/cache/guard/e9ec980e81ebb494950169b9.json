@@ -1,0 +1,15 @@
+{
+ "headline": "Key dependencies in App.tsx require careful editing",
+ "what_breaks": [
+  "packages/excalidraw/types.ts \u2014 relies on types defined here",
+  "packages/excalidraw/data/library.ts \u2014 uses components and states managed in App.tsx",
+  "packages/excalidraw/components/ContextMenu.tsx \u2014 interacts with app state and context"
+ ],
+ "why": "This file is central to the application, managing the main app state and UI interactions. Changes here can ripple through numerous components and affect overall functionality.",
+ "checklist": [
+  "Review changes to state management functions like getObservedAppState.",
+  "Check interactions with imported components like ContextMenu and Dialog.",
+  "Ensure any new utility functions do not conflict with existing ones from @excalidraw/common.",
+  "Validate that changes do not break the expected app behavior in dependent components."
+ ]
+}

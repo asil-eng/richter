@@ -1,0 +1,11 @@
+{
+ "headline": "Frequent Reworks in Linear Element Editor",
+ "diagnosis": "The linearElementEditor.ts file is undergoing frequent reworks primarily due to issues related to arrow binding and focus handling. The commit history indicates a pattern of fixes addressing binding inaccuracies and focus loss during transitions, suggesting a lack of stability in these features.",
+ "plan": [
+  "Conduct a thorough review of the binding logic, particularly in the functions related to arrow endpoints and focus handling.",
+  "Implement comprehensive unit tests for the binding and focus functionalities to ensure they behave as expected under various scenarios.",
+  "Refactor the code to simplify the binding logic and reduce complexity, potentially isolating binding concerns into dedicated modules.",
+  "Engage with the team to gather insights on the frequent fixes and establish clearer requirements for the binding and focus features."
+ ],
+ "owner_hint": "The team responsible for the binding and arrow features should take ownership of these issues."
+}

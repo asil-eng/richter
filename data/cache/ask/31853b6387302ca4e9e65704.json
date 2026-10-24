@@ -1,0 +1,8 @@
+{
+ "answer": "The most fragile files in this selection are: 'packages/excalidraw/components/App.tsx' with a magnitude of 7.6, 'packages/excalidraw/types.ts' with a magnitude of 6.2, and 'packages/common/src/constants.ts' with a magnitude of 6.1. These files have high fragility scores, indicating they are likely to break with changes.",
+ "files": [
+  "packages/excalidraw/components/App.tsx",
+  "packages/excalidraw/types.ts",
+  "packages/common/src/constants.ts"
+ ]
+}

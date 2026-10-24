@@ -1,0 +1,14 @@
+{
+ "headline": "Language struct and translation operations",
+ "what_breaks": [
+  "resources/resource/resourcetypes.go \u2014 relies on Language struct",
+  "tpl/template.go \u2014 uses LanguageTranslateOps interface",
+  "config/allconfig/configlanguage.go \u2014 depends on Language for language settings"
+ ],
+ "why": "This file defines the Language struct and the LanguageTranslateOps interface, which are critical for language handling and translation functionalities. Changes here can impact multiple components that rely on language configurations and translations.",
+ "checklist": [
+  "Review changes to Language struct fields and methods",
+  "Check compatibility with LanguageTranslateOps interface implementations",
+  "Ensure that any modifications to NewLanguage function are reflected in dependent files"
+ ]
+}

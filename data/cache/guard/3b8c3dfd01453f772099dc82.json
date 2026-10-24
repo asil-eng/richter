@@ -1,0 +1,14 @@
+{
+ "headline": "Key Dependencies for Screen Class Functionality",
+ "what_breaks": [
+  "src/textual/dom.py \u2014 relies on Screen for rendering content",
+  "src/textual/app.py \u2014 utilizes Screen for application UI",
+  "src/textual/widget.py \u2014 Screen is a widget subclass"
+ ],
+ "why": "The Screen class is central to rendering and managing terminal content, impacting many components. Changes here can disrupt the functionality of multiple dependent modules.",
+ "checklist": [
+  "Review changes to Screen class methods and properties",
+  "Check interactions with BackgroundScreen and other renderables",
+  "Ensure compatibility with DOMNode and Widget classes"
+ ]
+}

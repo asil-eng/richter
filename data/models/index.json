@@ -17,6 +17,23 @@
   "has_snapshots": true
  },
  {
+  "slug": "excalidraw__excalidraw",
+  "name": "excalidraw/excalidraw",
+  "summary": {
+   "files": 529,
+   "edges": 2810,
+   "cochange_pairs": 55,
+   "ghost_edges": 20,
+   "bus_factor_files": 96,
+   "languages": {
+    "typescript": 504,
+    "javascript": 25
+   }
+  },
+  "commits": 4097,
+  "has_snapshots": true
+ },
+ {
   "slug": "fastapi__fastapi",
   "name": "fastapi/fastapi",
   "summary": {
@@ -27,6 +44,24 @@
    "bus_factor_files": 26
   },
   "commits": 7932,
+  "has_snapshots": true
+ },
+ {
+  "slug": "gohugoio__hugo",
+  "name": "gohugoio/hugo",
+  "summary": {
+   "files": 537,
+   "edges": 7687,
+   "cochange_pairs": 137,
+   "ghost_edges": 99,
+   "bus_factor_files": 182,
+   "languages": {
+    "go": 524,
+    "javascript": 9,
+    "c/c++": 4
+   }
+  },
+  "commits": 9803,
   "has_snapshots": true
  },
  {
@@ -53,6 +88,23 @@
    "bus_factor_files": 38
   },
   "commits": 3387,
+  "has_snapshots": true
+ },
+ {
+  "slug": "textualize__textual",
+  "name": "Textualize/textual",
+  "summary": {
+   "files": 249,
+   "edges": 1106,
+   "cochange_pairs": 57,
+   "ghost_edges": 20,
+   "bus_factor_files": 42,
+   "languages": {
+    "python": 248,
+    "typescript": 1
+   }
+  },
+  "commits": 10740,
   "has_snapshots": true
  }
 ]

@@ -1,0 +1,14 @@
+{
+ "headline": "Key classes in reactive.py: Reactive and Initialize",
+ "what_breaks": [
+  "src/textual/dom.py \u2014 relies on DOMNode from this file",
+  "src/textual/app.py \u2014 uses Reactive for app state management",
+  "src/textual/widgets/_toggle_button.py \u2014 depends on reactive properties"
+ ],
+ "why": "The Reactive class is central to the reactivity model used throughout the application. Changes in this file can affect a wide range of components that rely on reactive state management.",
+ "checklist": [
+  "Review changes to the Reactive and Initialize classes for impact.",
+  "Check any modifications to the invoke_watcher function, as it affects state updates.",
+  "Ensure that any new dependencies are compatible with the existing DOMNode usage."
+ ]
+}

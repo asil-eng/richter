@@ -1,0 +1,14 @@
+{
+ "headline": "Fs struct and its constructors are critical",
+ "what_breaks": [
+  "deps/deps.go \u2014 relies on Fs struct",
+  "helpers/path.go \u2014 uses methods from Fs",
+  "transform/chain.go \u2014 interacts with Fs for file operations"
+ ],
+ "why": "The Fs struct is central to managing file systems in Hugo, and its constructors directly affect how file systems are initialized. Changes to this file could disrupt the functionality of numerous dependent files that rely on the Fs struct and its methods.",
+ "checklist": [
+  "Review changes to NewDefault and NewFrom functions for impact on Fs instantiation.",
+  "Check any modifications to the getWorkingPublishDir function for config dependency changes.",
+  "Ensure that any changes to Fs fields do not break existing assumptions in dependent files."
+ ]
+}

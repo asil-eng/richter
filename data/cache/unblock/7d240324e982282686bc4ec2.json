@@ -1,0 +1,11 @@
+{
+ "headline": "Frequent Template System Reworks",
+ "diagnosis": "The commit history indicates a recurring theme of reworking the template system, particularly around handling partials and context management. Key issues include robustness, performance, and preventing deadlocks, which suggest that the underlying architecture may be fragile or overly complex.",
+ "plan": [
+  "Conduct a thorough review of the template system's architecture focusing on the handling of partials and context management.",
+  "Identify and isolate the root causes of the recurring issues by analyzing the recent commits related to robustness and performance.",
+  "Implement a series of unit tests specifically targeting the identified weak areas, especially around the `partialCached` and recursion detection functionalities.",
+  "Establish a documentation and review process for future changes to the template system to ensure clarity and maintainability."
+ ],
+ "owner_hint": "Ownership should be shared among the core template team to reduce bus factor."
+}

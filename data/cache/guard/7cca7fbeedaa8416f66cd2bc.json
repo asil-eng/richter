@@ -1,0 +1,14 @@
+{
+ "headline": "Critical Dependencies in hugolib/page.go",
+ "what_breaks": [
+  "create/content.go \u2014 relies on page.Page interface",
+  "commands/commandeer.go \u2014 uses pageContext for error handling",
+  "commands/hugobuilder.go \u2014 depends on pageState for page management"
+ ],
+ "why": "This file defines the pageState struct and pageContext interface, which are essential for managing page data and context throughout the application. Changes here can impact multiple commands and resource handling across the project.",
+ "checklist": [
+  "Review changes to pageState struct and its methods",
+  "Check impacts on pageContext interface implementations",
+  "Ensure compatibility with create/content.go and commands/commandeer.go"
+ ]
+}

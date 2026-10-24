@@ -1,0 +1,14 @@
+{
+ "headline": "Key string comparison functions in compare_strings.go",
+ "what_breaks": [
+  "common/hstrings/strings.go \u2014 relies on Strings() for string comparison",
+  "identity/finder.go \u2014 depends on LessStrings() for ordering",
+  "resources/page/pages.go \u2014 may utilize string comparison for sorting"
+ ],
+ "why": "This file contains critical functions for string comparison, specifically Strings() and LessStrings(). Changes here can affect a wide range of dependent files that rely on these comparisons for functionality.",
+ "checklist": [
+  "Review changes to Strings() for impact on dependent files.",
+  "Check LessStrings() for any modifications that could alter comparisons.",
+  "Ensure that comments accurately reflect the logic in compareFold()."
+ ]
+}

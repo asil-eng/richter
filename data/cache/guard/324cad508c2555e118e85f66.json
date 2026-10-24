@@ -1,0 +1,14 @@
+{
+ "headline": "Critical angle calculations and conversions",
+ "what_breaks": [
+  "packages/math/src/index.ts \u2014 relies on exported functions for angle operations",
+  "packages/math/src/point.ts \u2014 uses angle-related types and functions"
+ ],
+ "why": "This file contains essential functions for angle normalization and conversion, which are heavily utilized by other modules. Changes here could disrupt angle calculations across multiple components, affecting functionality in dependent files.",
+ "checklist": [
+  "Verify changes to normalizeRadians and radiansDifference functions",
+  "Check impact on cartesian2Polar and angle conversion functions",
+  "Ensure type integrity for Degrees and Radians in all functions",
+  "Review interactions with PRECISION in isRightAngleRads function"
+ ]
+}

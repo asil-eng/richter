@@ -1,0 +1,22 @@
+{
+ "answer": "Hidden coupling is present between the following files: resources/page/page.go and resources/page/page_nop.go, parser/pageparser/pagelexer.go and parser/pageparser/pageparser.go, parser/pageparser/pagelexer.go and parser/pageparser/item.go, hugolib/page__common.go and hugolib/page__new.go, hugolib/page.go and hugolib/page__output.go, resources/resource_transformers/tocss/dartsass/client.go and resources/resource_transformers/tocss/dartsass/transform.go, parser/pageparser/item.go and parser/pageparser/pageparser.go, scripts/fork_go_templates/main.go and tpl/internal/go_templates/testenv/testenv.go, modules/client.go and modules/module.go, tpl/tplimpl/templates.go and tpl/tplimpl/templatestore.go.",
+ "files": [
+  "resources/page/page.go",
+  "resources/page/page_nop.go",
+  "parser/pageparser/pagelexer.go",
+  "parser/pageparser/pageparser.go",
+  "parser/pageparser/item.go",
+  "hugolib/page__common.go",
+  "hugolib/page__new.go",
+  "hugolib/page.go",
+  "hugolib/page__output.go",
+  "resources/resource_transformers/tocss/dartsass/client.go",
+  "resources/resource_transformers/tocss/dartsass/transform.go",
+  "scripts/fork_go_templates/main.go",
+  "tpl/internal/go_templates/testenv/testenv.go",
+  "modules/client.go",
+  "modules/module.go",
+  "tpl/tplimpl/templates.go",
+  "tpl/tplimpl/templatestore.go"
+ ]
+}

@@ -21,6 +21,13 @@ Record each meaningful project change during the event, newest first. Update thi
 
 ## Event build log
 
+## 2026-10-25T04:21:16+05:30 — Three large demo repos: excalidraw, hugo, textual
+
+- Changed: Added models, 28-frame snapshots, precomputed AI notes and cache for excalidraw/excalidraw (TypeScript, 529 files, 2,810 imports), gohugoio/hugo (Go, 537 files, 7,687 imports) and Textualize/textual (Python, 249 files, 1,106 imports). Demo index now lists seven repos; README findings table and repo counts updated; hosted demo rebuilt.
+- Why: Participant wanted large, famous repos preloaded so the code city and graph look big in the demo.
+- Validation: Analyses: excalidraw 173 s, hugo 334 s, textual 117 s; snapshots 38-60 s each. Headed Chrome: map, cascade and city at 120 fps for all three, no page errors. README grades computed with the app's report formula (matches the UI: excalidraw B 4.4, hugo B 3.5, textual B 4.1).
+- Limitations: Repos with far longer histories (e.g. microsoft/vscode, ~130k commits) are out of reach for local analysis and the browser.
+
 ## 2026-10-25T04:07:44+05:30 — Full-screen canvas
 
 - Changed: `App.tsx`: FULL SCREEN button (top-right of the canvas, under find file) and `X` key toggle the browser Fullscreen API on the stage (graph, risk map, city); label switches to EXIT; Esc also exits. `app.css` styles; `Inspector.tsx` keys list gains X.

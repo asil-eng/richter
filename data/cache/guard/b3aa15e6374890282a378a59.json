@@ -1,0 +1,14 @@
+{
+ "headline": "Guard Note for newElement.ts Changes",
+ "what_breaks": [
+  "packages/element/src/index.ts \u2014 relies on exports from newElement.ts",
+  "packages/element/src/arrowEndpointText.ts \u2014 uses functions/types from newElement.ts",
+  "packages/element/src/convertToShape.ts \u2014 depends on newElement.ts for element creation"
+ ],
+ "why": "This file is foundational for creating new elements in the application. Changes here can impact multiple dependent files and their functionalities.",
+ "checklist": [
+  "Review changes to _newElementBase function and its parameters.",
+  "Check interactions with imported utility functions like getUpdatedTimestamp.",
+  "Ensure consistency with the ExcalidrawElement types used throughout."
+ ]
+}

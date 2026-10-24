@@ -1,0 +1,14 @@
+{
+ "headline": "Key Configurations in commonConfig.go",
+ "what_breaks": [
+  "deps/deps.go \u2014 relies on LoadConfigResult",
+  "media/config.go \u2014 relies on BaseConfig",
+  "markup/converter/converter.go \u2014 relies on BuildConfig"
+ ],
+ "why": "This file contains essential configuration structures that are foundational for multiple components. Changes here could impact the behavior of dependent modules across the codebase.",
+ "checklist": [
+  "Review changes to BaseConfig and BuildConfig structures",
+  "Check for impacts on LoadConfigResult usage in deps/deps.go",
+  "Ensure backward compatibility for deprecated directory fields"
+ ]
+}

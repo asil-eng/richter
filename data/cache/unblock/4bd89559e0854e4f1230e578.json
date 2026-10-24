@@ -1,0 +1,11 @@
+{
+ "headline": "Frequent Rework on Restore Functionality",
+ "diagnosis": "The file 'restore.ts' has undergone numerous changes, particularly in handling text and element restoration. The recurring theme in the commit messages indicates a focus on fixing issues related to element properties and their restoration process, leading to instability.",
+ "plan": [
+  "Conduct a thorough review of the restoration logic, particularly focusing on the handling of text elements and their properties, as highlighted in commit messages like 'normalize container + bound text order on restore' and 'handle invalid points on restore'.",
+  "Implement comprehensive unit tests for the restoration functionality to cover edge cases mentioned in the commits, such as large line elements and invalid points.",
+  "Collaborate with the authors of the most recent commits to gather insights on the specific issues they encountered, ensuring that their feedback is incorporated into the next iteration of the code.",
+  "Establish a code review process that emphasizes the stability of the restoration logic before merging future changes, to prevent further reworks."
+ ],
+ "owner_hint": "Ownership lies with the team responsible for the editor features."
+}

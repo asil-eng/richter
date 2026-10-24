@@ -1,0 +1,13 @@
+{
+ "headline": "Guard note for constants.ts edits",
+ "what_breaks": [
+  "packages/math/src/curve.ts \u2014 imports LegendreGaussN24TValues and LegendreGaussN24CValues"
+ ],
+ "why": "This file contains critical mathematical constants used in curve calculations. Changes here can affect numerous dependent files, particularly those that rely on these constants for accurate computations.",
+ "checklist": [
+  "Review changes to LegendreGaussN24TValues and LegendreGaussN24CValues for correctness",
+  "Ensure any modifications maintain the integrity of mathematical properties",
+  "Check for any direct usages in packages/math/src/curve.ts",
+  "Communicate with the author if unsure about changes to constants"
+ ]
+}

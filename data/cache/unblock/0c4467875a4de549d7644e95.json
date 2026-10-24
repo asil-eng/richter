@@ -1,0 +1,11 @@
+{
+ "headline": "Frequent Rework of Excalidraw Type Definitions",
+ "diagnosis": "The file 'types.ts' is undergoing frequent changes, primarily due to evolving features and fixes in the Excalidraw editor. The recurring theme in commit messages indicates a focus on enhancing the editor's functionality, which often necessitates updates to the type definitions.",
+ "plan": [
+  "1. Review the recent commit messages to identify specific features that are causing type changes, such as 'wrap/unwrap selection' and 'duplicate logic'.",
+  "2. Conduct a thorough analysis of the type definitions in 'types.ts' to ensure they align with the current implementation and anticipated features.",
+  "3. Establish a more stable interface for the types used in the editor to minimize the need for rework as features evolve.",
+  "4. Create a documentation guideline for type changes that links them to specific feature requests or bug fixes to improve traceability."
+ ],
+ "owner_hint": "Consider assigning a dedicated team member to maintain type definitions."
+}

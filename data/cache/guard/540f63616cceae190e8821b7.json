@@ -1,0 +1,14 @@
+{
+ "headline": "ContentSpec Initialization and Functionality",
+ "what_breaks": [
+  "deps/deps.go \u2014 relies on helpers for content processing",
+  "resources/resource/resource_helpers.go \u2014 uses ContentSpec for rendering",
+  "resources/page/permalinks.go \u2014 depends on ExtractTOC for navigation"
+ ],
+ "why": "This file is crucial for content rendering and manipulation in Hugo. Changes to the ContentSpec or its methods can affect a wide range of dependent files and functionalities.",
+ "checklist": [
+  "Review changes to NewContentSpec for config dependencies",
+  "Check modifications to ExtractTOC for nav structure impacts",
+  "Ensure stripEmptyNav logic aligns with content expectations"
+ ]
+}

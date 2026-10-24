@@ -1,0 +1,15 @@
+{
+ "headline": "Fonts Module Export Dependencies",
+ "what_breaks": [
+  "packages/excalidraw/components/App.tsx \u2014 relies on Fonts for rendering text",
+  "packages/excalidraw/scene/export.ts \u2014 depends on Fonts for exporting scenes with text",
+  "packages/excalidraw/components/FontPicker/FontPickerList.tsx \u2014 uses Fonts for font selection"
+ ],
+ "why": "This file exports the Fonts module, which is crucial for text rendering across multiple components. Changes here could disrupt the functionality of several dependent files that rely on font management.",
+ "checklist": [
+  "Review the Fonts module for any breaking changes",
+  "Check import paths in App.tsx and FontPickerList.tsx",
+  "Ensure compatibility with FontPicker and actionProperties",
+  "Verify that exported types from Fonts are intact"
+ ]
+}

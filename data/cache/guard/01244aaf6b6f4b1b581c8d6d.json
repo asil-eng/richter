@@ -1,0 +1,15 @@
+{
+ "headline": "Key URL Handling Functions in helpers/url.go",
+ "what_breaks": [
+  "resources/resource/resource_helpers.go \u2014 relies on AbsURL",
+  "resources/image_cache.go \u2014 relies on RelURL",
+  "resources/page/page_paths.go \u2014 relies on URLize"
+ ],
+ "why": "This file contains critical functions for URL manipulation that are heavily utilized across multiple modules. Changes here could disrupt the URL generation and handling logic, affecting a wide range of functionalities.",
+ "checklist": [
+  "Review changes to URLize, AbsURL, and RelURL functions.",
+  "Check for impacts on resources that import this file.",
+  "Ensure consistency in handling of base URLs and language prefixes.",
+  "Update any related documentation for URL handling."
+ ]
+}

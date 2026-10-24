@@ -1,0 +1,14 @@
+{
+ "headline": "Content class impacts multiple Textual components",
+ "what_breaks": [
+  "src/textual/app.py \u2014 relies on Content for rendering text",
+  "src/textual/widget.py \u2014 uses Content for widget text management",
+  "src/textual/visual.py \u2014 depends on Content for visual representation"
+ ],
+ "why": "The Content class is central to text handling in the Textual framework, affecting various components that rely on it for rendering and styling. Changes to its implementation could lead to widespread issues across dependent files.",
+ "checklist": [
+  "Review changes to Content class methods and properties",
+  "Check interactions with Span class for any breaking changes",
+  "Ensure compatibility with rich.text and other imported modules"
+ ]
+}

@@ -1,0 +1,14 @@
+{
+ "headline": "Guarding Media Type Logic in mediaType.go",
+ "what_breaks": [
+  "deps/deps.go \u2014 relies on Type for media type handling",
+  "resources/resource/resourcetypes.go \u2014 depends on Type for resource type definitions",
+  "helpers/content.go \u2014 uses FromContent for content type resolution"
+ ],
+ "why": "This file contains the Type struct and the FromContent function, both of which are critical for media type identification and handling. Changes here could affect how media types are processed across multiple dependent files.",
+ "checklist": [
+  "Review changes to Type struct and its fields",
+  "Ensure FromContent logic aligns with expected MIME type behavior",
+  "Check for impacts on dependent files like deps/deps.go and resources/resource/resourcetypes.go"
+ ]
+}

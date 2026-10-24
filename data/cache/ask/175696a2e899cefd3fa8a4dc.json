@@ -1,0 +1,8 @@
+{
+ "answer": "Refactoring the core could potentially break several files, particularly those with high blast risk. Notably, 'tpl/template.go' has a blast risk of 181, 'helpers/path.go' has 166, and 'hugofs/rootmapping_fs.go' has 215. These files are heavily interconnected and changes could lead to significant issues.",
+ "files": [
+  "tpl/template.go",
+  "helpers/path.go",
+  "hugofs/rootmapping_fs.go"
+ ]
+}

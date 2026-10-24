@@ -1,0 +1,8 @@
+{
+ "answer": "Refactoring the core could break several files due to their high fragility and interdependencies. Specifically, the files with the highest blast risk include src/textual/geometry.py, src/textual/widget.py, and src/textual/app.py, each with a blast score of 181, 170, and 170 respectively. Changes in these files are likely to impact the overall functionality significantly.",
+ "files": [
+  "src/textual/geometry.py",
+  "src/textual/widget.py",
+  "src/textual/app.py"
+ ]
+}

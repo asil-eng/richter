@@ -1,0 +1,16 @@
+{
+ "headline": "Guard Note for types.ts Modifications",
+ "what_breaks": [
+  "packages/math/src/index.ts \u2014 relies on types for mathematical constructs",
+  "packages/math/src/point.ts \u2014 uses GlobalPoint and LocalPoint types",
+  "packages/math/src/vector.ts \u2014 depends on Vector type definition",
+  "packages/math/src/polygon.ts \u2014 utilizes Polygon type for shape definitions"
+ ],
+ "why": "This file defines critical types used throughout the math package, impacting numerous dependent files. Changes here can lead to widespread issues in type consistency and functionality across the package.",
+ "checklist": [
+  "Review all type definitions for consistency with existing usage",
+  "Ensure any new types do not conflict with existing ones",
+  "Check for impacts on dependent files like point.ts and vector.ts",
+  "Update comments to reflect any changes made to type definitions"
+ ]
+}

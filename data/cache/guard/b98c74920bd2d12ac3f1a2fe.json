@@ -1,0 +1,16 @@
+{
+ "headline": "Edit collision.ts with care due to dependencies",
+ "what_breaks": [
+  "packages/element/src/index.ts \u2014 imports functions from this file",
+  "packages/element/src/bounds.ts \u2014 relies on bounds-related functions",
+  "packages/element/src/utils.ts \u2014 uses utility functions defined here",
+  "packages/element/src/binding.ts \u2014 interacts with binding logic"
+ ],
+ "why": "This file is central to collision detection and element interaction, impacting numerous dependent files. Changes here can significantly affect the behavior of elements across the application.",
+ "checklist": [
+  "Review changes to functions like shouldTestInside and hitElementItself",
+  "Ensure any modifications to hit testing logic are reflected in related imports",
+  "Check for impacts on bounds calculations in packages/element/src/bounds.ts",
+  "Verify interactions with binding logic in packages/element/src/binding.ts"
+ ]
+}

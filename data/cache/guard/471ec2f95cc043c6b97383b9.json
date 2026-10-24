@@ -1,0 +1,14 @@
+{
+ "headline": "Guard note for utils.ts modifications",
+ "what_breaks": [
+  "packages/math/src/index.ts \u2014 relies on utility functions",
+  "packages/math/src/point.ts \u2014 uses clamp and round functions",
+  "packages/math/src/angle.ts \u2014 depends on isCloseTo for angle comparisons"
+ ],
+ "why": "This file contains essential utility functions that are heavily utilized across multiple components in the math package. Changes here could impact the functionality of dependent files, potentially leading to widespread issues.",
+ "checklist": [
+  "Review changes to clamp, round, and isCloseTo functions",
+  "Ensure no changes affect the expected output of average and isFiniteNumber",
+  "Check for impacts on dependent files, especially point and angle calculations"
+ ]
+}

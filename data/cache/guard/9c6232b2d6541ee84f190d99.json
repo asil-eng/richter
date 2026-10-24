@@ -1,0 +1,14 @@
+{
+ "headline": "Guard Note for linearElementEditor.ts Changes",
+ "what_breaks": [
+  "packages/element/src/index.ts \u2014 relies on LinearElementEditor class",
+  "packages/element/src/bounds.ts \u2014 relies on getElementAbsoluteCoords function",
+  "packages/element/src/textElement.ts \u2014 relies on getBoundTextElement function"
+ ],
+ "why": "This file contains the LinearElementEditor class, which is crucial for handling linear elements in the application. Changes here could affect the functionality of multiple dependent files that utilize this class and its methods.",
+ "checklist": [
+  "Review changes to LinearElementEditor class methods",
+  "Check interactions with getElementAbsoluteCoords in bounds.ts",
+  "Ensure compatibility with getBoundTextElement in textElement.ts"
+ ]
+}

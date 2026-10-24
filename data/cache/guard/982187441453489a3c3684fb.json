@@ -1,0 +1,14 @@
+{
+ "headline": "Text WYSIWYG Editor Dependencies",
+ "what_breaks": [
+  "packages/excalidraw/components/App.text.ts \u2014 imports AppState type",
+  "packages/excalidraw/element \u2014 multiple functions and types used",
+  "packages/excalidraw/common \u2014 various constants and utility functions"
+ ],
+ "why": "This file is crucial for the text editing functionality in Excalidraw. Changes here can affect how text elements are rendered and interacted with across the application.",
+ "checklist": [
+  "Verify changes to functions from @excalidraw/element are compatible.",
+  "Check that AppState usage aligns with expected application behavior.",
+  "Ensure constants from @excalidraw/common are correctly referenced."
+ ]
+}

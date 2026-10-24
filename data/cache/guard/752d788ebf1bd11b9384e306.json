@@ -1,0 +1,14 @@
+{
+ "headline": "Key looping functions for iterable handling",
+ "what_breaks": [
+  "src/textual/content.py \u2014 relies on loop_first, loop_last",
+  "src/textual/widgets/_option_list.py \u2014 relies on loop_first_last",
+  "src/textual/widgets/_tree.py \u2014 relies on loop_from_index"
+ ],
+ "why": "This file contains crucial functions for iterating over collections, which are directly utilized by multiple other components. Changes to these functions could lead to widespread issues across dependent files that rely on their behavior.",
+ "checklist": [
+  "Review changes to loop_first, loop_last, loop_first_last, loop_from_index functions",
+  "Check for any modifications in the yield behavior of these functions",
+  "Ensure that the assertions in loop_from_index are still valid with your changes"
+ ]
+}

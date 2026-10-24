@@ -1,0 +1,14 @@
+{
+ "headline": "ElementBounds class impacts layout calculations",
+ "what_breaks": [
+  "packages/element/src/index.ts \u2014 imports ElementBounds",
+  "packages/element/src/linearElementEditor.ts \u2014 uses getBounds from ElementBounds",
+  "packages/element/src/collision.ts \u2014 relies on bounds calculations"
+ ],
+ "why": "The ElementBounds class is crucial for calculating the dimensions and positions of elements in the canvas. Any changes to its methods or properties could disrupt layout and rendering across numerous dependent files.",
+ "checklist": [
+  "Review changes to getBounds method for impact on dependent files.",
+  "Check interactions with boundsCache and nonRotatedBoundsCache for performance issues.",
+  "Ensure type definitions for ExcalidrawElement remain consistent."
+ ]
+}

@@ -1,0 +1,14 @@
+{
+ "headline": "CSS RulesMap Class Dependencies",
+ "what_breaks": [
+  "src/textual/dom.py \u2014 relies on CSSLocation type",
+  "src/textual/layout.py \u2014 relies on Layout type",
+  "src/textual/css/types.py \u2014 relies on various CSS types"
+ ],
+ "why": "The RulesMap class defines a structure for CSS rules that is essential for rendering styles in the application. Changes to this class may impact how styles are applied across multiple components, particularly those in the DOM and layout modules.",
+ "checklist": [
+  "Review changes to RulesMap structure and types",
+  "Check for impacts on src/textual/dom.py and src/textual/layout.py",
+  "Ensure consistency with imported CSS types from src/textual/css/types.py"
+ ]
+}

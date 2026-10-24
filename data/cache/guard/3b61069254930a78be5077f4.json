@@ -1,0 +1,15 @@
+{
+ "headline": "Key Functions in helpers/path.go",
+ "what_breaks": [
+  "deps/deps.go \u2014 relies on MakePath",
+  "resources/resource/resource_helpers.go \u2014 relies on MakePathSanitized",
+  "resources/page/page_paths.go \u2014 relies on GetDottedRelativePath"
+ ],
+ "why": "This file contains critical path manipulation functions that are widely used across various modules. Changes to these functions could disrupt the functionality of dependent files that rely on path formatting and sanitization.",
+ "checklist": [
+  "Review changes to MakePath and MakePathSanitized functions",
+  "Check impact on GetDottedRelativePath function",
+  "Ensure consistency in path handling across dependent files",
+  "Update any related documentation for path functions"
+ ]
+}

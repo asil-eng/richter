@@ -1,0 +1,11 @@
+{
+ "headline": "Frequent Rework on Bounds.ts Due to Overlapping Features",
+ "diagnosis": "The recurring theme in the commit messages indicates a pattern of feature additions and subsequent bug fixes related to the bounds and clipping functionality. Specifically, the frequent references to 'bounds checks', 'frame membership', and 'arrow selection' suggest that the code in bounds.ts is not adequately handling various edge cases, leading to instability.",
+ "plan": [
+  "Conduct a thorough review of the bounds.ts code, focusing on the functions related to clipping, frame membership, and arrow selection to identify potential logical flaws.",
+  "Implement unit tests that cover the edge cases mentioned in the commit messages, particularly around the handling of bounds and clipping for different element types.",
+  "Refactor the identified problematic areas in bounds.ts to improve clarity and reduce complexity, ensuring that the logic is straightforward and well-documented.",
+  "Engage with the authors of recent commits to gather insights on their experiences with the bounds.ts file and incorporate their feedback into the refactoring process."
+ ],
+ "owner_hint": "Ownership should be shared among the authors of recent commits to ensure collective knowledge."
+}

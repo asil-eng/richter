@@ -1,0 +1,8 @@
+{
+ "answer": "The most fragile files in this codebase are src/textual/geometry.py, src/textual/widget.py, and src/textual/app.py, with magnitudes of 7.9, 7.7, and 7.6 respectively. These files have high blast counts, indicating they are likely to break if changes are made. Additionally, they have significant churn, suggesting they are frequently modified.",
+ "files": [
+  "src/textual/geometry.py",
+  "src/textual/widget.py",
+  "src/textual/app.py"
+ ]
+}

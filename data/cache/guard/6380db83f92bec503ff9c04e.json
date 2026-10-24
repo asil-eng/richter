@@ -1,0 +1,14 @@
+{
+ "headline": "Guard Note for pathparser.go Modifications",
+ "what_breaks": [
+  "config/configLoader.go \u2014 relies on paths package",
+  "config/configProvider.go \u2014 relies on paths package",
+  "helpers/path.go \u2014 relies on paths package"
+ ],
+ "why": "This file is critical for parsing path identifiers and is heavily relied upon by multiple components in the system. Changes here could disrupt the functionality of configuration loading and path handling across the application.",
+ "checklist": [
+  "Review changes in isCustomWrapperIdentifier and parsePrefixIdentifier functions.",
+  "Check for impacts on configLoader and configProvider due to paths usage.",
+  "Ensure that any changes to identifier constants are reflected in dependent files."
+ ]
+}

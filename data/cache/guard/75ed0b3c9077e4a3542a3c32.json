@@ -1,0 +1,15 @@
+{
+ "headline": "Key Bindings Class in Keys.py",
+ "what_breaks": [
+  "src/textual/app.py \u2014 relies on Keys for key handling",
+  "src/textual/events.py \u2014 uses Keys for event mapping",
+  "src/textual/screen.py \u2014 depends on Keys for rendering input"
+ ],
+ "why": "The Keys class defines essential key bindings used throughout the application. Changes to this class may affect key handling in multiple components, leading to potential functional regressions.",
+ "checklist": [
+  "Review all references to Keys in app.py, events.py, and screen.py.",
+  "Ensure any new keys added are consistent with existing patterns.",
+  "Check for any hardcoded key strings that may need updates.",
+  "Confirm that the Enum structure is maintained to avoid breaking comparisons."
+ ]
+}

@@ -1,0 +1,14 @@
+{
+ "headline": "Guard Note for hugolib/site.go Edits",
+ "what_breaks": [
+  "create/content.go \u2014 relies on Site struct",
+  "commands/commandeer.go \u2014 uses Site methods",
+  "commands/hugobuilder.go \u2014 interacts with Site state"
+ ],
+ "why": "This file contains the Site struct, which is foundational for multiple components. Changes here can impact the behavior of several commands and content handling across the application.",
+ "checklist": [
+  "Review changes to Site struct and methods",
+  "Check interactions with Deps and relatedDocsHandler",
+  "Ensure compatibility with commands that use Site"
+ ]
+}

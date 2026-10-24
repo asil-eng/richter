@@ -1,0 +1,11 @@
+{
+ "headline": "Frequent Rework of Geometry File",
+ "diagnosis": "The file 'geometry.py' is undergoing repeated changes, primarily due to issues with shapes and selections as indicated by the commit messages. The recurring theme of 'shape' and 'selection' suggests that the functionality related to these concepts is not stable, leading to multiple fixes and refactors.",
+ "plan": [
+  "Conduct a thorough review of the shape and selection logic to identify inconsistencies or unclear implementations.",
+  "Implement comprehensive unit tests specifically targeting shape and selection functionalities to ensure correctness and prevent future regressions.",
+  "Refactor the shape and selection code to simplify and clarify the logic, reducing the chance of errors and misunderstandings.",
+  "Establish a code review process that emphasizes the importance of shape and selection changes to catch potential issues before they lead to rework."
+ ],
+ "owner_hint": "The lead developer on geometry-related features should take ownership to reduce bus factor."
+}

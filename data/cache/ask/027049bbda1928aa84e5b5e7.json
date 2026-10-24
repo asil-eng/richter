@@ -1,0 +1,9 @@
+{
+ "answer": "Refactoring the core could break several files, particularly those with a high blast risk. The most critical file is 'packages/excalidraw/components/App.tsx', which has a blast risk of 409, indicating that many files depend on it. Other files with similar blast risks include 'packages/excalidraw/types.ts', 'packages/common/src/constants.ts', and 'packages/common/src/utils.ts', all of which could also be impacted by changes in the core.",
+ "files": [
+  "packages/excalidraw/components/App.tsx",
+  "packages/excalidraw/types.ts",
+  "packages/common/src/constants.ts",
+  "packages/common/src/utils.ts"
+ ]
+}

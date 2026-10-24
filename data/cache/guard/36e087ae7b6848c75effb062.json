@@ -1,0 +1,13 @@
+{
+ "headline": "Key Classes for DataTable Functionality",
+ "what_breaks": [
+  "src/textual/widgets/__init__.py \u2014 relies on DataTable class",
+  "src/textual/widgets/data_table.py \u2014 relies on DataTable and its exceptions"
+ ],
+ "why": "This file contains critical exception classes and key types that are essential for the DataTable's functionality. Changes here could disrupt how data is managed and rendered across multiple components.",
+ "checklist": [
+  "Review changes to CellDoesNotExist, RowDoesNotExist, and ColumnDoesNotExist exceptions.",
+  "Ensure StringKey functionality remains intact for DataTable operations.",
+  "Check for any modifications to CellType and its implications on DataTable."
+ ]
+}

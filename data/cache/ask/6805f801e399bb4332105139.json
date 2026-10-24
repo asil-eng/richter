@@ -1,0 +1,9 @@
+{
+ "answer": "Hidden coupling exists between the following files: 'packages/excalidraw/components/App.tsx' and 'packages/common/src/constants.ts' (84 commits), 'packages/excalidraw/components/App.tsx' and 'packages/element/src/linearElementEditor.ts' (49 commits), 'packages/excalidraw/actions/actionFinalize.tsx' and 'packages/excalidraw/components/App.tsx' (48 commits), among others. This indicates that changes in one file may require changes in another, which can increase the risk of introducing bugs if not managed carefully.",
+ "files": [
+  "packages/excalidraw/components/App.tsx",
+  "packages/common/src/constants.ts",
+  "packages/element/src/linearElementEditor.ts",
+  "packages/excalidraw/actions/actionFinalize.tsx"
+ ]
+}

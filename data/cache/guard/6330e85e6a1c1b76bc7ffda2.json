@@ -1,0 +1,14 @@
+{
+ "headline": "Guard note for exec.go modifications",
+ "what_breaks": [
+  "tpl/template.go \u2014 relies on state struct for execution",
+  "tpl/tplimpl/template_funcs.go \u2014 uses ExecError for error handling",
+  "tpl/tplimpl/templates.go \u2014 depends on template execution state"
+ ],
+ "why": "This file is central to template execution, managing state and error handling. Changes here can affect multiple dependent files and overall template functionality.",
+ "checklist": [
+  "Review changes to state struct and its methods",
+  "Check interactions with ExecError for error reporting",
+  "Ensure compatibility with parse.Node usage in state"
+ ]
+}

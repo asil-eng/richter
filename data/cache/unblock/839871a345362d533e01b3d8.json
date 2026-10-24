@@ -1,0 +1,11 @@
+{
+ "headline": "Frequent Reworks in Binding Logic",
+ "diagnosis": "The commit history indicates a recurring theme of performance optimizations and bug fixes related to binding elements, particularly arrows. The specific issues often revolve around handling binding logic during drag and resize operations, as well as maintaining the integrity of bound elements during state transitions.",
+ "plan": [
+  "Conduct a thorough review of the binding logic, focusing on the functions related to arrow binding and element interactions, particularly in drag and resize scenarios.",
+  "Identify and isolate the root causes of the recurring bugs by analyzing the recent commits that address binding issues, especially those related to distance calculations and state transitions.",
+  "Implement unit tests specifically targeting the binding functionality to ensure that changes do not introduce new bugs and that existing issues are resolved.",
+  "Establish a code review checklist that emphasizes the importance of binding logic, ensuring that any future changes are scrutinized for potential impacts on this critical functionality."
+ ],
+ "owner_hint": "Ownership should be assigned to a single engineer to reduce bus factor."
+}

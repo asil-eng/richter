@@ -1,0 +1,14 @@
+{
+ "headline": "Export Scene Functionality Dependencies",
+ "what_breaks": [
+  "packages/excalidraw/data/blob.ts \u2014 relies on export data types",
+  "packages/excalidraw/clipboard.ts \u2014 uses copy functions for clipboard operations",
+  "packages/excalidraw/element \u2014 depends on element manipulation functions"
+ ],
+ "why": "This file handles the export functionality for scenes, which is critical for user interaction. Changes here can affect how scenes are rendered and exported, impacting multiple components and utilities that rely on this functionality.",
+ "checklist": [
+  "Review changes to functions like renderSceneToSvg and renderStaticScene",
+  "Check interactions with clipboard functions for exporting data",
+  "Ensure compatibility with element manipulation functions from @excalidraw/element"
+ ]
+}

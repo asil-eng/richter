@@ -1,0 +1,11 @@
+{
+ "headline": "Frequent Reworks on Text Element Functionality",
+ "diagnosis": "The textElement.ts file is undergoing frequent changes due to issues related to text alignment, binding, and layout management, particularly with sticky notes and arrows. The recurring theme in commit messages indicates a struggle with maintaining consistent behavior for text elements during various interactions.",
+ "plan": [
+  "Conduct a thorough review of the text handling logic, especially around the redrawTextBoundingBox function and its interaction with sticky notes and arrows.",
+  "Create a comprehensive test suite that covers all edge cases related to text binding and layout adjustments to ensure stability during future changes.",
+  "Establish a clear ownership structure for the text-related functionalities, possibly assigning a dedicated team member to oversee changes and maintain consistency.",
+  "Document the expected behavior of text elements in various scenarios to serve as a reference for future development and reduce ambiguity."
+ ],
+ "owner_hint": "Assign a dedicated engineer to oversee text element functionalities."
+}

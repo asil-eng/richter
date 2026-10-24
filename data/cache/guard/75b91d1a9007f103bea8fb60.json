@@ -1,0 +1,14 @@
+{
+ "headline": "Guard note for parse.go edits",
+ "what_breaks": [
+  "tpl/internal/go_templates/texttemplate/exec.go \u2014 relies on Parse function",
+  "tpl/internal/go_templates/texttemplate/hugo_template.go \u2014 depends on Tree structure",
+  "tpl/internal/go_templates/texttemplate/template.go \u2014 uses Tree for template parsing"
+ ],
+ "why": "This file is central to the parsing of templates, affecting multiple components. Changes here could disrupt the functionality of dependent files that rely on the parsing logic.",
+ "checklist": [
+  "Review changes to the Parse function for impact on exec.go",
+  "Ensure Tree structure remains compatible with dependent files",
+  "Check for any modifications to parsing modes and their implications"
+ ]
+}

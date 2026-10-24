@@ -1,0 +1,11 @@
+{
+ "headline": "Frequent Reworks in utils.ts",
+ "diagnosis": "The file 'utils.ts' is undergoing repeated changes primarily due to evolving requirements in the editor and Excalidraw features. The commit messages indicate a pattern of adding new features and fixing issues related to cross-document functionality and editor behavior, suggesting that the code is not stable and may require further refinement.",
+ "plan": [
+  "Conduct a thorough review of the recent commit messages to identify specific features that are causing instability, particularly those related to cross-document rendering and editor interactions.",
+  "Refactor the functions in 'utils.ts' that are frequently modified, such as 'getTargetWindow' and 'getDateTime', to ensure they are more robust and can handle edge cases effectively.",
+  "Establish a clear set of requirements for the editor and Excalidraw features to minimize the need for frequent changes and ensure that new features are aligned with existing functionality.",
+  "Implement a testing strategy that includes unit tests for the utility functions to catch issues early and reduce the need for rework."
+ ],
+ "owner_hint": "Ownership should be shared among the core editor team to distribute knowledge."
+}

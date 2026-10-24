@@ -1,0 +1,16 @@
+{
+ "headline": "Guard note for hugio/copy.go edits",
+ "what_breaks": [
+  "common/hashing/hashing.go \u2014 relies on CopyFile",
+  "resources/resource/resourcetypes.go \u2014 relies on CopyDir",
+  "markup/converter/hooks/hooks.go \u2014 relies on CopyFile",
+  "parser/metadecoders/decoder.go \u2014 relies on CopyDir"
+ ],
+ "why": "This file contains critical functions for file and directory copying, which are directly used by multiple other files. Changes here could lead to widespread issues in file handling across the project.",
+ "checklist": [
+  "Review changes to CopyFile and CopyDir functions",
+  "Check impacts on all direct importers listed",
+  "Ensure error handling remains intact in CopyFile and CopyDir",
+  "Verify that file permissions are correctly managed in CopyFile"
+ ]
+}

@@ -1,0 +1,16 @@
+{
+ "headline": "Key dependencies for textElement.ts modifications",
+ "what_breaks": [
+  "packages/element/src/index.ts \u2014 relies on redrawTextBoundingBox",
+  "packages/element/src/stickyNote.ts \u2014 relies on updateStickyNoteLayout",
+  "packages/element/src/linearElementEditor.ts \u2014 relies on LinearElementEditor",
+  "packages/element/src/bounds.ts \u2014 relies on getBoundTextMaxWidth"
+ ],
+ "why": "This file is central to rendering and managing text elements, impacting multiple components. Changes here can affect how text is displayed and interacted with across the application.",
+ "checklist": [
+  "Verify changes to redrawTextBoundingBox function behavior.",
+  "Check interactions with updateStickyNoteLayout in stickyNote.ts.",
+  "Ensure LinearElementEditor functionality remains intact.",
+  "Review any changes to text measurement logic in measureText."
+ ]
+}

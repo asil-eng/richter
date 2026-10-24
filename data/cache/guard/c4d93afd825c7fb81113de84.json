@@ -1,0 +1,16 @@
+{
+ "headline": "Guard note for types.ts modifications",
+ "what_breaks": [
+  "packages/excalidraw/components/App.tsx \u2014 relies on Collaborator and App types",
+  "packages/excalidraw/actions/types.ts \u2014 relies on Action type",
+  "packages/excalidraw/clipboard.ts \u2014 relies on ClipboardData type",
+  "packages/excalidraw/data/types.ts \u2014 relies on ImportedDataState type"
+ ],
+ "why": "This file defines critical types used across multiple components and actions. Changes to these types can lead to widespread issues in dependent files and components.",
+ "checklist": [
+  "Review changes to Collaborator and ClipboardData types for impact.",
+  "Ensure any modifications to types don't break existing imports in App.tsx.",
+  "Check compatibility of changes with Action type in actions/types.ts.",
+  "Confirm that new types or changes are reflected in related components."
+ ]
+}

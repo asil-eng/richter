@@ -1,0 +1,14 @@
+{
+ "headline": "Binding.ts: Critical for Element Binding Logic",
+ "what_breaks": [
+  "packages/element/src/index.ts \u2014 relies on exports from binding.ts",
+  "packages/element/src/linearElementEditor.ts \u2014 uses functions from binding.ts",
+  "packages/element/src/collision.ts \u2014 depends on binding logic for element interactions"
+ ],
+ "why": "This file contains essential functions and types that manage the binding of elements, which is crucial for the overall functionality of the drawing application. Changes here could directly affect how elements interact and bind to each other, impacting many dependent files.",
+ "checklist": [
+  "Review changes to getBindingGap and maxBindingDistance_simple functions",
+  "Ensure any modifications to BindingStrategy type are reflected in dependent files",
+  "Check for impacts on element binding in linearElementEditor and collision handling"
+ ]
+}

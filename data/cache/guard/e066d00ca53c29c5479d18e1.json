@@ -1,0 +1,14 @@
+{
+ "headline": "Restoration Logic for App State Management",
+ "what_breaks": [
+  "packages/excalidraw/components/App.tsx \u2014 relies on AppState structure",
+  "packages/excalidraw/data/blob.ts \u2014 interacts with restored data",
+  "packages/excalidraw/index.tsx \u2014 integrates overall application state"
+ ],
+ "why": "This file is crucial for restoring the application state, affecting how elements are rendered and managed. Changes here can lead to incorrect application behavior or crashes if not handled properly.",
+ "checklist": [
+  "Review changes to handleOversizedLinearElements function for impact on element rendering.",
+  "Check interactions with getDefaultAppState to ensure state integrity.",
+  "Verify dependencies on AppState and related types are consistent with changes."
+ ]
+}

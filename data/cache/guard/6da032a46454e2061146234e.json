@@ -1,0 +1,14 @@
+{
+ "headline": "Key Params Management in hmaps Package",
+ "what_breaks": [
+  "deps/deps.go \u2014 relies on Params and its methods",
+  "config/configLoader.go \u2014 depends on MergeParams and SetParams",
+  "resources/resource/resources.go \u2014 uses GetNested and IsZero"
+ ],
+ "why": "This file contains critical functions for managing parameter maps, impacting many dependent files. Changes here can lead to cascading failures in configuration loading and resource handling.",
+ "checklist": [
+  "Review changes to GetNested and SetParams for compatibility",
+  "Check impact of MergeParams on existing configurations",
+  "Ensure IsZero logic aligns with expected parameter states"
+ ]
+}

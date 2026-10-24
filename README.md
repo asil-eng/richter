@@ -26,7 +26,7 @@
 
 | | | |
 | --- | --- | --- |
-| 🌐 | **[Open the live app](https://asil-eng.github.io/richter/app/)** | Four real repos (rich, fastapi, black, ripgrep), fully interactive, nothing to install |
+| 🌐 | **[Open the live app](https://asil-eng.github.io/richter/app/)** | Seven real repos (rich, fastapi, black, ripgrep, plus the larger excalidraw, hugo and textual), interactive, nothing to install |
 | ▶ | **[Watch the 94-second demo](https://asil-eng.github.io/richter/)** | The whole story with narration |
 | 💻 | **[Run it on your own repo](#-run-it)** | Two commands, then paste any GitHub URL |
 
@@ -212,6 +212,9 @@ The scoring was **frozen** (`SCORING_VERSION = "1.0"`) after one sanity check: a
 | [psf/black](https://github.com/psf/black) · Python | **C** · M 5.4 | `src/black/__init__.py` M 8.4: 579 commits, 130 fixes, 173 authors | `pgen.py` ⟷ `pytree.py` changed together 10× with no import |
 | [fastapi/fastapi](https://github.com/fastapi/fastapi) · Python | **B** · M 4.5 | `fastapi/routing.py` M 7.8: 193 commits, 50 fixes, 54 authors | 61% of all fix touches land in the hottest 10% of files |
 | [BurntSushi/ripgrep](https://github.com/BurntSushi/ripgrep) · Rust | **A** · M 1.8 | `crates/ignore/src/walk.rs` M 9.4: 84 commits, 21 fixes, 31 authors | Risk is concentrated in one crate (`ignore`); the rest is calm |
+| [excalidraw/excalidraw](https://github.com/excalidraw/excalidraw) · TypeScript · 529 files | **B** · M 4.4 | `App.tsx` M 7.6: 358 fix commits | Change `types.ts` and 421 files (80%) are downstream; `App.tsx` ⟷ `constants.ts` changed together 84× with no import |
+| [gohugoio/hugo](https://github.com/gohugoio/hugo) · Go · 537 files | **B** · M 3.5 | `tpl/template.go` M 7.3 | 7,687 import links; `compare.go` reaches 330 files (62%) |
+| [Textualize/textual](https://github.com/Textualize/textual) · Python · 249 files | **B** · M 4.1 | `src/textual/geometry.py` M 7.9 | `widget.py`, `app.py`, `screen.py` and `dom.py` each reach 170 files |
 
 ---
 
@@ -283,7 +286,7 @@ flowchart LR
 
 - **Full history, fast.** A *blobless* clone keeps every commit but skips file contents until they're needed. A shallow clone would make churn, authorship and co-change meaningless.
 - **One model, every view.** The backend writes a single JSON model. The 2D map, the 3D city, the inspector and the AI all read the same numbers.
-- **Offline demo.** The four demo repos ship with their models, snapshots and precomputed AI notes, so the app runs from static files with no backend and no API key.
+- **Offline demo.** The seven demo repos ship with their models, snapshots and precomputed AI notes, so the app runs from static files with no backend and no API key.
 - **Honest AI.** Prompts contain only the selected file's metrics, its dependents and a short code excerpt. Answers are cached, and file paths are validated against the repo before they're highlighted.
 
 ---
@@ -351,7 +354,7 @@ These aren't built yet:
 - **Project name:** Richter — measure the magnitude of risk in any codebase
 - **Short description:** Richter ingests a public GitHub repo and predicts what breaks when you change a file (blast radius), where work keeps getting reworked (fix-heavy churn), and which files are secretly coupled (co-change with no import link). It fuses these into one magnitude score shown as a seismic hazard map and a 3D code city with time-travel, and writes guard notes and unblock plans with an LLM. It helps engineers and reviewers touch risky code safely.
 - **Team:** Muhammed Asil Pari ([@asil-eng](https://github.com/asil-eng))
-- **Working demo:** Live at **https://asil-eng.github.io/richter/app/** (static build, four demo repos, cached AI). Video: https://asil-eng.github.io/richter/. Full app locally: see [Run it](#-run-it).
+- **Working demo:** Live at **https://asil-eng.github.io/richter/app/** (static build, seven demo repos, cached AI). Video: https://asil-eng.github.io/richter/. Full app locally: see [Run it](#-run-it).
 - **Technology stack:** Python 3 + FastAPI, GitPython, `ast` + per-language import resolvers, networkx (backend); React 19 + Vite + TypeScript, d3-force, three.js (frontend); OpenAI `gpt-4o-mini` (notes, ask-the-repo).
 
 ### Run the project

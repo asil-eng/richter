@@ -1,0 +1,14 @@
+{
+ "headline": "Key Classes and Functions in message_pump.py",
+ "what_breaks": [
+  "src/textual/message.py \u2014 relies on Message class",
+  "src/textual/widget.py \u2014 depends on MessagePump base class",
+  "src/textual/_context.py \u2014 uses active_message_pump and NoActiveAppError"
+ ],
+ "why": "This file serves as a foundational component for message processing in the application, impacting multiple widgets and screens. Changes here could disrupt the message handling mechanism across various dependent modules.",
+ "checklist": [
+  "Review changes to MessagePump class and its methods",
+  "Check interactions with Message class in message.py",
+  "Ensure compatibility with active_message_pump in _context.py"
+ ]
+}

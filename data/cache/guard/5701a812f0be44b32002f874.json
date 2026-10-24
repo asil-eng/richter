@@ -1,0 +1,14 @@
+{
+ "headline": "RootMappingFs construction and symlink handling",
+ "what_breaks": [
+  "deps/deps.go \u2014 relies on RootMappingFs",
+  "helpers/path.go \u2014 uses functions from RootMappingFs",
+  "helpers/pathspec.go \u2014 depends on structures defined in this file"
+ ],
+ "why": "This file defines the NewRootMappingFs function, which is critical for creating instances of RootMappingFs. Changes here can affect multiple components that depend on root mapping functionality.",
+ "checklist": [
+  "Review changes to NewRootMappingFs for impact on dependencies.",
+  "Check symlink handling logic for potential edge cases.",
+  "Ensure all mappings in NewRootMappingFs are correctly initialized."
+ ]
+}

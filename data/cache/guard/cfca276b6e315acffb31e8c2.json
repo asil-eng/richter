@@ -1,0 +1,14 @@
+{
+ "headline": "Guarding compare.go: Key Interfaces and Functions",
+ "what_breaks": [
+  "common/hstrings/strings.go \u2014 relies on Eq and ProbablyEq",
+  "identity/finder.go \u2014 relies on Comparer interface",
+  "resources/page/pages.go \u2014 relies on Eq and Comparer functions"
+ ],
+ "why": "This file defines critical interfaces and functions for equality and comparison checks used throughout the codebase. Changes here can impact numerous dependent files, especially those handling data comparisons in templates.",
+ "checklist": [
+  "Review changes to Eq and ProbablyEq functions for impact on dependents.",
+  "Ensure that any modifications to interfaces do not break existing implementations.",
+  "Check for any updates needed in dependent files like identity/finder.go."
+ ]
+}

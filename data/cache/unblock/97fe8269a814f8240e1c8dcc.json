@@ -1,0 +1,11 @@
+{
+ "headline": "Frequent Rework of Export Functions in Excalidraw",
+ "diagnosis": "The file 'export.ts' has undergone numerous reworks, primarily focusing on export functionality and type handling. The recurring theme in the commit messages indicates issues with ownership, type definitions, and export processes that lead to instability and require fixes.",
+ "plan": [
+  "Conduct a thorough review of the recent commits, particularly those labeled 'fix' and 'feat', to identify specific changes that led to regressions or issues.",
+  "Analyze the export functions and their dependencies, especially the interactions with types like 'NonDeleted' and the handling of dark mode filters, to ensure they are correctly implemented and tested.",
+  "Establish a clear ownership model for the export functionality, possibly assigning a dedicated owner to maintain consistency and accountability in future changes.",
+  "Implement a comprehensive suite of tests for the export functions, focusing on edge cases highlighted in the recent commits, to prevent future regressions."
+ ],
+ "owner_hint": "Assign a dedicated owner for the export functionality to reduce bus factor."
+}

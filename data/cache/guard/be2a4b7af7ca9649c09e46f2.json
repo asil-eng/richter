@@ -1,0 +1,14 @@
+{
+ "headline": "Constants for Excalidraw application behavior",
+ "what_breaks": [
+  "packages/common/src/index.ts \u2014 relies on constants for app configuration",
+  "packages/common/src/utils.ts \u2014 uses constants for utility functions",
+  "packages/common/src/font-metadata.ts \u2014 depends on font-related constants"
+ ],
+ "why": "This file defines critical constants that affect the overall behavior and configuration of the Excalidraw application. Changes here can impact multiple components and utilities across the project, leading to potential runtime errors or unexpected behavior.",
+ "checklist": [
+  "Review changes to constants affecting UI behavior",
+  "Ensure any new constants are exported for use in dependent files",
+  "Verify that modifications do not conflict with existing constants in utils or font-metadata"
+ ]
+}

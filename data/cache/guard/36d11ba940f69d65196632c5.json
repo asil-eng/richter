@@ -1,0 +1,14 @@
+{
+ "headline": "Key Context Management in tpl/template.go",
+ "what_breaks": [
+  "tpl.Context \u2014 relies on contexthelpers and identity packages",
+  "tpl.Template \u2014 interface used for rendering templates",
+  "tpl.RenderingContext \u2014 used for site/language rendering context"
+ ],
+ "why": "This file is crucial for managing template rendering contexts and dependencies. Changes here can affect how templates interact with site data and rendering logic across many dependent files.",
+ "checklist": [
+  "Review changes to the Context variable and its dispatchers",
+  "Ensure Template interface methods are correctly implemented",
+  "Check interactions with RenderingContext for site rendering logic"
+ ]
+}

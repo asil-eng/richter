@@ -1,0 +1,14 @@
+{
+ "headline": "Key Event Classes in src/textual/events.py",
+ "what_breaks": [
+  "src/textual/app.py \u2014 relies on Event and its subclasses",
+  "src/textual/widget.py \u2014 uses Event for widget interactions",
+  "src/textual/message_pump.py \u2014 processes Callback events"
+ ],
+ "why": "This file defines essential event classes that are foundational for the Textual framework's event handling. Changes here could disrupt event propagation and handling across multiple components.",
+ "checklist": [
+  "Review changes to Event and its subclasses for compatibility",
+  "Check Callback and its integration with message_pump",
+  "Ensure CursorPosition and Resize maintain expected behavior"
+ ]
+}

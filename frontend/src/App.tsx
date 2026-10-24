@@ -63,12 +63,14 @@ export default function App() {
 
   const select = useCallback((i: number | null) => setSelected(i), [])
   const openRepo = useCallback((s: string) => {
+    // re-clicking the open repo must not wipe its snapshots (the load effect won't re-run)
+    if (s === slug) return
     setSlug(s)
     setSelected(null)
     setHighlight(new Set())
     setTime(null)
     setSnapshots(null)
-  }, [])
+  }, [slug])
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {

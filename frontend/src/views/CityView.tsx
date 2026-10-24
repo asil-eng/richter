@@ -102,13 +102,13 @@ function windowTexture(): THREE.CanvasTexture {
   const g = c.getContext('2d')!
   g.fillStyle = '#000'
   g.fillRect(0, 0, 64, 128)
-  for (let y = 6; y < 128; y += 10) {
-    for (let x = 6; x < 64; x += 13) {
+  for (let y = 8; y < 128; y += 16) {
+    for (let x = 6; x < 64; x += 15) {
       const lit = Math.random()
-      if (lit < 0.3) continue
-      const v = Math.floor(70 + lit * 185)
+      if (lit < 0.22) continue
+      const v = Math.floor(170 + lit * 85)
       g.fillStyle = `rgb(${v},${v},${v})`
-      g.fillRect(x, y, 8, 5)
+      g.fillRect(x, y, 9, 8)
     }
   }
   const t = new THREE.CanvasTexture(c)
@@ -168,7 +168,7 @@ export function CityView({ model, snapshots, time, selected, highlight, onSelect
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
     renderer.setSize(W(), H())
     renderer.toneMapping = THREE.ACESFilmicToneMapping
-    renderer.toneMappingExposure = 1.3
+    renderer.toneMappingExposure = 1.45
     renderer.shadowMap.enabled = true
     renderer.shadowMap.type = THREE.PCFSoftShadowMap
     el.appendChild(renderer.domElement)
@@ -215,9 +215,9 @@ export function CityView({ model, snapshots, time, selected, highlight, onSelect
     controls.enabled = false
 
     // ---- lights
-    scene.add(new THREE.AmbientLight(0x1f3038, 0.8))
-    scene.add(new THREE.HemisphereLight(0x3a5864, 0x050607, 0.45))
-    const moon = new THREE.DirectionalLight(0xa8c8d4, 1.1)
+    scene.add(new THREE.AmbientLight(0x2a3c44, 1.0))
+    scene.add(new THREE.HemisphereLight(0x7a98a6, 0x0a0d0f, 0.9))
+    const moon = new THREE.DirectionalLight(0xb8d4de, 1.9)
     moon.position.set(-span * 0.8, span * 1.4, span * 0.5)
     moon.castShadow = true
     moon.shadow.mapSize.set(2048, 2048)
@@ -236,9 +236,9 @@ export function CityView({ model, snapshots, time, selected, highlight, onSelect
     ground.rotation.x = -Math.PI / 2
     ground.receiveShadow = true
     scene.add(ground)
-    const grid = new THREE.GridHelper(span * 6, Math.round((span * 6) / CELL), 0x1a2a2e, 0x111a1d)
+    const grid = new THREE.GridHelper(span * 6, Math.round((span * 6) / CELL), 0x2a4448, 0x1a2a2e)
     ;(grid.material as THREE.Material).transparent = true
-    ;(grid.material as THREE.Material).opacity = 0.45
+    ;(grid.material as THREE.Material).opacity = 0.6
     grid.position.y = 0.01
     scene.add(grid)
 
@@ -247,14 +247,14 @@ export function CityView({ model, snapshots, time, selected, highlight, onSelect
     for (const d of districts) {
       const plot = new THREE.Mesh(
         new THREE.BoxGeometry(d.w, 0.12, d.d),
-        new THREE.MeshStandardMaterial({ color: 0x0c1114, roughness: 0.85 }),
+        new THREE.MeshStandardMaterial({ color: 0x18242a, roughness: 0.85 }),
       )
       plot.position.set(d.x + d.w / 2, 0.06, d.z + d.d / 2)
       plot.receiveShadow = true
       scene.add(plot)
       const edges = new THREE.LineSegments(
         new THREE.EdgesGeometry(plot.geometry),
-        new THREE.LineBasicMaterial({ color: 0x4d8583, transparent: true, opacity: 0.35 }),
+        new THREE.LineBasicMaterial({ color: 0x6fb3b0, transparent: true, opacity: 0.7 }),
       )
       edges.position.copy(plot.position)
       scene.add(edges)
@@ -283,9 +283,9 @@ export function CityView({ model, snapshots, time, selected, highlight, onSelect
       const tex = winTex.clone()
       tex.needsUpdate = true
       const mat = new THREE.MeshStandardMaterial({
-        color: 0x18222a,
-        roughness: 0.5,
-        metalness: 0.3,
+        color: 0x334650,
+        roughness: 0.72,
+        metalness: 0.08,
         emissive: new THREE.Color(heatHex(n.magnitude)),
         emissiveMap: tex,
         emissiveIntensity: 0,
@@ -356,7 +356,7 @@ export function CityView({ model, snapshots, time, selected, highlight, onSelect
     // ---- post
     const composer = new EffectComposer(renderer)
     composer.addPass(new RenderPass(scene, camera))
-    const bloom = new UnrealBloomPass(new THREE.Vector2(W(), H()), 0.95, 0.6, 0.16)
+    const bloom = new UnrealBloomPass(new THREE.Vector2(W(), H()), 0.6, 0.4, 0.42)
     composer.addPass(bloom)
     composer.addPass(new OutputPass())
 
@@ -512,11 +512,11 @@ export function CityView({ model, snapshots, time, selected, highlight, onSelect
         t.mesh.scale.y = h
         t.mesh.visible = h > 0.02
         const tex = t.mat.emissiveMap!
-        tex.repeat.set(1, Math.max(1, h / 2.2))
+        tex.repeat.set(1, Math.max(1, h / 3.2))
 
         const m = Math.min(1, Math.max(0, t.m))
         baseColor.setHex(heatHex(m))
-        let intensity = 0.42 + Math.pow(m, 2.1) * 2.7
+        let intensity = 0.5 + Math.pow(m, 2.1) * 1.9
         let color = baseColor
         const hp = hop.get(t.i)
         if (sel !== null) {

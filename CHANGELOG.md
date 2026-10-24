@@ -4,6 +4,13 @@ Record each meaningful project change during the event, newest first. Update thi
 
 ## Event build log
 
+## 2026-10-24T22:41:35+05:30 — City visibility pass + fix lost snapshots on re-click
+
+- Changed: `CityView.tsx`: coarser, evenly lit window texture (was fine grain that read as static), lighter matte tower bodies so faces shade, stronger hemisphere/moon/ambient light and exposure, brighter ground grid and district plots/outlines, bloom reduced (strength 0.95->0.6, threshold 0.16->0.42) and peak emissive lowered so hot towers stay crisp. `App.tsx`: re-clicking the already-open repo tab no longer clears its snapshots.
+- Why: Participant: code city visibility was poor. While checking, found that clicking the active repo tab wiped time-travel data (the load effect does not re-run for the same slug).
+- Validation: Before/after Playwright screenshots of rich and starlette cities at 1440x900; rich timeline present after re-clicking its tab. `tsc -b` and `oxlint` clean.
+- Limitations: Checked with software WebGL; GPU bloom may differ slightly.
+
 ## 2026-10-24T22:36:42+05:30 — Revert camera-facing district labels
 
 - Changed: Restored `frontend/src/views/CityView.tsx` to its version before commit 8da6b0c: district labels lie flat at a fixed position on each plot's front edge, original label brightness. The legend/HUD change from 8da6b0c is kept.

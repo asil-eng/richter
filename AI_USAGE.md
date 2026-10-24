@@ -24,6 +24,7 @@ No participant AI usage has been recorded yet. Replace the placeholder row as yo
 | 2026-10-24T22:34+05:30 | Claude Code (Claude Opus 5.5) | City: camera-facing district labels, clearer legend | Diagnosed folder/district question, fixed label orientation and HUD | Pending participant review | Screenshots from two camera angles |
 | 2026-10-24T22:36+05:30 | Claude Code (Claude Opus 5.5) | Revert camera-facing district labels | Reverted label orientation change on request | Pending participant review | tsc clean |
 | 2026-10-24T22:41+05:30 | Claude Code (Claude Opus 5.5) | City visibility pass + fix lost snapshots on re-click | City lighting/material/bloom pass; fixed repo re-click bug | Pending participant review | Before/after screenshots |
+| 2026-10-24T22:51+05:30 | Claude Code (Claude Opus 5.5) | Visible background grid | Background grid visibility | Pending participant review | Screenshot reviewed |
 
 ## Template preparation
 

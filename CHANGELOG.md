@@ -4,6 +4,13 @@ Record each meaningful project change during the event, newest first. Update thi
 
 ## Event build log
 
+## 2026-10-24T22:51:34+05:30 — Visible background grid
+
+- Changed: `frontend/src/styles/app.css`: background instrument grid raised from 1.8% opacity with a top fade to a two-level grid (minor 32px at 4%, major 128px at 8.5%), no fade.
+- Why: Participant: the background grid was not visible.
+- Validation: Playwright screenshot at 1440x900 with a selection active; grid visible behind the graph without competing with nodes. No page errors.
+- Limitations: None identified in these checks.
+
 ## 2026-10-24T22:41:35+05:30 — City visibility pass + fix lost snapshots on re-click
 
 - Changed: `CityView.tsx`: coarser, evenly lit window texture (was fine grain that read as static), lighter matte tower bodies so faces shade, stronger hemisphere/moon/ambient light and exposure, brighter ground grid and district plots/outlines, bloom reduced (strength 0.95->0.6, threshold 0.16->0.42) and peak emissive lowered so hot towers stay crisp. `App.tsx`: re-clicking the already-open repo tab no longer clears its snapshots.

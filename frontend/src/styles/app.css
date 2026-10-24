@@ -66,11 +66,12 @@ kbd {
   grid-template-rows: var(--topbar-h) minmax(0, 1fr);
   height: 100vh;
   overflow: clip;
-  /* faint instrument grid behind everything */
+  /* instrument graph paper: minor cells every 32px, major lines every 4 cells */
   background:
-    linear-gradient(var(--bg), transparent 60%),
-    repeating-linear-gradient(0deg, rgba(170, 196, 204, 0.018) 0 1px, transparent 1px 48px),
-    repeating-linear-gradient(90deg, rgba(170, 196, 204, 0.018) 0 1px, transparent 1px 48px),
+    repeating-linear-gradient(0deg, rgba(150, 200, 205, 0.085) 0 1px, transparent 1px 128px),
+    repeating-linear-gradient(90deg, rgba(150, 200, 205, 0.085) 0 1px, transparent 1px 128px),
+    repeating-linear-gradient(0deg, rgba(150, 200, 205, 0.04) 0 1px, transparent 1px 32px),
+    repeating-linear-gradient(90deg, rgba(150, 200, 205, 0.04) 0 1px, transparent 1px 32px),
     var(--bg);
 }
 .topbar {

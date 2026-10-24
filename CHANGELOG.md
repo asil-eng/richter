@@ -4,6 +4,13 @@ Record each meaningful project change during the event, newest first. Update thi
 
 ## Event build log
 
+## 2026-10-24T23:09:33+05:30 — Inspector redesign
+
+- Changed: `Inspector.tsx`: magnitude header with descriptor and a one-line verdict (fragile and reworked / load-bearing but stable / reworked but isolated / quiet), a 0-10 Richter scale with a spring-in marker, STRUCTURAL/HUMAN meters with numeric values; BLAST RADIUS card (big count, % of codebase, stacked hop bar + counts); 4-column stats strip; MAGNITUDE OVER HISTORY sparkline from the time-travel snapshots; downstream hops with a colored rail, a short explanation per hop, chips sorted by importance with a magnitude dot, and expandable '+N more'. Old readout grid CSS removed. `App.tsx` passes snapshots to the inspector.
+- Why: Participant asked to make the file inspector much better and more attractive.
+- Validation: Playwright at 1440x1000: selected rich/cells.py via finder; header, blast card, stats, history and hops render; '+24 more' expands and collapses; no page errors. `tsc -b` and `oxlint` clean.
+- Limitations: History curve uses the snapshot normalization (human axis vs present-day max), so it can differ from the header by ~0.1; the end label shows the current score.
+
 ## 2026-10-24T23:03:49+05:30 — Canvas vs panel surfaces
 
 - Changed: `tokens.css`: canvas `--bg` darkened to #060809; panel tokens lifted to slate (`--bg-1` #13191d, `--bg-2` #1a2227, `--bg-3` #20292f). `app.css`: graph-paper grid moved from the whole app onto `.stage` only, with an inset shadow so the canvas reads recessed; rails and top bar use the panel color with stronger edge lines.

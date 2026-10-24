@@ -167,7 +167,7 @@ export default function App() {
             <FileFinder model={model} onSelect={select} />
             <AskBar slug={slug} model={model} onHighlight={setHighlight} onSelect={select} />
           </main>
-          <Inspector model={model} slug={slug} selected={selected} onSelect={select} />
+          <Inspector model={model} slug={slug} snapshots={snapshots} selected={selected} onSelect={select} />
         </>
       )}
       {error && <div className="fatal">{error}</div>}

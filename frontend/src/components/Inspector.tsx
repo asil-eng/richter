@@ -1,21 +1,24 @@
 import { useEffect, useMemo, useState } from 'react'
 import { fetchNote } from '../lib/data'
-import { fmtM, heat, shortName } from '../lib/heat'
-import type { Note, RiskModel } from '../lib/types'
+import { descriptor, fmtM, heat, shortName } from '../lib/heat'
+import type { Note, RiskModel, Snapshots } from '../lib/types'
 import { Meter } from './Gauge'
 
 interface Props {
   model: RiskModel
   slug: string
+  snapshots: Snapshots | null
   selected: number | null
   onSelect: (i: number | null) => void
 }
 
 type Kind = 'guard' | 'unblock'
 
-export function Inspector({ model, slug, selected, onSelect }: Props) {
+export function Inspector({ model, slug, snapshots, selected, onSelect }: Props) {
   if (selected === null || !model.nodes[selected]) return <EmptyInspector model={model} onSelect={onSelect} />
-  return <FileInspector key={`${slug}:${selected}`} model={model} slug={slug} i={selected} onSelect={onSelect} />
+  return (
+    <FileInspector key={`${slug}:${selected}`} model={model} slug={slug} snapshots={snapshots} i={selected} onSelect={onSelect} />
+  )
 }
 
 function EmptyInspector({ model, onSelect }: { model: RiskModel; onSelect: (i: number) => void }) {
@@ -103,15 +106,43 @@ function EmptyInspector({ model, onSelect }: { model: RiskModel; onSelect: (i: n
   )
 }
 
-function FileInspector({ model, slug, i, onSelect }: { model: RiskModel; slug: string; i: number; onSelect: Props['onSelect'] }) {
+const HOP_COLOR = ['#fff0e6', '#ff2d1f', '#ff6a1a', '#ffb02e']
+const hopColor = (h: number) => HOP_COLOR[Math.min(3, h)]
+const HOP_NOTE = ['', 'imports it directly', 'imports a hop-1 file', 'further downstream']
+
+// One plain-English reading of where a file sits on the two axes.
+function verdict(structural: number, human: number): { text: string; hot: boolean } {
+  const s = structural >= 0.5
+  const h = human >= 0.5
+  if (s && h) return { text: 'Fragile and reworked — touch with care', hot: true }
+  if (s) return { text: 'Load-bearing but stable', hot: false }
+  if (h) return { text: 'Reworked often, but few files depend on it', hot: false }
+  return { text: 'Quiet corner of the codebase', hot: false }
+}
+
+function FileInspector({
+  model,
+  slug,
+  snapshots,
+  i,
+  onSelect,
+}: {
+  model: RiskModel
+  slug: string
+  snapshots: Snapshots | null
+  i: number
+  onSelect: Props['onSelect']
+}) {
   const n = model.nodes[i]
   const [kind, setKind] = useState<Kind>(n.human > n.structural ? 'unblock' : 'guard')
+  const [expanded, setExpanded] = useState<Set<number>>(new Set())
 
   const rings = useMemo(() => {
     const byHop = new Map<number, number[]>()
     for (const [j, h] of n.blast) byHop.set(h, [...(byHop.get(h) ?? []), j])
+    for (const js of byHop.values()) js.sort((a, b) => model.nodes[b].importance - model.nodes[a].importance)
     return [...byHop.entries()].sort((a, b) => a[0] - b[0])
-  }, [n])
+  }, [model, n])
   const partners = useMemo(
     () =>
       model.cochange
@@ -120,9 +151,14 @@ function FileInspector({ model, slug, i, onSelect }: { model: RiskModel; slug: s
         .map((c) => ({ j: c.a === i ? c.b : c.a, shared: c.shared })),
     [model, i],
   )
+  const history = useMemo(() => snapshots?.frames.map((f) => ({ ts: f.ts, m: f.magnitude[i] })) ?? [], [snapshots, i])
+
   const parts = n.id.split('/')
   const file = parts.pop()
-  const pct = Math.round((n.blast_size / Math.max(1, model.nodes.length - 1)) * 100)
+  const total = Math.max(1, model.nodes.length - 1)
+  const pct = Math.round((n.blast_size / total) * 100)
+  const m10 = n.magnitude * 10
+  const v = verdict(n.structural, n.human)
 
   return (
     <aside className="rail rail-right">
@@ -135,66 +171,122 @@ function FileInspector({ model, slug, i, onSelect }: { model: RiskModel; slug: s
         </div>
         <div className="insp-dir">{parts.join('/') || '.'}/</div>
         <div className="insp-file">{file}</div>
-        <div className="insp-mag">
-          <div className="insp-mag-num" style={{ color: heat(n.magnitude), textShadow: `0 0 24px ${heat(n.magnitude, 0.45)}` }}>
+
+        <div className="insp-reading">
+          <div className="insp-mag-num" style={{ color: heat(n.magnitude), textShadow: `0 0 28px ${heat(n.magnitude, 0.4)}` }}>
             {fmtM(n.magnitude)}
           </div>
-          <div className="insp-mag-side">
-            <div className="label-dim">MAGNITUDE</div>
-            <div className="insp-axes">
-              <div>
-                <span>STRUCTURAL</span>
-                <Meter value={n.structural} hot={false} />
-              </div>
-              <div>
-                <span>HUMAN</span>
-                <Meter value={n.human} />
-              </div>
+          <div className="insp-reading-side">
+            <div className="insp-desc" style={{ color: heat(n.magnitude) }}>
+              M · {descriptor(m10)}
             </div>
+            <div className={`insp-verdict ${v.hot ? 'is-hot' : ''}`}>{v.text}</div>
           </div>
+        </div>
+
+        <div className="scale" aria-label={`magnitude ${fmtM(n.magnitude)} of 10`}>
+          <div className="scale-track" />
+          <div className="scale-ticks">
+            {Array.from({ length: 11 }, (_, k) => (
+              <span key={k}>{k % 2 === 0 ? k : ''}</span>
+            ))}
+          </div>
+          <div className="scale-marker" style={{ left: `${n.magnitude * 100}%` }} />
+        </div>
+
+        <div className="axes">
+          <Axis name="STRUCTURAL" hint="how much depends on it" value={n.structural} cool />
+          <Axis name="HUMAN" hint="how often it's reworked" value={n.human} />
         </div>
         {n.bus_factor && <div className="flag">BUS FACTOR 1 — one author has written every commit</div>}
       </section>
 
-      <section className="panel readouts">
-        <Readout k="BLAST RADIUS" v={n.blast_size} unit={`files · ${pct}%`} hot={n.blast_size > 0} />
-        <Readout k="IMPORTANCE" v={`P${Math.round(n.importance * 100)}`} unit="pagerank" />
-        <Readout k="CHURN" v={n.churn} unit="commits" />
-        <Readout k="FIXES" v={n.fixes} unit={`ratio ${(n.fix_ratio * 100).toFixed(0)}%`} hot={n.fix_ratio > 0.25} />
-        <Readout k="AUTHORS" v={n.authors} unit="" />
-        <Readout k="LOC" v={n.loc.toLocaleString()} unit="lines" />
+      <section className="panel blast-card">
+        <div className="label">BLAST RADIUS</div>
+        <div className="blast-hero">
+          <span className="blast-num" style={{ color: n.blast_size ? 'var(--orange)' : 'var(--text-2)' }}>
+            {n.blast_size}
+          </span>
+          <span className="blast-copy">
+            {n.blast_size === 1 ? 'file breaks' : 'files break'} if this changes
+            <b>{pct}% of the codebase</b>
+          </span>
+        </div>
+        <div className="blast-bar" title="share of the codebase, split by hops">
+          {rings.map(([h, js]) => (
+            <span key={h} style={{ width: `${(js.length / total) * 100}%`, background: hopColor(h) }} />
+          ))}
+        </div>
+        <div className="blast-keys">
+          {rings.map(([h, js]) => (
+            <span key={h}>
+              <i style={{ background: hopColor(h) }} />
+              HOP {h} <b>{js.length}</b>
+            </span>
+          ))}
+          {rings.length === 0 && <span className="muted">Nothing inside the repo imports it.</span>}
+        </div>
       </section>
+
+      <section className="panel stats-strip">
+        <Stat k="CHURN" v={n.churn} u="commits" />
+        <Stat k="FIXES" v={n.fixes} u={`${Math.round(n.fix_ratio * 100)}% ratio`} hot={n.fix_ratio > 0.25} />
+        <Stat k="AUTHORS" v={n.authors} u={n.authors === 1 ? 'only one' : 'people'} hot={n.bus_factor} />
+        <Stat k="LOC" v={n.loc.toLocaleString()} u="lines" />
+      </section>
+
+      {history.some((h) => h.m !== null) && <History points={history} now={n.magnitude} />}
 
       <section className="panel">
         <div className="label">
-          DOWNSTREAM <span className="label-dim">/ who breaks, by distance</span>
+          DOWNSTREAM <span className="label-dim">/ who breaks, nearest first</span>
         </div>
         {rings.length === 0 && <div className="muted">No in-repo dependents. Callers outside the repo may still rely on it.</div>}
         <div className="rings">
-          {rings.map(([h, js]) => (
-            <div key={h} className="ring" style={{ animationDelay: `${h * 260}ms` }}>
-              <div className="ring-h">
-                <span className="ring-dot" style={{ background: h <= 1 ? 'var(--red)' : h === 2 ? 'var(--orange)' : 'var(--amber)' }} />
-                HOP {h}
-                <b>{js.length}</b>
+          {rings.map(([h, js]) => {
+            const open = expanded.has(h)
+            const shown = open ? js : js.slice(0, 8)
+            return (
+              <div key={h} className="ring" style={{ animationDelay: `${h * 200}ms`, borderColor: hopColor(h) }}>
+                <div className="ring-h">
+                  <span className="ring-dot" style={{ background: hopColor(h), color: hopColor(h) }} />
+                  HOP {h}
+                  <span className="ring-note">{HOP_NOTE[Math.min(3, h)]}</span>
+                  <b>{js.length}</b>
+                </div>
+                <div className="chips">
+                  {shown.map((j) => (
+                    <button key={j} className="chip" onClick={() => onSelect(j)} title={model.nodes[j].id}>
+                      <i className="chip-dot" style={{ background: heat(model.nodes[j].magnitude) }} />
+                      {shortName(model.nodes[j].id)}
+                    </button>
+                  ))}
+                  {js.length > 8 && (
+                    <button
+                      className="chip chip-more"
+                      onClick={() =>
+                        setExpanded((s) => {
+                          const next = new Set(s)
+                          if (open) next.delete(h)
+                          else next.add(h)
+                          return next
+                        })
+                      }
+                    >
+                      {open ? 'show less' : `+${js.length - 8} more`}
+                    </button>
+                  )}
+                </div>
               </div>
-              <div className="chips">
-                {js.slice(0, 14).map((j) => (
-                  <button key={j} className="chip" onClick={() => onSelect(j)} title={model.nodes[j].id}>
-                    {shortName(model.nodes[j].id)}
-                  </button>
-                ))}
-                {js.length > 14 && <span className="chip chip-more">+{js.length - 14}</span>}
-              </div>
-            </div>
-          ))}
+            )
+          })}
         </div>
       </section>
 
       {partners.length > 0 && (
         <section className="panel">
           <div className="label">
-            HIDDEN COUPLING <span className="label-dim">/ co-change, no import</span>
+            HIDDEN COUPLING <span className="label-dim">/ change together, no import</span>
           </div>
           <div className="chips">
             {partners.slice(0, 8).map((p) => (
@@ -221,13 +313,57 @@ function FileInspector({ model, slug, i, onSelect }: { model: RiskModel; slug: s
   )
 }
 
-function Readout({ k, v, unit, hot }: { k: string; v: string | number; unit: string; hot?: boolean }) {
+function Axis({ name, hint, value, cool }: { name: string; hint: string; value: number; cool?: boolean }) {
   return (
-    <div className={`readout ${hot ? 'is-hot' : ''}`}>
-      <div className="readout-k">{k}</div>
-      <div className="readout-v">{v}</div>
-      <div className="readout-u">{unit}</div>
+    <div className="axis" title={hint}>
+      <span className="axis-name">{name}</span>
+      <Meter value={value} hot={!cool} />
+      <span className="axis-val">{value.toFixed(2)}</span>
     </div>
+  )
+}
+
+function Stat({ k, v, u, hot }: { k: string; v: string | number; u: string; hot?: boolean }) {
+  return (
+    <div className={`sstat ${hot ? 'is-hot' : ''}`}>
+      <div className="sstat-k">{k}</div>
+      <div className="sstat-v">{v}</div>
+      <div className="sstat-u">{u}</div>
+    </div>
+  )
+}
+
+// Magnitude across the time-travel snapshots: when did this file become dangerous?
+function History({ points, now }: { points: { ts: number; m: number | null }[]; now: number }) {
+  const W = 300
+  const H = 54
+  const n = points.length
+  const xy = points.map((p, k) => (p.m === null ? null : [(k / Math.max(1, n - 1)) * W, H - 4 - p.m * (H - 10)]))
+  let d = ''
+  xy.forEach((p, k) => {
+    if (!p) return
+    d += `${!xy[k - 1] ? 'M' : 'L'}${p[0].toFixed(1)},${p[1].toFixed(1)} `
+  })
+  const born = points.findIndex((p) => p.m !== null)
+  const last = points[n - 1].m ?? 0
+  const year = (ts: number) => new Date(ts * 1000).getFullYear()
+  return (
+    <section className="panel">
+      <div className="label">
+        MAGNITUDE OVER HISTORY <span className="label-dim">/ {points.length} snapshots</span>
+      </div>
+      <svg className="hist" viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none">
+        {[0.25, 0.5, 0.75].map((g) => (
+          <line key={g} x1="0" x2={W} y1={H - 4 - g * (H - 10)} y2={H - 4 - g * (H - 10)} className="hist-grid" />
+        ))}
+        <path d={d} className="hist-line" style={{ stroke: heat(last) }} />
+        {xy[n - 1] && <circle cx={xy[n - 1]![0]} cy={xy[n - 1]![1]} r="3" fill={heat(last)} />}
+      </svg>
+      <div className="hist-axis">
+        <span>{born > 0 ? `born ${year(points[born].ts)}` : year(points[0].ts)}</span>
+        <span>now · M {fmtM(now)}</span>
+      </div>
+    </section>
   )
 }
 

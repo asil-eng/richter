@@ -1,0 +1,14 @@
+{
+ "headline": "Guard Note for gitignore.rs Modifications",
+ "what_breaks": [
+  "crates/ignore/src/walk.rs \u2014 relies on Gitignore for path matching",
+  "crates/ignore/src/overrides.rs \u2014 depends on Gitignore for glob handling",
+  "crates/ignore/src/dir.rs \u2014 uses Glob for directory matching"
+ ],
+ "why": "This file contains the core logic for matching globs from gitignore files, which is critical for the functionality of multiple components. Changes here can affect how paths are ignored or matched across the entire project.",
+ "checklist": [
+  "Review changes to Glob and Gitignore structs and their methods",
+  "Check interactions with GlobSet in Gitignore's new method",
+  "Ensure any changes to error handling in new method are consistent"
+ ]
+}

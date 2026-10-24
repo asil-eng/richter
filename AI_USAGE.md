@@ -30,6 +30,7 @@ No participant AI usage has been recorded yet. Replace the placeholder row as yo
 | 2026-10-24T23:03+05:30 | Claude Code (Claude Opus 5.5) | Canvas vs panel surfaces | Surface color split between canvas and panels | Pending participant review | Screenshots reviewed |
 | 2026-10-24T23:09+05:30 | Claude Code (Claude Opus 5.5) | Inspector redesign | Inspector redesign | Pending participant review | Screenshots reviewed |
 | 2026-10-24T23:13+05:30 | Claude Code (Claude Opus 5.5) | Inspector instruments: plain-English summary, gauge, risk quadrant, shockwave rings | Designed and built the inspector instruments | Pending participant review | Screenshots reviewed |
+| 2026-10-24T23:25+05:30 | Claude Code (Claude Opus 5.5) | Multi-language import graphs (JS/TS, Go, JVM, Rust, C/C++, C#, Ruby, PHP) | Designed and implemented multi-language parsing, tests, real-repo verification | Pending participant review | pytest 17 passed; 8 real repos checked |
 
 ## Template preparation
 

@@ -1,0 +1,8 @@
+{
+ "answer": "The most fragile files in the codebase are crates/ignore/src/walk.rs, crates/ignore/src/gitignore.rs, and crates/ignore/src/dir.rs, with fragility scores of 9.4, 8.4, and 8.3 respectively. These files have high blast scores, indicating that changes to them could lead to significant breakage. Additionally, they have a considerable amount of churn, suggesting they are frequently modified.",
+ "files": [
+  "crates/ignore/src/walk.rs",
+  "crates/ignore/src/gitignore.rs",
+  "crates/ignore/src/dir.rs"
+ ]
+}

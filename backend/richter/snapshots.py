@@ -1,6 +1,6 @@
 """Time-travel snapshots: the risk model re-scored at ~28 points across history.
 
-For each sampled commit we check out only the .py files (sparse, blobless
+For each sampled commit we check out only source files (sparse, blobless
 worktree), rebuild the import graph, recompute git stats on the history prefix,
 and score with the frozen risk engine. Historical paths are mapped to today's
 files through rename tracking, so one tower in the city is one file over time.
@@ -16,7 +16,7 @@ import math
 import subprocess
 from pathlib import Path
 
-from . import gitstats, risk
+from . import gitstats, langs, risk
 from .deps import build_import_graph
 from .ingest import Commit, clone, read_log, repo_slug
 from .pipeline import MODELS_DIR, write_manifest
@@ -33,7 +33,9 @@ def _worktree(root: Path, sha: str) -> Path:
     wt = root.parent / f"{root.name}__snap"
     if not wt.exists():
         _git("-C", str(root), "worktree", "add", "-q", "--no-checkout", "--detach", str(wt), sha)
-        _git("-C", str(wt), "sparse-checkout", "set", "--no-cone", "*.py")
+        # only source files are needed to rebuild the import graph
+        patterns = [f"*{ext}" for ext in langs.SOURCE_EXTS] + ["go.mod", "Cargo.toml", "package.json", "tsconfig.json", "jsconfig.json"]
+        _git("-C", str(wt), "sparse-checkout", "set", "--no-cone", *patterns)
     _git("-C", str(wt), "checkout", "-q", "--detach", sha)
     return wt
 

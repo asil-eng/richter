@@ -1,0 +1,14 @@
+{
+ "headline": "Replacer struct impacts multiple modules",
+ "what_breaks": [
+  "crates/printer/src/hyperlink/mod.rs \u2014 uses Replacer for hyperlink processing",
+  "crates/printer/src/stats.rs \u2014 relies on Replacer for statistical replacements",
+  "crates/printer/src/json.rs \u2014 integrates Replacer for JSON formatting"
+ ],
+ "why": "The Replacer struct is central to handling string replacements across various modules. Any changes to its methods or structure could disrupt functionality in dependent files.",
+ "checklist": [
+  "Review changes to Replacer methods, especially replace_all",
+  "Check for impacts on Searcher and Matcher interfaces used in Replacer",
+  "Ensure compatibility with MAX_LOOK_AHEAD constant in related modules"
+ ]
+}

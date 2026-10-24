@@ -1,0 +1,11 @@
+{
+ "headline": "Frequent Rework on Replacer Logic",
+ "diagnosis": "The file 'util.rs' is repeatedly modified, primarily around the 'Replacer' struct and its methods. Commit messages indicate issues with panic handling, replacement logic, and formatting, suggesting a lack of stability in the replacement functionality.",
+ "plan": [
+  "Conduct a thorough review of the 'replace_all' method to identify edge cases causing panics and incorrect replacements.",
+  "Implement comprehensive unit tests for the 'Replacer' struct, focusing on various input scenarios, including edge cases mentioned in commit messages.",
+  "Refactor the 'Replacer' logic to improve clarity and reliability, particularly around allocation and error handling.",
+  "Establish a code review process to ensure that changes to 'util.rs' are scrutinized for potential impacts on dependent files."
+ ],
+ "owner_hint": "Ownership should be assigned to a single developer to reduce bus factor."
+}

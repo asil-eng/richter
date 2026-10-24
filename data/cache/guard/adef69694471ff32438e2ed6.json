@@ -1,0 +1,15 @@
+{
+ "headline": "Key components for ReadByLine and SliceByLine",
+ "what_breaks": [
+  "crates/searcher/src/searcher/mod.rs \u2014 imports Config, Searcher, Core",
+  "crates/searcher/src/sink.rs \u2014 relies on Sink and SinkError",
+  "grep_matcher::Matcher \u2014 required for matcher functionality"
+ ],
+ "why": "This file contains critical structures and methods for processing search results line by line. Changes here could directly impact how search operations are executed and how data is handled across multiple components.",
+ "checklist": [
+  "Review changes to ReadByLine and SliceByLine structs",
+  "Check interactions with Core and ensure compatibility",
+  "Verify that matcher implementations still conform to Matcher trait",
+  "Ensure Sink implementations are unaffected by changes"
+ ]
+}

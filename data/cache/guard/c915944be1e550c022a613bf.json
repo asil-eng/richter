@@ -1,0 +1,14 @@
+{
+ "headline": "Guarding the Overrides Module in Rust",
+ "what_breaks": [
+  "crates/ignore/src/walk.rs \u2014 relies on Override and Match",
+  "crates/ignore/src/dir.rs \u2014 relies on Override and Match",
+  "crates/ignore/src/incremental.rs \u2014 relies on Override and Match"
+ ],
+ "why": "This file contains the core logic for managing override globs, which are crucial for file matching functionality. Changes here can directly affect how other modules interpret file paths and matches.",
+ "checklist": [
+  "Verify changes to Override and Glob structures",
+  "Check interactions with Match in dependent files",
+  "Ensure path handling logic in matched() is intact"
+ ]
+}

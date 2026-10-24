@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import json
 import time
+from collections import Counter
 from pathlib import Path
 
 from . import gitstats, risk
@@ -31,6 +32,7 @@ def build_model(root: Path, commits: list[Commit], url: str = "",
         nodes.append({
             "id": p,
             "dir": p.rsplit("/", 1)[0] if "/" in p else ".",
+            "lang": g.nodes[p].get("lang", "python"),
             "loc": g.nodes[p]["loc"],
             "pagerank": round(r.pagerank, 6),
             "importance": round(r.importance, 4),
@@ -70,6 +72,7 @@ def build_model(root: Path, commits: list[Commit], url: str = "",
             "cochange_pairs": len(cc),
             "ghost_edges": sum(c["ghost"] for c in cc),
             "bus_factor_files": sum(n["bus_factor"] for n in nodes),
+            "languages": dict(Counter(n["lang"] for n in nodes).most_common()),
         },
         "nodes": nodes,
         "edges": edges,

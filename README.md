@@ -64,8 +64,27 @@ The backtest scores each repo as it was 60% of the way through its history, usin
 | rich | commit 2,056 / 3,387 | 208 | **45%** | 46% | 10% |
 | fastapi | commit 4,816 / 7,932 | 76 | **68%** | 72% | 10% |
 | black | commit 1,483 / 2,442 | 233 | **42%** | 48% | 11% |
+| ripgrep (Rust) | commit 1,358 / 2,236 | 173 | **11%** | 17% | 11% |
 
-The honest reading: magnitude finds where future fixes land **4–7× better than random**. A churn-only ranking does about as well, and slightly better on fastapi and black. So the *predictive* power comes mostly from the history signal. What magnitude adds is **impact**: it ranks the reworked files by how much breaks when they change, and the blast radius tells you exactly what that is. The scoring was frozen before this test and hasn't been tuned against it. Reproduce it with `python -m richter.cli backtest <url> [--cutoff 0.6]`.
+The honest reading: on the three Python repos, magnitude finds where future fixes land **4–7× better than random**. A churn-only ranking does about as well, and slightly better on fastapi and black. On ripgrep, magnitude did **no better than random**: its later fixes landed in files that were quiet at the cutoff, so neither ranking saw them coming. So the *predictive* power comes mostly from the history signal. What magnitude adds is **impact**: it ranks the reworked files by how much breaks when they change, and the blast radius tells you exactly what that is. The scoring was frozen before this test and hasn't been tuned against it. Reproduce it with `python -m richter.cli backtest <url> [--cutoff 0.6]`.
+
+## Languages
+
+Everything except the import parser is language-agnostic: git history, scoring, AI notes and all three views work the same way for every language below.
+
+| Language | Files | How an import becomes an edge |
+| --- | --- | --- |
+| Python | `.py` | `ast`; relative imports, `src/` layouts, `__init__.py` re-exports |
+| JavaScript / TypeScript | `.js .jsx .mjs .cjs .ts .tsx .vue .svelte` | relative paths and `index` files, `./x.js` → `x.ts`, `tsconfig`/`jsconfig` path aliases, monorepo workspace packages |
+| Go | `.go` | module path from `go.mod`; an import links to every file in that package |
+| Java / Kotlin / Scala | `.java .kt .kts .scala` | `package` + class name → file; wildcard imports → the whole package |
+| Rust | `.rs` | `mod` declarations; `use crate::`, `super::`, `self::` and workspace crates (incl. `{a, b}` groups) |
+| C / C++ / Objective-C | `.c .h .cc .cpp .hpp .m …` | `#include` relative to the file, then by unique path suffix |
+| C# | `.cs` | `using` → the type or the files declaring that namespace (skipped for namespaces over 60 files) |
+| Ruby | `.rb` | `require_relative`; `require` → gem-style `lib/<name>.rb` |
+| PHP | `.php` | `use` namespace\class → file; `require`/`include` paths |
+
+Checked on real repos: [pmndrs/zustand](https://github.com/pmndrs/zustand) (TypeScript), [junegunn/fzf](https://github.com/junegunn/fzf) (Go), [google/gson](https://github.com/google/gson) (Java), [BurntSushi/ripgrep](https://github.com/BurntSushi/ripgrep) (Rust), [redis/hiredis](https://github.com/redis/hiredis) (C), [sinatra/sinatra](https://github.com/sinatra/sinatra) (Ruby) and [guzzle/guzzle](https://github.com/guzzle/guzzle) (PHP), with sampled edges spot-checked against the source. ripgrep ships as a fourth demo: its riskiest files are the directory walker and gitignore engine in `crates/ignore` (`walk.rs` M 9.4).
 
 ## Architecture
 
@@ -87,7 +106,7 @@ flowchart LR
 ```
 
 - **Ingest:** a blobless clone keeps the *full* commit history while skipping file contents until they're needed. A shallow clone would make churn, authorship and co-change meaningless.
-- **Import parsing:** handles relative imports, `src/` layouts and `__init__.py` re-exports, so edges point at the real module. Otherwise everything collapses into a star centered on `__init__.py` (on fastapi, 2% of edges end at an `__init__.py`). `tests/`, `docs_src/`, `docs/` and `examples/` are excluded by default; add `--include-tests` to include them.
+- **Import parsing:** Python uses `ast` and handles relative imports, `src/` layouts and `__init__.py` re-exports, so edges point at the real module. Otherwise everything collapses into a star centered on `__init__.py` (on fastapi, 2% of edges end at an `__init__.py`). Other languages use per-language import resolvers (see [Languages](#languages)). Test, docs and example folders, vendored code and build output are excluded by default; add `--include-tests` to include tests, docs and examples.
 - **Ask-the-repo:** the model must return JSON `{answer, files[]}`, and every path is checked against the model before anything gets highlighted. Invented paths are dropped, and the UI says how many were dropped.
 - **Offline demo:** the three demo models and their snapshots are committed. The frontend loads them as static files, so the demo runs without the backend or an API key.
 
@@ -106,20 +125,20 @@ cd frontend && npm install && npm run dev      # → http://localhost:5173
 Optional: `cp .env.example .env` and set `OPENAI_API_KEY` to enable AI guard notes, unblock plans and ask-the-repo.
 
 ```bash
-# analyze any public Python repo, then precompute its time-travel frames
+# analyze any public repo in a supported language, then precompute its time-travel frames
 cd backend
 .venv/bin/python -m richter.cli analyze https://github.com/owner/repo [--include-tests]
 .venv/bin/python -m richter.cli snapshots https://github.com/owner/repo
 .venv/bin/python -m richter.cli notes https://github.com/owner/repo      # precompute AI notes (needs key)
 .venv/bin/python -m richter.cli backtest https://github.com/owner/repo   # needs snapshots
-.venv/bin/python -m pytest -q                  # 12 tests
+.venv/bin/python -m pytest -q                  # 17 tests
 ```
 
 Keys: `1` graph · `2` risk map · `3` city · `Esc` clear selection.
 
 ## Scope and limitations
 
-- **Works on Python today.** Import parsing uses Python's `ast` module. Everything after the parser is language-agnostic (graph, git stats, scoring, views), so other languages need only a new import parser, for example one built on [tree-sitter](https://tree-sitter.github.io).
+- **Import resolution is pattern-based outside Python.** It catches standard import syntax but isn't a compiler: Java/Kotlin/Scala/C# files can use same-package types with no import, and those links are invisible. Swift, Dart and other languages aren't parsed yet. A [tree-sitter](https://tree-sitter.github.io) front end would make extraction more robust; everything after the parser is already language-agnostic.
 - **AI notes need a key for anything outside the bundle.** The demo repos include precomputed `gpt-4o-mini` notes (14 files each) and answers to the three suggested questions. Other files fall back to a labelled rule-based note, and free-form questions need `OPENAI_API_KEY`.
 - **Fix detection** is a regex over commit messages (`fix`, `bug`, `revert`, `hotfix`, `regression`, `crash`, `broken`).
 - **Importance only counts imports inside the repo.** A library's public entry points look less central than they really are, because their callers live outside the repo.
@@ -135,7 +154,7 @@ Keys: `1` graph · `2` risk map · `3` city · `Esc` clear selection.
 - **Short description:** Richter ingests a public GitHub repo and predicts what breaks when you change a file (blast radius), where work keeps getting reworked (fix-heavy churn), and which files are secretly coupled (co-change with no import link). It fuses these into one magnitude score and writes guard notes and unblock plans with an LLM. It helps engineers and reviewers touch risky code safely.
 - **Team:** Muhammed Asil Pari ([@asil-eng](https://github.com/asil-eng))
 - **Working demo:** Local; see [Run it](#run-it). The demo repos load without the backend or an API key.
-- **Technology stack:** Python 3 + FastAPI, GitPython, `ast`, networkx (backend); React 19 + Vite + TypeScript, d3-force, three.js (frontend); OpenAI `gpt-4o-mini` (notes).
+- **Technology stack:** Python 3 + FastAPI, GitPython, `ast` + per-language import resolvers, networkx (backend); React 19 + Vite + TypeScript, d3-force, three.js (frontend); OpenAI `gpt-4o-mini` (notes).
 
 ### Run the project
 
@@ -149,7 +168,7 @@ Keys: `1` graph · `2` risk map · `3` city · `Esc` clear selection.
 
 - Working features: ingest, import + git parsers, risk engine, JSON model, FastAPI, 2D graph with blast-radius cascade, risk map, ghost-edge and bus-factor layers, report card, 3D code city, time-travel (precomputed for rich, fastapi, black), ask-the-repo with path validation, guard notes and unblock plans (AI path verified with gpt-4o-mini; rule-based fallback verified).
 - Known limitations: see [Scope and limitations](#scope-and-limitations).
-- Libraries, APIs, and public datasets used: [FastAPI](https://fastapi.tiangolo.com), [GitPython](https://github.com/gitpython-developers/GitPython), [networkx](https://networkx.org), [NumPy](https://numpy.org)/[SciPy](https://scipy.org) (PageRank), [React](https://react.dev), [Vite](https://vite.dev), [d3-force](https://d3js.org/d3-force), [three.js](https://threejs.org), [IBM Plex Mono](https://github.com/IBM/plex) and [Archivo](https://github.com/Omnibus-Type/Archivo) via Fontsource, [OpenAI API](https://platform.openai.com). Demo data is derived from the public repositories [Textualize/rich](https://github.com/Textualize/rich), [fastapi/fastapi](https://github.com/fastapi/fastapi) and [psf/black](https://github.com/psf/black).
+- Libraries, APIs, and public datasets used: [FastAPI](https://fastapi.tiangolo.com), [GitPython](https://github.com/gitpython-developers/GitPython), [networkx](https://networkx.org), [NumPy](https://numpy.org)/[SciPy](https://scipy.org) (PageRank), [React](https://react.dev), [Vite](https://vite.dev), [d3-force](https://d3js.org/d3-force), [three.js](https://threejs.org), [IBM Plex Mono](https://github.com/IBM/plex) and [Archivo](https://github.com/Omnibus-Type/Archivo) via Fontsource, [OpenAI API](https://platform.openai.com). Demo data is derived from the public repositories [Textualize/rich](https://github.com/Textualize/rich), [fastapi/fastapi](https://github.com/fastapi/fastapi), [psf/black](https://github.com/psf/black) and [BurntSushi/ripgrep](https://github.com/BurntSushi/ripgrep).
 
 See [AI_USAGE.md](AI_USAGE.md) for AI assistance and [CHANGELOG.md](CHANGELOG.md) for the development record.
 

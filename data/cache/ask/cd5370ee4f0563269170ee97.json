@@ -1,0 +1,9 @@
+{
+ "answer": "Hidden coupling is present between the following files: crates/printer/src/counter.rs and crates/printer/src/hyperlink/mod.rs, as well as between crates/core/main.rs and crates/core/flags/lowargs.rs. These pairs have co-changed together in 3 commits.",
+ "files": [
+  "crates/printer/src/counter.rs",
+  "crates/printer/src/hyperlink/mod.rs",
+  "crates/core/main.rs",
+  "crates/core/flags/lowargs.rs"
+ ]
+}

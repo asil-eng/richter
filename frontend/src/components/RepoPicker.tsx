@@ -121,7 +121,10 @@ export function RepoPicker({
                     {r.name.split('/')[1] ?? r.name}
                   </span>
                   <span className="picker-row-meta">
-                    {r.summary.files ? `${r.summary.files} files` : 'no Python files'} · {r.commits.toLocaleString()} commits
+                    {r.summary.languages && Object.keys(r.summary.languages).length > 0 && (
+                      <span className="picker-lang">{Object.keys(r.summary.languages).slice(0, 2).join(' · ')} · </span>
+                    )}
+                    {r.summary.files ? `${r.summary.files} files` : 'no supported files'} · {r.commits.toLocaleString()} commits
                   </span>
                   {r.has_snapshots && <span className="picker-tag">TIME-TRAVEL</span>}
                 </button>

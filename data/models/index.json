@@ -1,5 +1,22 @@
 [
  {
+  "slug": "burntsushi__ripgrep",
+  "name": "BurntSushi/ripgrep",
+  "summary": {
+   "files": 81,
+   "edges": 159,
+   "cochange_pairs": 9,
+   "ghost_edges": 2,
+   "bus_factor_files": 23,
+   "languages": {
+    "rust": 80,
+    "ruby": 1
+   }
+  },
+  "commits": 2236,
+  "has_snapshots": true
+ },
+ {
   "slug": "fastapi__fastapi",
   "name": "fastapi/fastapi",
   "summary": {

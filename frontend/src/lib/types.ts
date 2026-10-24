@@ -1,6 +1,7 @@
 export interface FileNode {
   id: string
   dir: string
+  lang?: string
   loc: number
   pagerank: number
   importance: number
@@ -43,6 +44,7 @@ export interface RiskModel {
     cochange_pairs: number
     ghost_edges: number
     bus_factor_files: number
+    languages?: Record<string, number> // absent in models built before multi-language support
   }
   nodes: FileNode[]
   edges: [number, number][]

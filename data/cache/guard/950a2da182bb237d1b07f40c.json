@@ -1,0 +1,14 @@
+{
+ "headline": "Guard note for types.rs modifications",
+ "what_breaks": [
+  "crates/ignore/src/walk.rs \u2014 relies on Glob for file matching",
+  "crates/ignore/src/dir.rs \u2014 uses types for directory filtering",
+  "crates/ignore/src/incremental.rs \u2014 depends on file type definitions"
+ ],
+ "why": "This file defines the Glob struct and its behavior, which are critical for file type matching across multiple modules. Changes here could disrupt file matching logic in dependent files, affecting functionality.",
+ "checklist": [
+  "Review changes to Glob struct and its methods",
+  "Check impacts on TypesBuilder usage in dependent files",
+  "Ensure consistency with DEFAULT_TYPES in default_types.rs"
+ ]
+}

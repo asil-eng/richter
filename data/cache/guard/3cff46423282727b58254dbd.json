@@ -1,0 +1,13 @@
+{
+ "headline": "HaystackBuilder and Haystack dependencies",
+ "what_breaks": [
+  "crates/core/flags/hiargs.rs \u2014 relies on HaystackBuilder for building haystacks",
+  "crates/core/main.rs \u2014 uses Haystack for searching logic"
+ ],
+ "why": "This file contains the HaystackBuilder and Haystack structs, which are crucial for constructing search parameters. Changes to their methods or structure can directly affect how searching is performed in dependent files.",
+ "checklist": [
+  "Review changes to HaystackBuilder::build_from_result for impact on search logic.",
+  "Check Haystack's methods for any alterations that may affect file handling.",
+  "Ensure logging behavior in build() aligns with expected error handling."
+ ]
+}

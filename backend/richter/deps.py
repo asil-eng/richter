@@ -1,7 +1,7 @@
 """Stage 2a — DEPENDENCY PARSER.
 
-Walk the repo's .py files, extract imports with `ast`, and build a file-level
-import graph (edge A -> B means "A imports B").
+Build a file-level import graph (edge A -> B means "A imports B"). Python files
+are parsed with `ast` here; other languages are handled in `langs.py`.
 
 The naive version collapses into a star on `__init__.py`, because most code does
 `from pkg import thing`. To keep edges pointing at real modules we:
@@ -21,8 +21,8 @@ from pathlib import Path
 
 import networkx as nx
 
-DEFAULT_EXCLUDES = ("tests", "test", "docs_src", "docs", "examples")
-_ALWAYS_SKIP = {".git", ".venv", "venv", "node_modules", "build", "dist", "__pycache__", ".tox"}
+from . import langs
+
 
 
 @dataclass
@@ -38,16 +38,7 @@ class Module:
 
 
 def iter_python_files(root: Path, include_tests: bool = False) -> list[Path]:
-    skip = set(_ALWAYS_SKIP) | (set() if include_tests else set(DEFAULT_EXCLUDES))
-    files = []
-    for p in root.rglob("*.py"):
-        parts = p.relative_to(root).parts
-        if any(part in skip or part.startswith(".") for part in parts[:-1]):
-            continue
-        if not include_tests and (parts[-1].startswith("test_") or parts[-1] == "conftest.py"):
-            continue
-        files.append(p)
-    return sorted(files)
+    return [p for p in langs.iter_source_files(root, include_tests) if p.suffix == ".py"]
 
 
 def module_name(root: Path, path: Path) -> str:
@@ -171,12 +162,17 @@ def load_modules(root: Path, include_tests: bool = False) -> dict[str, Module]:
 
 
 def build_import_graph(root: Path, include_tests: bool = False) -> nx.DiGraph:
-    """Nodes are repo-relative file paths (with `loc` attr); edge A->B = A imports B."""
+    """Nodes are repo-relative file paths (with `loc`, `lang`); edge A->B = A imports B.
+
+    Python uses the `ast` resolver below; every other language goes through
+    `langs.build_edges`. Mixed-language repos get one combined graph.
+    """
+    files = langs.iter_source_files(root, include_tests)
     modules = load_modules(root, include_tests)
     resolver = ImportResolver(modules)
     g = nx.DiGraph()
     for mod in modules.values():
-        g.add_node(mod.path, loc=mod.loc, module=mod.name)
+        g.add_node(mod.path, loc=mod.loc, module=mod.name, lang="python")
     for mod in modules.values():
         if mod.tree is None:
             continue
@@ -186,6 +182,13 @@ def build_import_graph(root: Path, include_tests: bool = False) -> nx.DiGraph:
                     dst = modules[target].path
                     if dst != mod.path:
                         g.add_edge(mod.path, dst)
+
+    other = [p for p in files if p.suffix != ".py"]
+    if other:
+        loc, edges = langs.build_edges(root, other)
+        for path, n in loc.items():
+            g.add_node(path, loc=n, module=path, lang=langs.language_of(path))
+        g.add_edges_from(edges)
     return g
 
 
@@ -196,7 +199,8 @@ if __name__ == "__main__":
     g = build_import_graph(Path(sys.argv[1]))
     indeg = Counter(dict(g.in_degree()))
     inits = sum(d for n, d in indeg.items() if n.endswith("__init__.py"))
-    print(f"{g.number_of_nodes()} files, {g.number_of_edges()} import edges, "
+    by_lang = Counter(d["lang"] for _, d in g.nodes(data=True))
+    print(f"{g.number_of_nodes()} files {dict(by_lang)}, {g.number_of_edges()} import edges, "
           f"{inits / max(g.number_of_edges(), 1):.0%} of edges point at __init__.py")
     for n, d in indeg.most_common(8):
         print(f"  {d:4d}  {n}")

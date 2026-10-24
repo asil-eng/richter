@@ -1,0 +1,14 @@
+{
+ "headline": "BinaryDetection struct and its dependencies",
+ "what_breaks": [
+  "crates/searcher/src/sink.rs \u2014 relies on BinaryDetection for data handling",
+  "crates/searcher/src/searcher/glue.rs \u2014 uses BinaryDetection for search operations",
+  "crates/searcher/src/lib.rs \u2014 imports core functionality including BinaryDetection"
+ ],
+ "why": "The BinaryDetection struct is central to how binary data is handled during searches, affecting multiple components. Changes to its implementation or behavior could disrupt the search functionality across dependent modules.",
+ "checklist": [
+  "Review changes to BinaryDetection methods for impact on sink.rs and glue.rs",
+  "Ensure any modifications to line_buffer::BinaryDetection are reflected in BinaryDetection",
+  "Check for any necessary updates in documentation related to BinaryDetection's behavior"
+ ]
+}

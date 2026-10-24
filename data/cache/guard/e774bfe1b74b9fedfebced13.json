@@ -1,0 +1,14 @@
+{
+ "headline": "Guard Note for default_types.rs Modifications",
+ "what_breaks": [
+  "crates/ignore/src/types.rs \u2014 relies on DEFAULT_TYPES",
+  "crates/ignore/src/lib.rs \u2014 relies on DEFAULT_TYPES"
+ ],
+ "why": "This file defines the DEFAULT_TYPES constant, which is crucial for file type recognition in the ignore crate. Changes to this list could affect how various file types are processed across multiple dependent files.",
+ "checklist": [
+  "Review all changes to the DEFAULT_TYPES constant for correctness.",
+  "Ensure that any new file types added are popular open formats.",
+  "Maintain the lexicographical order and 79-column wrapping in the list.",
+  "Check for consistency with existing file type patterns and formats."
+ ]
+}

@@ -1,0 +1,14 @@
+{
+ "headline": "Guard note for walk.rs modifications",
+ "what_breaks": [
+  "crates/ignore/src/dir.rs \u2014 relies on DirEntry for directory handling",
+  "crates/ignore/src/gitignore.rs \u2014 may depend on DirEntry for ignore file parsing",
+  "crates/ignore/src/lib.rs \u2014 uses DirEntry in public API"
+ ],
+ "why": "Modifications to DirEntry could affect directory traversal and error handling across multiple components. Given its central role, changes may introduce breaking changes in dependent files.",
+ "checklist": [
+  "Review changes to DirEntry methods for compatibility with dir.rs",
+  "Check interactions with IgnoreBuilder in gitignore.rs",
+  "Ensure public API in lib.rs remains consistent with DirEntry updates"
+ ]
+}

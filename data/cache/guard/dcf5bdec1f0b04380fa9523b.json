@@ -1,0 +1,14 @@
+{
+ "headline": "Guard note for dir.rs modifications",
+ "what_breaks": [
+  "crates/ignore/src/walk.rs \u2014 relies on Ignore for directory traversal",
+  "crates/ignore/src/incremental.rs \u2014 depends on Ignore for incremental directory matching",
+  "crates/ignore/src/lib.rs \u2014 uses Ignore in the public API"
+ ],
+ "why": "Changes to the Ignore structure or its methods can impact directory traversal and matching behavior across multiple files. This file serves as a core component for managing ignore rules, making it critical for the functionality of the crate.",
+ "checklist": [
+  "Review changes to the Ignore struct and its methods",
+  "Check the usage of Ignore in walk.rs and incremental.rs",
+  "Ensure compatibility with existing matchers in the codebase"
+ ]
+}

@@ -108,13 +108,13 @@ export default function App() {
         <main className="stage stage-empty">
           <div className="no-python">
             <div className="label">NO SIGNAL</div>
-            <div className="no-python-title">{model.repo.name} has no Python files to analyze</div>
+            <div className="no-python-title">{model.repo.name} has no source files Richter can read</div>
             <p>
-              Richter reads imports with Python's <code>ast</code> today, so repos in other languages produce an empty
-              graph. Its {model.repo.commits.toLocaleString()} commits were read, but no <code>.py</code> files were found
-              outside tests/, docs/ and examples/.
+              Richter builds the import graph for Python, JavaScript/TypeScript, Go, Java/Kotlin/Scala, Rust, C/C++, C#,
+              Ruby and PHP. Its {model.repo.commits.toLocaleString()} commits were read, but no files in those languages
+              were found outside tests/, docs/ and examples/.
             </p>
-            <p className="muted">Pick another repo from the REPO menu, or analyze a Python project.</p>
+            <p className="muted">Pick another repo from the REPO menu, or analyze a project in a supported language.</p>
           </div>
         </main>
       )}
@@ -128,7 +128,7 @@ export default function App() {
                 <span>{model.summary.files} FILES</span>
                 {view === 'city' ? (
                   <>
-                    <span title="Folders with analyzed Python files. tests/, docs/ and examples/ are excluded by default.">DISTRICT = FOLDER WITH .PY FILES</span>
+                    <span title="Folders with analyzed source files. tests/, docs/ and examples/ are excluded by default.">DISTRICT = FOLDER</span>
                     <span>HEIGHT = IMPORTANCE</span>
                     <span>GLOW = MAGNITUDE</span>
                   </>

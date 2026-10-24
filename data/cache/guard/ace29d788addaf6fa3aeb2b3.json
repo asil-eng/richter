@@ -1,0 +1,15 @@
+{
+ "headline": "Critical flag definitions for ripgrep functionality",
+ "what_breaks": [
+  "crates/core/flags/mod.rs \u2014 relies on FLAGS for flag definitions",
+  "crates/core/flags/parse.rs \u2014 depends on Flag implementations for parsing",
+  "crates/core/flags/complete/bash.rs \u2014 uses flag definitions for completion scripts"
+ ],
+ "why": "This file defines all the flags available in ripgrep, which are crucial for its command-line interface. Changes to the FLAGS constant or the Flag implementations can affect multiple dependent modules and their functionalities.",
+ "checklist": [
+  "Review any changes to the FLAGS constant for impact on dependent files.",
+  "Ensure all Flag implementations are correctly defined and ordered.",
+  "Check for consistency in flag names and their corresponding functionalities.",
+  "Update documentation comments if any flag definitions change."
+ ]
+}

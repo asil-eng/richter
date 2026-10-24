@@ -1,0 +1,13 @@
+{
+ "headline": "Search Worker Configuration and Builder",
+ "what_breaks": [
+  "crates/core/flags/hiargs.rs \u2014 relies on SearchWorkerBuilder",
+  "crates/core/main.rs \u2014 relies on SearchWorkerBuilder"
+ ],
+ "why": "This file defines the `SearchWorkerBuilder` and `Config` structures, which are essential for constructing search workers. Changes here can affect multiple components that depend on the search functionality.",
+ "checklist": [
+  "Review changes to `SearchWorkerBuilder` methods, especially `build` and `preprocessor`.",
+  "Check interactions with `grep::cli::CommandReaderBuilder` and `grep::searcher::Searcher`.",
+  "Ensure any modifications to `Config` do not break existing configurations."
+ ]
+}

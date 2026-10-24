@@ -1,0 +1,14 @@
+{
+ "headline": "HiArgs Struct and Its Dependencies",
+ "what_breaks": [
+  "crates/core/flags/mod.rs \u2014 relies on HiArgs for high-level argument representation",
+  "crates/core/flags/parse.rs \u2014 relies on HiArgs for converting low-level arguments"
+ ],
+ "why": "The HiArgs struct is central to managing high-level CLI arguments, which are critical for the application's functionality. Changes to this struct or its methods can impact multiple files that depend on its representation and conversion logic.",
+ "checklist": [
+  "Review changes to HiArgs struct fields and methods",
+  "Check interactions with LowArgs in from_low_args function",
+  "Ensure compatibility with modules importing HiArgs",
+  "Consider implications for dependent files like mod.rs and parse.rs"
+ ]
+}

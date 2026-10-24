@@ -937,6 +937,18 @@ kbd {
   font-size: var(--fs-11);
   word-break: break-all;
 }
+.insp-lang {
+  float: right;
+  font-size: var(--fs-9);
+  letter-spacing: 0.06em;
+  color: var(--cool);
+  border: 1px solid var(--cool-dim);
+  padding: 0 6px;
+  text-transform: uppercase;
+}
+.picker-lang {
+  color: var(--cool);
+}
 .insp-file {
   font-family: var(--font-head);
   font-weight: 700;

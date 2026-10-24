@@ -170,7 +170,9 @@ function FileInspector({
             ESC ✕
           </button>
         </div>
-        <div className="insp-dir">{parts.join('/') || '.'}/</div>
+        <div className="insp-dir">
+          {parts.join('/') || '.'}/<span className="insp-lang">{n.lang ?? 'python'}</span>
+        </div>
         <div className="insp-file">{file}</div>
 
         <p className="insp-summary">

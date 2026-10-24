@@ -43,6 +43,7 @@ No participant AI usage has been recorded yet. Replace the placeholder row as yo
 | 2026-10-25T04:21+05:30 | Claude Code (Claude Opus 5.5) | Three large demo repos: excalidraw, hugo, textual | Selected, analyzed and verified three large demo repos | Pending participant review | Real-browser frame-rate test |
 | 2026-10-25T04:35+05:30 | Claude Code (Claude Opus 5.5) | Callout pointing first-time visitors to the code city | Code city callout | Pending participant review | Playwright interaction test |
 | 2026-10-25T04:43+05:30 | Claude Code (Claude Opus 5.5) | City callout on every visit + permanent 3D badge | Callout visibility fix and 3D badge | Pending participant review | Playwright test |
+| 2026-10-25T05:10+05:30 | Claude Code (Claude Opus 5.5) | Callout pointing to the repo switcher | Repo-switcher callout | Pending participant review | Playwright at three widths |
 
 ## Template preparation
 

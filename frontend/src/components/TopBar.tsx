@@ -34,19 +34,33 @@ export function TopBar({ repos, slug, onRepo, view, onView, onAnalyzed, cityRead
   const [hintSeen, setHintSeen] = useState(false)
   const [hintPos, setHintPos] = useState<{ x: number; y: number } | null>(null)
   const dismissHint = () => setHintSeen(true)
+
+  // matching callout under the repo switcher, until the visitor switches repo or dismisses it
+  const [repoHintSeen, setRepoHintSeen] = useState(false)
+  const [firstSlug, setFirstSlug] = useState(slug)
+  if (firstSlug === null && slug !== null) setFirstSlug(slug)
+  else if (firstSlug !== null && slug !== firstSlug && !repoHintSeen) setRepoHintSeen(true)
+  const [repoPos, setRepoPos] = useState<{ x: number; y: number } | null>(null)
+  const openPicker = () => {
+    setRepoHintSeen(true)
+    window.dispatchEvent(new KeyboardEvent('keydown', { key: '/' })) // RepoPicker's shortcut
+  }
   // opening the city by any route (tab, key 3, callout) retires the hint; React's
   // "adjust state while rendering" pattern, guarded so it runs once
   if (view === 'city' && !hintSeen) dismissHint()
   useLayoutEffect(() => {
     const place = () => {
       const r = cityTab.current?.getBoundingClientRect()
-      setHintPos(r ? { x: r.left + r.width / 2, y: r.bottom } : null)
+      setHintPos(r ? { x: r.left, y: r.bottom } : null)
+      const p = document.querySelector('.picker-btn')?.getBoundingClientRect()
+      setRepoPos(p ? { x: p.left + 12, y: p.bottom } : null)
     }
     place()
     window.addEventListener('resize', place)
     return () => window.removeEventListener('resize', place)
   }, [repos, slug])
   const showHint = !hintSeen && view !== 'city' && cityReady && hintPos
+  const showRepoHint = !repoHintSeen && repos.length > 1 && repoPos
 
   const run = async () => {
     setErr(null)
@@ -138,8 +152,32 @@ export function TopBar({ repos, slug, onRepo, view, onView, onAnalyzed, cityRead
         )}
       </form>
       )}
+      {showRepoHint && (
+        <div className="city-hint repo-hint" style={{ left: repoPos.x, top: repoPos.y + 10 }}>
+          <button className="city-hint-go" onClick={openPicker}>
+            <span className="city-hint-icon">⇄</span>
+            <span>
+              <b>Try another repo</b>
+              <small>
+                {repos.length} analyzed ·{' '}
+                {[...repos]
+                  .filter((r) => r.slug !== slug)
+                  .sort((a, b) => b.summary.files - a.summary.files)
+                  .slice(0, 2)
+                  .map((r) => r.name.split('/')[1] ?? r.name)
+                  .join(', ')}
+                …
+              </small>
+            </span>
+            <span className="city-hint-arrow">→</span>
+          </button>
+          <button className="city-hint-x" onClick={() => setRepoHintSeen(true)} aria-label="dismiss">
+            ✕
+          </button>
+        </div>
+      )}
       {showHint && (
-        <div className="city-hint" style={{ left: hintPos.x, top: hintPos.y + 10 }}>
+        <div className="city-hint city-hint-left" style={{ left: hintPos.x, top: hintPos.y + 10 }}>
           <button className="city-hint-go" onClick={() => onView('city')}>
             <span className="city-hint-icon">▲</span>
             <span>

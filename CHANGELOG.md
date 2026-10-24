@@ -21,6 +21,13 @@ Record each meaningful project change during the event, newest first. Update thi
 
 ## Event build log
 
+## 2026-10-25T05:10:06+05:30 — Callout pointing to the repo switcher
+
+- Changed: `TopBar.tsx`: a second callout under the REPO switcher ('Try another repo · N analyzed · <two largest other repos>…'); clicking opens the searchable picker; it disappears once the visitor switches repo or dismisses it. Both callouts are now left-anchored to their controls so they sit side by side. `app.css` styles. Hosted demo rebuilt.
+- Why: Participant asked for the same kind of pointer for changing the repo as for the code city.
+- Validation: Playwright at 1280, 1440 and 1920 px: both callouts visible with no overlap; clicking opens the picker, switching to hugo hides the repo callout; no page errors. `tsc -b`, `oxlint` clean.
+- Limitations: None identified in these checks.
+
 ## 2026-10-25T04:43:19+05:30 — City callout on every visit + permanent 3D badge
 
 - Changed: `TopBar.tsx`: the code-city callout is no longer remembered forever in localStorage; it shows on every page load while on Graph/Risk until the city is opened or the callout dismissed in that visit. The CODE CITY tab gets a permanent orange 3D badge. `app.css` badge style. Hosted demo rebuilt.

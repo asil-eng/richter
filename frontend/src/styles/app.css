@@ -375,6 +375,25 @@ kbd {
   0%, 100% { transform: translate(-50%, 0); }
   50% { transform: translate(-50%, 4px); }
 }
+.repo-hint,
+.city-hint-left {
+  transform: none;
+  animation: repo-hint-in 600ms var(--ease-spring) 2.2s both, repo-hint-bob 2.2s ease-in-out 2.8s infinite;
+}
+.repo-hint::before,
+.city-hint-left::before {
+  left: 22px;
+}
+.city-hint-left {
+  animation-delay: 1.6s, 2.2s;
+}
+@keyframes repo-hint-in {
+  from { opacity: 0; transform: translateY(10px); }
+}
+@keyframes repo-hint-bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(4px); }
+}
 .city-hint-go {
   display: flex;
   align-items: center;

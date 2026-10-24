@@ -4,6 +4,13 @@ Record each meaningful project change during the event, newest first. Update thi
 
 ## Event build log
 
+## 2026-10-24T22:29:21+05:30 — Fix: long URL in Analyze shifted the whole UI sideways
+
+- Changed: `frontend/src/styles/app.css`: repo tabs strip shrinks and scrolls horizontally (hidden scrollbar, edge fade) so the top bar never exceeds the viewport; `overflow: clip` on body, `.app` and `.topbar` so the page cannot be scrolled programmatically; ellipsis in the Analyze input. `TopBar.tsx`: active repo tab scrolls into view.
+- Why: Participant report: with several repos analyzed, typing a long URL scrolled the overflowing top bar's container to keep the caret visible, cutting off the left rail.
+- Validation: Reproduced with Playwright at 1600px (top bar 1840px wide, page scrolled 144px). After fix, typing a long URL at 1280/1440/1600/1920px leaves scroll at 0 and the left rail at x=0. `tsc -b` and `oxlint` clean.
+- Limitations: None identified in these checks.
+
 ## 2026-10-24T22:25:10+05:30 — Readability pass
 
 - Changed: Raised text contrast (tokens: text-2 #bcc8cd, text-3 #8f9ea6, text-4 #66747c; previously ~3:1 and ~2:1 on the panel background), larger type scale (smallest 10.5px, was 9px), letter-spacing on small-caps labels tightened from 0.12-0.22em to 0.08em, brighter hairlines, wider rails. Graph labels 12.5px medium with dark halo; graph-mode nodes and edges brighter; city district labels larger and brighter. Renamed left-rail section to HOTTEST FILES.

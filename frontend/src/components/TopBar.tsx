@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { pollJob, startAnalyze } from '../lib/data'
 import type { Job } from '../lib/data'
 import type { RepoEntry, View } from '../lib/types'
@@ -26,6 +26,12 @@ export function TopBar({ repos, slug, onRepo, view, onView, onAnalyzed, cityRead
   const [url, setUrl] = useState('')
   const [job, setJob] = useState<Job | null>(null)
   const [err, setErr] = useState<string | null>(null)
+  const reposRef = useRef<HTMLElement>(null)
+
+  // keep the active repo tab visible inside the scrollable tab strip
+  useEffect(() => {
+    reposRef.current?.querySelector('.is-on')?.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'smooth' })
+  }, [slug, repos])
 
   const run = async () => {
     setErr(null)
@@ -57,7 +63,7 @@ export function TopBar({ repos, slug, onRepo, view, onView, onAnalyzed, cityRead
         <Seismo level={running ? 0.9 : 0.22} color={running ? '#ff6a1a' : '#4d8583'} height={20} />
       </div>
 
-      <nav className="repos" aria-label="repository">
+      <nav className="repos" aria-label="repository" ref={reposRef}>
         {repos.map((r) => (
           <button key={r.slug} className={`repo-tab ${r.slug === slug ? 'is-on' : ''}`} onClick={() => onRepo(r.slug)}>
             <span className="repo-tab-owner">{r.name.split('/')[0]}/</span>

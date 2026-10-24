@@ -1,7 +1,7 @@
 import { forceCollide, forceLink, forceManyBody, forceSimulation, forceX, forceY } from 'd3-force'
 import type { SimulationLinkDatum, SimulationNodeDatum } from 'd3-force'
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
-import { fmtM, heat, shortName } from '../lib/heat'
+import { fmtM, heat, heatRGB, shortName } from '../lib/heat'
 import type { RiskModel } from '../lib/types'
 
 // The blast-radius cascade is timed in "hops": each ring of dependents ignites
@@ -79,6 +79,125 @@ function computeLayout(model: RiskModel): Layout {
   return { x, y, r, bounds }
 }
 
+// ---- isoseismal field ---------------------------------------------------------
+// A seismic hazard map, not a node-link diagram: every file radiates its magnitude
+// as a gaussian and the field takes the MAX, so a contour reaches M8 only around
+// files that really are M8 (summing would inflate dense clusters of moderate files).
+// Contour lines at M5..M8 are the "isoseismals".
+const ISO_LEVELS = [0.5, 0.6, 0.7, 0.8]
+
+interface Hazard {
+  image: HTMLCanvasElement
+  x0: number
+  y0: number
+  w: number
+  h: number
+  lines: { level: number; segs: Float32Array; labels: [number, number][] }[]
+}
+
+function computeHazard(model: RiskModel, L: Layout): Hazard {
+  const n = model.nodes.length
+  let [x0, y0, x1, y1] = [Infinity, Infinity, -Infinity, -Infinity]
+  for (let i = 0; i < n; i++) {
+    x0 = Math.min(x0, L.x[i])
+    y0 = Math.min(y0, L.y[i])
+    x1 = Math.max(x1, L.x[i])
+    y1 = Math.max(y1, L.y[i])
+  }
+  const pad = 90
+  x0 -= pad
+  y0 -= pad
+  x1 += pad
+  y1 += pad
+  const cell = Math.max(5, Math.sqrt(((x1 - x0) * (y1 - y0)) / 40000))
+  const gw = Math.ceil((x1 - x0) / cell) + 1
+  const gh = Math.ceil((y1 - y0) / cell) + 1
+  const field = new Float32Array(gw * gh)
+  for (let i = 0; i < n; i++) {
+    const m = model.nodes[i].magnitude
+    if (m < 0.2) continue
+    const sigma = 46 + L.r[i] * 2.2
+    const reach = sigma * 3
+    const gx0 = Math.max(0, Math.floor((L.x[i] - reach - x0) / cell))
+    const gx1 = Math.min(gw - 1, Math.ceil((L.x[i] + reach - x0) / cell))
+    const gy0 = Math.max(0, Math.floor((L.y[i] - reach - y0) / cell))
+    const gy1 = Math.min(gh - 1, Math.ceil((L.y[i] + reach - y0) / cell))
+    for (let gy = gy0; gy <= gy1; gy++) {
+      const dy = y0 + gy * cell - L.y[i]
+      for (let gx = gx0; gx <= gx1; gx++) {
+        const dx = x0 + gx * cell - L.x[i]
+        const g = Math.exp(-(dx * dx + dy * dy) / (2 * sigma * sigma))
+        const v = m * g
+        if (v > field[gy * gw + gx]) field[gy * gw + gx] = v
+      }
+    }
+  }
+
+  // banded fill, one pixel per cell (upscaled with smoothing when drawn)
+  const image = document.createElement('canvas')
+  image.width = gw
+  image.height = gh
+  const ctx = image.getContext('2d')!
+  const img = ctx.createImageData(gw, gh)
+  for (let k = 0; k < field.length; k++) {
+    const v = field[k]
+    let band = -1
+    for (let b = 0; b < ISO_LEVELS.length; b++) if (v >= ISO_LEVELS[b]) band = b
+    if (band < 0) continue
+    const [r, g, b] = heatRGB(ISO_LEVELS[band] + 0.08)
+    img.data[k * 4] = r
+    img.data[k * 4 + 1] = g
+    img.data[k * 4 + 2] = b
+    img.data[k * 4 + 3] = 22 + band * 18
+  }
+  ctx.putImageData(img, 0, 0)
+
+  // marching squares per level
+  const placed: [number, number][] = []
+  const lines = [...ISO_LEVELS].reverse().map((level) => {
+    const segs: number[] = []
+    const at = (gx: number, gy: number) => field[gy * gw + gx]
+    const lerp = (a: number, b: number) => (level - a) / (b - a || 1e-6)
+    for (let gy = 0; gy < gh - 1; gy++) {
+      for (let gx = 0; gx < gw - 1; gx++) {
+        const a = at(gx, gy)
+        const b = at(gx + 1, gy)
+        const c = at(gx + 1, gy + 1)
+        const d = at(gx, gy + 1)
+        const idx = (a >= level ? 8 : 0) | (b >= level ? 4 : 0) | (c >= level ? 2 : 0) | (d >= level ? 1 : 0)
+        if (idx === 0 || idx === 15) continue
+        const X = x0 + gx * cell
+        const Y = y0 + gy * cell
+        const top: [number, number] = [X + lerp(a, b) * cell, Y]
+        const right: [number, number] = [X + cell, Y + lerp(b, c) * cell]
+        const bottom: [number, number] = [X + lerp(d, c) * cell, Y + cell]
+        const left: [number, number] = [X, Y + lerp(a, d) * cell]
+        const pairs: [number, number][][] = {
+          1: [[left, bottom]], 2: [[bottom, right]], 3: [[left, right]], 4: [[top, right]],
+          5: [[left, top], [bottom, right]], 6: [[top, bottom]], 7: [[left, top]], 8: [[left, top]],
+          9: [[top, bottom]], 10: [[left, bottom], [top, right]], 11: [[top, right]], 12: [[left, right]],
+          13: [[bottom, right]], 14: [[left, bottom]],
+        }[idx as 1]
+        for (const [p, q] of pairs) segs.push(p[0], p[1], q[0], q[1])
+      }
+    }
+    // a few well-separated label anchors, topmost first
+    const mids: [number, number][] = []
+    for (let k = 0; k < segs.length; k += 4) mids.push([(segs[k] + segs[k + 2]) / 2, (segs[k + 1] + segs[k + 3]) / 2])
+    mids.sort((p, q) => p[1] - q[1])
+    const labels: [number, number][] = []
+    for (const m of mids) {
+      if (labels.length >= 2) break
+      if (labels.every((l) => Math.hypot(l[0] - m[0], l[1] - m[1]) > 200) && placed.every((l) => Math.hypot(l[0] - m[0], l[1] - m[1]) > 70)) {
+        labels.push(m)
+        placed.push(m)
+      }
+    }
+    return { level, segs: new Float32Array(segs), labels }
+  })
+  return { image, x0, y0, w: (gw - 1) * cell, h: (gh - 1) * cell, lines }
+}
+
 const easeOutCubic = (t: number) => 1 - Math.pow(1 - Math.min(1, Math.max(0, t)), 3)
 const easeInOut = (t: number) => {
   const x = Math.min(1, Math.max(0, t))
@@ -115,6 +234,11 @@ export function GraphView({ model, mode, selected, highlight, layers, onSelect }
     const host = wrap.current!
     const ctx = cv.getContext('2d')!
     const L = computeLayout(model)
+    const hazard = computeHazard(model, L)
+    const shakers = [...model.nodes.keys()]
+      .filter((i) => model.nodes[i].magnitude >= 0.6)
+      .sort((a, b) => model.nodes[b].magnitude - model.nodes[a].magnitude)
+      .slice(0, 6)
     const n = model.nodes.length
     const t0 = performance.now()
 
@@ -158,9 +282,10 @@ export function GraphView({ model, mode, selected, highlight, layers, onSelect }
       .filter((c) => c.ghost)
       .sort((a, b) => b.shared - a.shared)
     const ghostTop = ghosts.slice(0, 40)
-    const labelSet = new Set(
-      [...model.nodes.keys()].sort((a, b) => model.nodes[b].importance - model.nodes[a].importance).slice(0, 10),
-    )
+    const labelSet = new Set([
+      ...[...model.nodes.keys()].sort((a, b) => model.nodes[b].magnitude - model.nodes[a].magnitude).slice(0, 6),
+      ...[...model.nodes.keys()].sort((a, b) => model.nodes[b].importance - model.nodes[a].importance).slice(0, 6),
+    ])
 
     // ---- interaction
     let hover = -1
@@ -285,6 +410,41 @@ export function GraphView({ model, mode, selected, highlight, layers, onSelect }
       const ignite = (h: number) => selDt - h * HOP_MS
       const lw = 1 / cam.k
 
+      // --- isoseismal hazard field
+      const fieldA = easeOutCubic((intro - 700) / 900) * (hasSel || hasHl ? 0.35 : 1)
+      if (fieldA > 0) {
+        ctx.globalAlpha = fieldA
+        ctx.imageSmoothingEnabled = true
+        ctx.drawImage(hazard.image, hazard.x0, hazard.y0, hazard.w, hazard.h)
+        for (const { level, segs } of hazard.lines) {
+          ctx.strokeStyle = heat(level + 0.08, 0.28 + (level - 0.5) * 1.1)
+          ctx.lineWidth = (level >= 0.8 ? 1.4 : 1) * lw
+          ctx.setLineDash(level >= 0.7 ? [] : [5 * lw, 4 * lw])
+          ctx.beginPath()
+          for (let k = 0; k < segs.length; k += 4) {
+            ctx.moveTo(segs[k], segs[k + 1])
+            ctx.lineTo(segs[k + 2], segs[k + 3])
+          }
+          ctx.stroke()
+        }
+        ctx.setLineDash([])
+        ctx.font = `600 ${9.5 / cam.k}px "IBM Plex Mono", monospace`
+        ctx.textAlign = 'center'
+        ctx.textBaseline = 'middle'
+        for (const { level, labels } of hazard.lines) {
+          for (const [x, y] of labels) {
+            const t = `M${Math.round(level * 10)}`
+            const w = ctx.measureText(t).width + 6 / cam.k
+            ctx.fillStyle = 'rgba(6,8,9,0.85)'
+            ctx.fillRect(x - w / 2, y - 7 / cam.k, w, 14 / cam.k)
+            ctx.fillStyle = heat(level + 0.08)
+            ctx.fillText(t, x, y)
+          }
+        }
+        ctx.textAlign = 'start'
+        ctx.globalAlpha = 1
+      }
+
       // --- import edges
       for (let e = 0; e < model.edges.length; e++) {
         const [s, t] = model.edges[e]
@@ -379,6 +539,20 @@ export function GraphView({ model, mode, selected, highlight, layers, onSelect }
           ctx.arc(L.x[sel], L.y[sel], L.r[sel] + easeOutCubic(u) * reach, 0, Math.PI * 2)
           ctx.stroke()
         }
+      }
+
+      // --- aftershocks: the hottest files keep trembling
+      if (!hasSel && !hasHl && intro > 1400) {
+        shakers.forEach((i, k) => {
+          const period = 3400
+          const u = ((now + k * 570) % period) / 1700
+          if (u >= 1) return
+          ctx.strokeStyle = heat(model.nodes[i].magnitude, 0.5 * (1 - u) * (1 - u))
+          ctx.lineWidth = 1.2 * lw
+          ctx.beginPath()
+          ctx.arc(L.x[i], L.y[i], L.r[i] + 2 + easeOutCubic(u) * (26 + L.r[i]), 0, Math.PI * 2)
+          ctx.stroke()
+        })
       }
 
       // --- nodes
@@ -527,8 +701,10 @@ export function GraphView({ model, mode, selected, highlight, layers, onSelect }
         const a = easeOutCubic((intro - introDelay[i] - 300) / 500)
         if (a <= 0) continue
         const text = shortName(model.nodes[i].id)
+        const mtag = hasSel ? '' : ` M${fmtM(model.nodes[i].magnitude)}`
         const lx = L.x[i] + L.r[i] + 6 / cam.k
-        const w = ctx.measureText(text).width
+        const nameW = ctx.measureText(text).width
+        const w = nameW + ctx.measureText(mtag).width
         const box: [number, number, number, number] = [lx, L.y[i] - lh / 2, lx + w, L.y[i] + lh / 2]
         const forced = i === sel || i === hover
         if (!forced && placed.some((b) => box[0] < b[2] && box[2] > b[0] && box[1] < b[3] && box[3] > b[1])) continue
@@ -540,6 +716,11 @@ export function GraphView({ model, mode, selected, highlight, layers, onSelect }
         ctx.strokeText(text, lx, L.y[i])
         ctx.fillStyle = i === sel ? '#fff0e6' : hasSel ? '#ffc8a8' : '#dfe7ea'
         ctx.fillText(text, lx, L.y[i])
+        if (mtag) {
+          ctx.strokeText(mtag, lx + nameW, L.y[i])
+          ctx.fillStyle = heat(model.nodes[i].magnitude)
+          ctx.fillText(mtag, lx + nameW, L.y[i])
+        }
       }
       ctx.globalAlpha = 1
       ctx.restore()

@@ -34,6 +34,7 @@ No participant AI usage has been recorded yet. Replace the placeholder row as yo
 | 2026-10-24T23:29+05:30 | Claude Code (Claude Opus 5.5) | Re-analyze stale models from the empty state | Diagnosed stale model; added re-analyze flow | Pending participant review | CLI + Playwright |
 | 2026-10-24T23:37+05:30 | Claude Code (Claude Opus 5.5) | Ask bar redesign | Ask bar redesign | Pending participant review | Playwright interaction + screenshots |
 | 2026-10-24T23:45+05:30 | Claude Code (Claude Opus 5.5) | Ask-the-repo knows the current selection | Selection-aware ask: backend context + UI chip | Pending participant review | pytest + live UI questions checked against model |
+| 2026-10-24T23:50+05:30 | Claude Code (Claude Opus 5.5) | Graph as a seismic hazard map: isoseismal contours, aftershocks, magnitude labels | Hazard-map rendering for the 2D graph | Pending participant review | Screenshots on two repos; fixed an exaggeration found in review |
 
 ## Template preparation
 

@@ -83,6 +83,10 @@ function EmptyInspector({ model, onSelect }: { model: RiskModel; onSelect: (i: n
             <span><b>After a click</b> — dependents 1, 2, 3+ hops away</span>
           </li>
           <li>
+            <span className="lg-iso" />
+            <span><b>Contours</b> — isoseismal lines M5–M8: where risk concentrates</span>
+          </li>
+          <li>
             <span className="lg-ghost" />
             <span><b>Ghost edge</b> — change together, never import each other</span>
           </li>

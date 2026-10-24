@@ -4,6 +4,13 @@ Record each meaningful project change during the event, newest first. Update thi
 
 ## Event build log
 
+## 2026-10-24T23:50:47+05:30 — Graph as a seismic hazard map: isoseismal contours, aftershocks, magnitude labels
+
+- Changed: `GraphView.tsx`: computes a hazard field once per layout (each file radiates its magnitude as a gaussian; field = max) and draws banded fills plus marching-squares contour lines at M5–M8 (dashed below M7) with spaced M-labels, fading in after the intro and dimming during a selection; the six hottest files (M ≥ 6) emit periodic aftershock ripples; labels show magnitude in heat color (riskiest 6 + most central 6 files). HUD adds CONTOURS = ISOSEISMAL M5–M8; HOW TO READ legend gains a contours entry.
+- Why: Participant: the graph looked like just another codebase visualizer.
+- Validation: Playwright screenshots of rich (graph + risk map) and arinjilley-web. First version combined fields as a probabilistic OR, which painted rich's whole core M8 around M2–M5 files — switched to max so contours only reach a level near files that actually have it. `tsc -b` and `oxlint` clean; no page errors.
+- Limitations: Contours are a visual aid over a force layout; distance on the map has no meaning beyond proximity in the import graph.
+
 ## 2026-10-24T23:45:56+05:30 — Ask-the-repo knows the current selection
 
 - Changed: Backend `agent.py`: `ask(model, question, focus, repo_root)` appends a CURRENT SELECTION block (file metrics, what it imports, dependents by hop, ghost partners, language/LOC, its folder's files ranked by magnitude, other folders importing from it, short code excerpt); the system prompt maps 'this file/this folder/it/here' to the selection; cache key includes the focus. `api.py` AskReq gains `focus` (404 if not in model). Frontend: `askRepo(..., focus)`; ask bar shows a context chip (◉ file · folder/, ✕ to ask about the whole repo, WHOLE REPO otherwise), selection-specific suggestions (impact, why risky, riskiest in folder, coupling), answers labelled '— about <file>'; offline bundle used only for repo-wide questions. Tests for focus block and cache key.

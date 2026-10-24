@@ -144,6 +144,7 @@ export default function App() {
                   <>
                     <span>{model.summary.edges} EDGES</span>
                     <span>{view === 'risk' ? 'COLOR = MAGNITUDE' : 'SIZE = IMPORTANCE'}</span>
+                    <span>CONTOURS = ISOSEISMAL M5–M8</span>
                   </>
                 )}
               </div>

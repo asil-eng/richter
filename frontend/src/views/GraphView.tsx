@@ -268,8 +268,8 @@ export function GraphView({ model, mode, selected, highlight, layers, onSelect }
         const [s, t] = model.edges[e]
         const appear = easeOutCubic((intro - 500 - Math.max(introDelay[s], introDelay[t])) / 500)
         if (appear <= 0) continue
-        let alpha = 0.13
-        let color = 'rgba(150,180,186,'
+        let alpha = 0.2
+        let color = 'rgba(160,190,196,'
         if (hasSel) {
           const hs = hop.get(s)
           const ht = hop.get(t)
@@ -372,8 +372,8 @@ export function GraphView({ model, mode, selected, highlight, layers, onSelect }
         let glowColor = ''
         let alpha = appear
 
-        const graphFill = 'rgba(22,28,32,1)'
-        const graphStroke = `rgba(111,179,176,${0.35 + 0.5 * d.importance})`
+        const graphFill = '#1b282c'
+        const graphStroke = `rgba(130,200,196,${0.55 + 0.45 * d.importance})`
         const riskFill = heat(d.magnitude)
         if (risk) {
           fill = riskFill
@@ -387,7 +387,7 @@ export function GraphView({ model, mode, selected, highlight, layers, onSelect }
         const h = hop.get(i)
         if (hasSel) {
           if (h === undefined) {
-            alpha *= 0.16
+            alpha *= 0.22
           } else if (h === 0) {
             const u = selDt / 500
             r *= 1 + 0.35 * springPop(u)
@@ -486,7 +486,7 @@ export function GraphView({ model, mode, selected, highlight, layers, onSelect }
       }
 
       // --- labels (screen-space font size)
-      ctx.font = `${10.5 / cam.k}px "IBM Plex Mono", monospace`
+      ctx.font = `500 ${12.5 / cam.k}px "IBM Plex Mono", monospace`
       ctx.textBaseline = 'middle'
       // candidates in priority order; a label is dropped if it would collide
       const cands: number[] = []
@@ -500,7 +500,7 @@ export function GraphView({ model, mode, selected, highlight, layers, onSelect }
       }
       if (!hasSel && !hasHl && cam.k > 0.55) cands.push(...labelSet)
       const placed: [number, number, number, number][] = []
-      const lh = 13 / cam.k
+      const lh = 15 / cam.k
       for (const i of new Set(cands)) {
         const a = easeOutCubic((intro - introDelay[i] - 300) / 500)
         if (a <= 0) continue
@@ -511,12 +511,12 @@ export function GraphView({ model, mode, selected, highlight, layers, onSelect }
         const forced = i === sel || i === hover
         if (!forced && placed.some((b) => box[0] < b[2] && box[2] > b[0] && box[1] < b[3] && box[3] > b[1])) continue
         placed.push(box)
-        ctx.globalAlpha = a * (forced ? 1 : 0.8)
+        ctx.globalAlpha = a
         ctx.strokeStyle = 'rgba(10,13,15,0.9)'
-        ctx.lineWidth = 3 / cam.k
+        ctx.lineWidth = 4 / cam.k
         ctx.lineJoin = 'round'
         ctx.strokeText(text, lx, L.y[i])
-        ctx.fillStyle = i === sel ? '#ffd9c2' : hasSel ? '#ffb994' : '#b4c0c6'
+        ctx.fillStyle = i === sel ? '#fff0e6' : hasSel ? '#ffc8a8' : '#dfe7ea'
         ctx.fillText(text, lx, L.y[i])
       }
       ctx.globalAlpha = 1

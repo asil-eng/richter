@@ -128,7 +128,7 @@ function labelTexture(text: string): { tex: THREE.CanvasTexture; aspect: number 
   c.width = w
   c.height = 64
   g.font = font
-  g.fillStyle = 'rgba(148,162,169,0.85)'
+  g.fillStyle = 'rgba(214,224,228,0.95)'
   g.textBaseline = 'middle'
   g.fillText(text, 12, 34)
   const tex = new THREE.CanvasTexture(c)
@@ -260,7 +260,7 @@ export function CityView({ model, snapshots, time, selected, highlight, onSelect
       scene.add(edges)
       const short = d.dir === '.' ? '/' : d.dir.split('/').slice(-2).join('/') + '/'
       const { tex, aspect } = labelTexture(short)
-      const lh = Math.min(1.1, (d.w - 0.4) / aspect) // never wider than its district
+      const lh = Math.min(1.5, (d.w - 0.4) / aspect) // never wider than its district
       const label = new THREE.Mesh(
         new THREE.PlaneGeometry(lh * aspect, lh),
         new THREE.MeshBasicMaterial({ map: tex, transparent: true, depthWrite: false }),

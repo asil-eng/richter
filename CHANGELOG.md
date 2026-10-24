@@ -4,6 +4,13 @@ Record each meaningful project change during the event, newest first. Update thi
 
 ## Event build log
 
+## 2026-10-24T22:25:10+05:30 — Readability pass
+
+- Changed: Raised text contrast (tokens: text-2 #bcc8cd, text-3 #8f9ea6, text-4 #66747c; previously ~3:1 and ~2:1 on the panel background), larger type scale (smallest 10.5px, was 9px), letter-spacing on small-caps labels tightened from 0.12-0.22em to 0.08em, brighter hairlines, wider rails. Graph labels 12.5px medium with dark halo; graph-mode nodes and edges brighter; city district labels larger and brighter. Renamed left-rail section to HOTTEST FILES.
+- Why: Participant feedback: visibility and readability were poor.
+- Validation: `tsc -b` clean, `oxlint` clean. Playwright screenshots at 1440x900 of graph and selection states reviewed; no page errors.
+- Limitations: None identified in these checks.
+
 ## 2026-10-24T22:10:07+05:30 — Real AI notes: sharper prompts, portable cache, offline bundle
 
 - Changed: `backend/richter/agent.py`: cache keyed on repo HEAD + file/question instead of prompt text (prompts contain local-clone excerpts, so the committed cache must hit on other machines); dependents passed most-important-first; prompts demand file-specific checklists and name classes/functions; ask summary labels every column (fixes a misread of the bus-factor flag). Added `precompute_notes` + `richter.cli notes <url>` writing `data/notes/<slug>.json`. Frontend `data.ts` falls back to that bundle when the API is unreachable. Committed AI notes (guard + unblock for 14 files per demo repo) and answers to the 3 suggested questions, plus `data/cache/`.

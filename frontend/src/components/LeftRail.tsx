@@ -92,7 +92,7 @@ export function LeftRail({ model, selected, onSelect, layers, setLayers }: Props
 
       <section className="panel panel-grow">
         <div className="label">
-          SEISMIC ACTIVITY <span className="label-dim">/ hottest files</span>
+          HOTTEST FILES <span className="label-dim">/ by magnitude</span>
         </div>
         <ul className="hotlist">
           {hottest.map((i, k) => {

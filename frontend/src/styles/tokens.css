@@ -10,15 +10,15 @@
   --bg-3: #161c20;
 
   /* hairlines */
-  --line: rgba(170, 196, 204, 0.075);
-  --line-2: rgba(170, 196, 204, 0.13);
-  --line-3: rgba(170, 196, 204, 0.22);
+  --line: rgba(170, 196, 204, 0.11);
+  --line-2: rgba(170, 196, 204, 0.19);
+  --line-3: rgba(170, 196, 204, 0.3);
 
   /* text */
-  --text: #d3dbdf;
-  --text-2: #94a2a9;
-  --text-3: #5d6a71;
-  --text-4: #3a454b;
+  --text: #e8eef0;
+  --text-2: #bcc8cd;
+  --text-3: #8f9ea6;
+  --text-4: #66747c;
 
   /* cool — safe, structure, calm */
   --cool: #6fb3b0;
@@ -35,12 +35,12 @@
   --font-mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, monospace;
   --font-head: 'Archivo Variable', 'Archivo', 'Helvetica Neue', Arial, sans-serif;
 
-  --fs-9: 9px;
-  --fs-10: 10px;
-  --fs-11: 11px;
-  --fs-12: 12px;
-  --fs-14: 14px;
-  --fs-18: 18px;
+  --fs-9: 10.5px;
+  --fs-10: 11.5px;
+  --fs-11: 12.5px;
+  --fs-12: 13px;
+  --fs-14: 15px;
+  --fs-18: 19px;
   --fs-28: 28px;
   --fs-44: 44px;
 
@@ -55,8 +55,8 @@
 
   /* layout */
   --topbar-h: 48px;
-  --rail-l: 288px;
-  --rail-r: 360px;
+  --rail-l: 300px;
+  --rail-r: 380px;
 
   /* motion */
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);

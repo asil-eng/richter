@@ -113,8 +113,9 @@ kbd {
 /* ============================================================ type primitives */
 .label {
   font-size: var(--fs-10);
-  letter-spacing: 0.14em;
-  color: var(--text-3);
+  letter-spacing: 0.08em;
+  color: var(--text-2);
+  font-weight: 500;
   text-transform: uppercase;
   display: flex;
   align-items: center;
@@ -131,8 +132,8 @@ kbd {
 }
 .label-dim {
   font-size: var(--fs-10);
-  letter-spacing: 0.12em;
-  color: var(--text-4);
+  letter-spacing: 0.08em;
+  color: var(--text-3);
   text-transform: uppercase;
 }
 .label .label-dim {
@@ -216,7 +217,7 @@ kbd {
   transition: color var(--t-fast), background var(--t-fast);
 }
 .repo-tab-owner {
-  color: var(--text-4);
+  color: var(--text-3);
 }
 .repo-tab:hover,
 .view-tab:hover:not(:disabled) {
@@ -247,7 +248,7 @@ kbd {
   color: var(--text-3);
 }
 .view-tab {
-  letter-spacing: 0.12em;
+  letter-spacing: 0.08em;
   font-size: var(--fs-10);
 }
 .view-tab:disabled {
@@ -287,7 +288,7 @@ kbd {
   align-self: stretch;
   padding: 0 var(--s-4);
   font-size: var(--fs-10);
-  letter-spacing: 0.14em;
+  letter-spacing: 0.08em;
   border-left: 1px solid var(--line);
   color: var(--text-2);
   transition: background var(--t-fast), color var(--t-fast);
@@ -305,7 +306,7 @@ kbd {
   display: flex;
   gap: var(--s-3);
   font-size: var(--fs-9);
-  letter-spacing: 0.12em;
+  letter-spacing: 0.08em;
   color: var(--text-4);
 }
 .analyze-steps .now {
@@ -357,8 +358,8 @@ kbd {
 }
 .stat-k {
   font-size: var(--fs-9);
-  letter-spacing: 0.14em;
-  color: var(--text-4);
+  letter-spacing: 0.08em;
+  color: var(--text-3);
 }
 .stat-v {
   font-size: var(--fs-14);
@@ -376,7 +377,7 @@ kbd {
 }
 .gauge-num {
   font-family: var(--font-mono);
-  font-size: 9px;
+  font-size: 10.5px;
   fill: var(--text-3);
 }
 .gauge-needle {
@@ -422,7 +423,7 @@ kbd {
 }
 .grade-sub {
   font-size: var(--fs-9);
-  letter-spacing: 0.18em;
+  letter-spacing: 0.08em;
   color: var(--text-4);
 }
 .report-reading {
@@ -441,7 +442,7 @@ kbd {
 }
 .report-desc {
   font-size: var(--fs-10);
-  letter-spacing: 0.22em;
+  letter-spacing: 0.08em;
 }
 .signals {
   display: grid;
@@ -451,7 +452,7 @@ kbd {
   display: flex;
   justify-content: space-between;
   font-size: var(--fs-9);
-  letter-spacing: 0.12em;
+  letter-spacing: 0.08em;
   color: var(--text-3);
   margin-bottom: 4px;
 }
@@ -511,7 +512,7 @@ kbd {
 .risk-kind {
   grid-row: span 2;
   font-size: var(--fs-9);
-  letter-spacing: 0.12em;
+  letter-spacing: 0.08em;
   padding: 2px 0;
   text-align: center;
   align-self: start;
@@ -588,7 +589,7 @@ kbd {
   text-align: left;
 }
 .hot-dir {
-  color: var(--text-4);
+  color: var(--text-3);
 }
 .hot-m {
   text-align: right;
@@ -640,13 +641,13 @@ kbd {
 }
 .toggle-name {
   font-size: var(--fs-10);
-  letter-spacing: 0.12em;
+  letter-spacing: 0.08em;
   color: var(--text-2);
 }
 .toggle-hint {
   grid-column: 3;
   font-size: var(--fs-10);
-  color: var(--text-4);
+  color: var(--text-3);
 }
 .sw-ghost {
   width: 14px;
@@ -679,7 +680,7 @@ kbd {
   z-index: 2;
   pointer-events: none;
   font-size: var(--fs-10);
-  letter-spacing: 0.12em;
+  letter-spacing: 0.08em;
   color: var(--text-3);
 }
 .hud-tl {
@@ -695,11 +696,12 @@ kbd {
 }
 .hud-view {
   color: var(--text);
+  font-weight: 600;
 }
 .hud-tl2 {
-  top: calc(var(--s-4) + 18px);
+  top: calc(var(--s-4) + 20px);
   left: var(--s-4);
-  color: var(--text-4);
+  color: var(--text-3);
   letter-spacing: 0.1em;
 }
 
@@ -823,7 +825,7 @@ kbd {
   grid-template-columns: 74px 1fr;
   align-items: center;
   font-size: var(--fs-9);
-  letter-spacing: 0.12em;
+  letter-spacing: 0.08em;
   color: var(--text-3);
 }
 .flag {
@@ -868,8 +870,8 @@ kbd {
 }
 .readout-k {
   font-size: var(--fs-9);
-  letter-spacing: 0.14em;
-  color: var(--text-4);
+  letter-spacing: 0.08em;
+  color: var(--text-3);
 }
 .readout-v {
   font-size: var(--fs-18);
@@ -896,7 +898,7 @@ kbd {
   align-items: center;
   gap: 6px;
   font-size: var(--fs-9);
-  letter-spacing: 0.14em;
+  letter-spacing: 0.08em;
   color: var(--text-3);
   margin-bottom: 5px;
 }
@@ -953,7 +955,7 @@ kbd {
   flex: 1;
   padding: 7px 0;
   font-size: var(--fs-10);
-  letter-spacing: 0.14em;
+  letter-spacing: 0.08em;
   color: var(--text-3);
   transition: background var(--t-med) var(--ease-out), color var(--t-fast);
 }
@@ -982,7 +984,7 @@ kbd {
 .note-src {
   display: inline-block;
   font-size: var(--fs-9);
-  letter-spacing: 0.14em;
+  letter-spacing: 0.08em;
   color: var(--text-3);
   border: 1px dotted var(--line-3);
   padding: 1px 6px;
@@ -1142,7 +1144,7 @@ kbd {
   padding: 0 var(--s-4);
   border-left: 1px solid var(--line-2);
   font-size: var(--fs-10);
-  letter-spacing: 0.14em;
+  letter-spacing: 0.08em;
   color: var(--text-2);
   transition: background var(--t-fast), color var(--t-fast);
 }
@@ -1233,7 +1235,7 @@ kbd {
 }
 .tl-sub {
   font-size: var(--fs-9);
-  letter-spacing: 0.12em;
+  letter-spacing: 0.08em;
   color: var(--text-3);
 }
 .tl-track {
@@ -1289,7 +1291,7 @@ kbd {
 .tl-now {
   flex: none;
   font-size: var(--fs-10);
-  letter-spacing: 0.14em;
+  letter-spacing: 0.08em;
   padding: 6px 10px;
   border: 1px solid var(--line-2);
   color: var(--text-2);
@@ -1395,8 +1397,8 @@ kbd {
 }
 @media (max-width: 1480px) {
   :root {
-    --rail-l: 256px;
-    --rail-r: 320px;
+    --rail-l: 272px;
+    --rail-r: 344px;
   }
   .repo-tab-owner {
     display: none;

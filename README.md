@@ -1,174 +1,274 @@
-# Richter
+<div align="center">
 
-**Measure the magnitude of risk in any codebase.**
+<img src="docs/banner.jpg" alt="Richter — measure the magnitude of risk in any codebase" width="100%">
 
-Richter reads a GitHub repo's import graph and its whole git history. It shows which files break other code when you change them, where work keeps getting redone, and which files are linked in ways the code doesn't show. It combines these into one **magnitude** score, the way the Richter scale summarizes an earthquake.
+**Every codebase has a few files that can take everything down with them. Richter finds them before you touch them.**
 
-![Blast radius cascade: selecting rich/cells.py lights up 88 dependent files, hop by hop](docs/blast-radius.gif)
+<sub>Python · TypeScript · JavaScript · Go · Rust · Java · Kotlin · C/C++ · C# · Ruby · PHP</sub>
 
-<sub>Clicking `rich/cells.py`. 88 files (81% of the codebase) depend on it, directly or through other files. The ring of files that import it directly lights up first, then the files that import those, and so on.</sub>
+[**▶ Watch the demo**](#-demo) · [How it works](#-how-the-score-works) · [Does it predict anything?](#-backtest-does-it-predict-anything) · [Run it](#-run-it)
 
-## What it does that a map doesn't
+</div>
 
-Tools for visualizing code already exist ([CodeScene](https://codescene.com)'s hotspot analysis, [CodeCity](https://wettel.github.io/codecity.html), [Gource](https://gource.io)). Richter goes further: it **predicts the blast radius** of a change and **tells you what to do about it**.
+---
 
-- **Blast-radius cascade.** Click any file and Richter follows the imports *backwards* through the whole graph: every file that depends on it, directly or through other files. The result plays out as an animated shockwave, colored by how many import hops each dependent is away (red → orange → amber).
-- **Guard notes and unblock plans.** For any file, an LLM (`gpt-4o-mini`) writes a short note: *"touch carefully: here's what breaks and why"* or *"why this keeps getting reworked, and how to unblock it."* The note is based only on that file's metrics, the files that depend on it, and a short code excerpt. These are notes, not code. Responses are cached on disk, and the demo repos ship precomputed AI notes for their 14 riskiest files, so the demo shows real AI output even without a key. For any other file, no key means a clearly labelled rule-based note instead.
-- **Time-travel.** Scrub through the repo's whole history and watch the 3D city grow and redden as rework builds up. The demo repos have 28 precomputed snapshots, each scored by the same engine.
-- **Ghost edges (hidden coupling).** These are pairs of files that are repeatedly committed together but never import each other. In fastapi, the `security/*` modules (`api_key.py`, `oauth2.py`, `http.py`, `open_id_connect_url.py`) changed together up to 17 times with no import between them.
+## ▶ Demo
 
-![Time-travel through rich's history: the code city grows from 25 files to 109 and its core reddens](docs/time-travel.gif)
+<!-- To show an inline player: edit this README on github.com, drag docs/richter-demo.mp4 onto this line, and delete the thumbnail link below. -->
 
-## Two views of one model
+[![Richter demo video — 94 seconds](docs/demo-thumbnail.jpg)](docs/richter-demo.mp4)
 
-| Risk map | Code city |
-| --- | --- |
-| ![Risk map of rich with ghost edges](docs/risk-map.png) | ![fastapi as a night city: towers glow by magnitude](docs/city.png) |
-| Files as nodes (size = importance), imports as edges, color = magnitude. The dashed amber arcs are ghost edges. | Folders become districts and files become towers. Height = importance, glow = magnitude. The five most dangerous towers get blinking red beacons. |
+<sub>94 seconds · click to play · narration is AI-generated (OpenAI TTS)</sub>
 
-Both views read the **same JSON model**, so selecting a file, highlighting it, and the layer toggles all behave the same way in both.
+---
 
-## How the score works
+## The problem
 
-All the scoring lives in one isolated module of pure functions, [`backend/richter/risk.py`](backend/richter/risk.py):
+You're about to change a file. What else breaks? Is this the file that gets "fixed" every other week? Is it secretly tied to a file it never imports? On a large codebase nobody can hold all of that in their head, and the tools we have show the *structure* of code, not the *risk* in it.
+
+**Richter reads two things nobody looks at together:**
+
+| | Signal | Where it comes from |
+| --- | --- | --- |
+| 🏗 | **Structural risk:** what depends on this file | the import graph, followed *transitively* |
+| 🔧 | **Human risk:** how often this file gets reworked | the full git history: churn, fix commits, authors |
+
+It fuses them into one **magnitude** from 0 to 10, like an earthquake. Files high on *both* axes are the ones that hurt.
+
+---
+
+## What you get
+
+### 1 · A seismic hazard map, not another dependency graph
+
+<img src="docs/hazard-map.jpg" alt="Risk map of Textualize/rich with isoseismal contours around the riskiest files" width="100%">
+
+Every file is a node: size is how central it is, color is its magnitude. Risk spreads into **isoseismal contours** at M5, M6, M7 and M8, like a quake map, so the danger zones stand out before you click anything. The riskiest files pulse with aftershocks and show their scores. Above, [Textualize/rich](https://github.com/Textualize/rich): `console.py` (M 8.2), `cells.py` (M 7.8) and `text.py` (M 7.5) form the epicenter.
+
+### 2 · Blast radius: who breaks if you change this
+
+<img src="docs/blast-radius.gif" alt="Clicking rich/cells.py: a shockwave lights up 88 dependent files ring by ring" width="100%">
+
+Click a file and Richter follows the imports **backwards through the whole graph**: everything that imports it, everything that imports *those*, and so on. The shock travels along the real import edges, ring by ring: **hop 1** in red, **hop 2** in orange, **hop 3+** in amber. Change `rich/cells.py` and **88 files, 81% of the codebase**, are downstream.
+
+### 3 · An inspector that explains, not just measures
+
+<table>
+<tr>
+<td width="50%"><img src="docs/inspector-top.jpg" alt="Inspector header: plain-English summary, magnitude gauge, verdict"></td>
+<td width="50%"><img src="docs/inspector.jpg" alt="Inspector: risk quadrant and blast-radius shockwave rings"></td>
+</tr>
+<tr>
+<td><b>A sentence first.</b> "Change cells.py and 88 files (81% of rich) could break. It has been changed 67×, 17 of those were fixes, by 6 people." Then a gauge and a verdict: <i>fragile and reworked: touch with care.</i></td>
+<td><b>Why it's risky.</b> Every file in the repo plotted by <i>depended on</i> × <i>reworked</i>. This file pulses in the <b>danger zone</b>. Below, the blast radius is drawn as shockwave rings: click any dot to jump to that file.</td>
+</tr>
+</table>
+
+### 4 · Ask the repo, about what you're looking at
+
+<img src="docs/ask.jpg" alt="Ask bar with cells.py as context, answer card highlighting the file" width="100%">
+
+Ask in plain English. The ask bar knows your selection (the `◉ cells.py rich/` chip), so *"is this file safe to change?"* is answered about that file and its folder. Answers come from the risk model (`gpt-4o-mini`). Every file path the model returns is **checked against the real repo before anything is highlighted**, and invented paths are dropped.
+
+For any file, Richter also writes a **guard note** (*what breaks and why, a checklist before you merge*) and an **unblock plan** (*why it keeps getting reworked, how to fix that*). These are notes for humans, not generated code.
+
+### 5 · Hidden coupling: files that move together but never import each other
+
+<img src="docs/ghost-edges.jpg" alt="Dashed amber ghost edges showing co-change without imports" width="100%">
+
+Dashed **ghost edges** connect files that are repeatedly committed together with no import between them: coupling the code doesn't declare. In [fastapi](https://github.com/fastapi/fastapi), the `security/*` modules changed together up to **17 times** without ever importing each other.
+
+### 6 · The same data as a city, with seven years of history
+
+<table>
+<tr>
+<td width="50%"><img src="docs/time-travel.gif" alt="Scrubbing rich's history: the code city grows and heats up"></td>
+<td width="50%"><img src="docs/city.jpg" alt="Code city of rich at night"></td>
+</tr>
+</table>
+
+Folders become districts and files become towers: **height = importance, glow = magnitude**. Drag the seismogram timeline to replay the repo's history (28 snapshots, each scored by the same engine) and watch the hotspots form. Rich grows from 25 files in 2019 to 109 today.
+
+### 7 · A report card for the whole repo, in any language
+
+<table>
+<tr>
+<td width="32%"><img src="docs/report-card.jpg" alt="Repo report card: gauge, grade D, M 6.5 and four signals"></td>
+<td width="68%"><img src="docs/ripgrep-city.jpg" alt="ripgrep (Rust) as a code city"></td>
+</tr>
+<tr>
+<td>Grade and magnitude from four <i>absolute</i> signals: fix concentration, reach, bus factor, hidden coupling.</td>
+<td><a href="https://github.com/BurntSushi/ripgrep">ripgrep</a>, in Rust. The riskiest files are the directory walker and gitignore engine: <code>walk.rs</code> scores M 9.4 (84 commits, 21 fixes, 31 authors).</td>
+</tr>
+</table>
+
+Paste any public GitHub URL into **ANALYZE**. Switch between analyzed repos with the searchable picker (`/`).
+
+---
+
+## 🧮 How the score works
+
+All scoring lives in one isolated module of pure functions, [`backend/richter/risk.py`](backend/richter/risk.py):
 
 | Signal | Definition |
 | --- | --- |
 | **importance** | PageRank on the import graph, rank-normalized |
 | **blast radius** | Reverse-import reachability: every file that depends on this one, directly or transitively, with hop distance |
 | **structural** | `0.5·rank(PageRank) + 0.5·rank(blast radius size)` |
-| **human** | `churn × fix_ratio`, log-scaled. `fix_ratio = (fixes + 1) / (churn + 5)` is smoothed, so a file with one commit that happened to be a fix doesn't score 100%. In practice this is a smoothed count of fix commits: it's high only for files that are both busy *and* repeatedly reworked. |
-| **magnitude** | `sqrt(max(structural, 0.05) · max(human, 0.05))`. This geometric mean only runs hot when a file is both fragile *and* reworked. The floor keeps a visible gradient instead of zeroing every file that is weak on one axis. |
+| **human** | `churn × fix_ratio`, log-scaled. `fix_ratio = (fixes + 1) / (churn + 5)` is smoothed, so a file with one commit that happened to be a fix doesn't score 100%. In effect it's a smoothed count of fix commits: high only for files that are both busy *and* repeatedly reworked. |
+| **magnitude** | `sqrt(max(structural, 0.05) · max(human, 0.05))`. This geometric mean only runs hot when a file is fragile *and* reworked. The floor keeps a visible gradient. |
 | **bus factor** | A separate flag for files only one author has ever touched |
 
-Co-change (the ghost edges) is filtered to cut noise. Commits touching more than 30 files are skipped. A pair needs at least 3 shared commits, and those shared commits must make up at least 50% of the commits on the less-edited file. File identity follows renames (`git log -M`).
+**Co-change** (ghost edges) is de-noised: commits touching more than 30 files are skipped, and a pair needs at least 3 shared commits that make up at least 50% of the less-edited file's commits. File identity follows renames (`git log -M`).
 
-The scoring was **frozen** (`SCORING_VERSION = "1.0"`) after one sanity check on fastapi: are the hottest files really the dangerous ones? They are: `routing.py` ranks #1 and `dependencies/utils.py` #4, alongside `encoders.py`, `params.py` and `exceptions.py`. The bottom five are re-export stubs that contain almost no code.
+**The repo grade** uses four *absolute* signals (fix concentration, widest blast radius, bus-factor share, hidden-coupling density), because file magnitudes are relative within a repo and couldn't tell repos apart.
 
-### What it found in the demo repos
+The scoring was **frozen** (`SCORING_VERSION = "1.0"`) after one sanity check: are fastapi's hottest files really the dangerous ones? `routing.py` ranks #1 and `dependencies/utils.py` #4, alongside `encoders.py`, `params.py` and `exceptions.py`. The bottom five are re-export stubs.
 
-| Repo | Report card | Most dangerous file | Notable |
+### What it found
+
+| Repo | Grade | Most dangerous file | Notable |
 | --- | --- | --- | --- |
-| [Textualize/rich](https://github.com/Textualize/rich) | **D**, M 6.5 (strong) | `rich/console.py`, M 8.2: 467 commits, 95 fixes, 43 authors | A Unicode version table (`_unicode_data/_versions.py`) sits beneath 82% of the codebase |
-| [psf/black](https://github.com/psf/black) | **C**, M 5.4 (moderate) | `src/black/__init__.py`, M 8.4: 579 commits, 130 fixes, 173 authors | `pgen.py` ⟷ `pytree.py` changed together 10× with no import between them |
-| [fastapi/fastapi](https://github.com/fastapi/fastapi) | **B**, M 4.5 (light) | `fastapi/routing.py`, M 7.8: 193 commits, 50 fixes, 54 authors | 61% of all fix touches land in the hottest 10% of files |
+| [Textualize/rich](https://github.com/Textualize/rich) · Python | **D** · M 6.5 | `rich/console.py` M 8.2: 467 commits, 95 fixes, 43 authors | A Unicode version table (`_unicode_data/_versions.py`) sits beneath 82% of the codebase |
+| [psf/black](https://github.com/psf/black) · Python | **C** · M 5.4 | `src/black/__init__.py` M 8.4: 579 commits, 130 fixes, 173 authors | `pgen.py` ⟷ `pytree.py` changed together 10× with no import |
+| [fastapi/fastapi](https://github.com/fastapi/fastapi) · Python | **B** · M 4.5 | `fastapi/routing.py` M 7.8: 193 commits, 50 fixes, 54 authors | 61% of all fix touches land in the hottest 10% of files |
+| [BurntSushi/ripgrep](https://github.com/BurntSushi/ripgrep) · Rust | **A** · M 1.8 | `crates/ignore/src/walk.rs` M 9.4: 84 commits, 21 fixes, 31 authors | Risk is concentrated in one crate (`ignore`); the rest is calm |
 
-The repo grade comes from four *absolute* signals (fix concentration, widest blast radius, bus-factor share, hidden-coupling density). File magnitudes are relative within a repo, so a grade built from them alone couldn't tell repos apart.
+---
 
-### Backtest: does it predict anything?
+## 📉 Backtest: does it predict anything?
 
-The backtest scores each repo as it was 60% of the way through its history, using that moment's snapshot. It then counts the fix commits that landed **afterwards** and measures what share of them hit the top 10% of files by magnitude:
+We score each repo as it was 60% of the way through its history, then count the fix commits that landed **afterwards** and measure what share hit the top 10% of files by magnitude.
 
-| Repo | Scored at | Fix touches after | Top 10% by **magnitude** | Top 10% by churn alone | Random |
+| Repo | Scored at | Later fix touches | Top 10% by **magnitude** | Top 10% by churn alone | Random |
 | --- | --- | --- | --- | --- | --- |
 | rich | commit 2,056 / 3,387 | 208 | **45%** | 46% | 10% |
 | fastapi | commit 4,816 / 7,932 | 76 | **68%** | 72% | 10% |
 | black | commit 1,483 / 2,442 | 233 | **42%** | 48% | 11% |
-| ripgrep (Rust) | commit 1,358 / 2,236 | 173 | **11%** | 17% | 11% |
+| ripgrep | commit 1,358 / 2,236 | 173 | **11%** | 17% | 11% |
 
-The honest reading: on the three Python repos, magnitude finds where future fixes land **4–7× better than random**. A churn-only ranking does about as well, and slightly better on fastapi and black. On ripgrep, magnitude did **no better than random**: its later fixes landed in files that were quiet at the cutoff, so neither ranking saw them coming. So the *predictive* power comes mostly from the history signal. What magnitude adds is **impact**: it ranks the reworked files by how much breaks when they change, and the blast radius tells you exactly what that is. The scoring was frozen before this test and hasn't been tuned against it. Reproduce it with `python -m richter.cli backtest <url> [--cutoff 0.6]`.
+**The honest reading:**
+- On the three Python repos, magnitude finds where future fixes land **4–7× better than random**.
+- A churn-only ranking does about as well, so the *predictive* power comes mostly from history.
+- On ripgrep neither ranking beat random: later fixes landed in files that were quiet at the cutoff.
 
-## Languages
+What magnitude adds is **impact**: among reworked files, it ranks the ones whose changes reach furthest, and the blast radius shows exactly where. The scoring was frozen before this test and never tuned against it. Reproduce it with `python -m richter.cli backtest <url>`.
 
-Everything except the import parser is language-agnostic: git history, scoring, AI notes and all three views work the same way for every language below.
+---
 
-| Language | Files | How an import becomes an edge |
-| --- | --- | --- |
-| Python | `.py` | `ast`; relative imports, `src/` layouts, `__init__.py` re-exports |
-| JavaScript / TypeScript | `.js .jsx .mjs .cjs .ts .tsx .vue .svelte` | relative paths and `index` files, `./x.js` → `x.ts`, `tsconfig`/`jsconfig` path aliases, monorepo workspace packages |
-| Go | `.go` | module path from `go.mod`; an import links to every file in that package |
-| Java / Kotlin / Scala | `.java .kt .kts .scala` | `package` + class name → file; wildcard imports → the whole package |
-| Rust | `.rs` | `mod` declarations; `use crate::`, `super::`, `self::` and workspace crates (incl. `{a, b}` groups) |
-| C / C++ / Objective-C | `.c .h .cc .cpp .hpp .m …` | `#include` relative to the file, then by unique path suffix |
-| C# | `.cs` | `using` → the type or the files declaring that namespace (skipped for namespaces over 60 files) |
-| Ruby | `.rb` | `require_relative`; `require` → gem-style `lib/<name>.rb` |
-| PHP | `.php` | `use` namespace\class → file; `require`/`include` paths |
+## 🌐 Languages
 
-Checked on real repos: [pmndrs/zustand](https://github.com/pmndrs/zustand) (TypeScript), [junegunn/fzf](https://github.com/junegunn/fzf) (Go), [google/gson](https://github.com/google/gson) (Java), [BurntSushi/ripgrep](https://github.com/BurntSushi/ripgrep) (Rust), [redis/hiredis](https://github.com/redis/hiredis) (C), [sinatra/sinatra](https://github.com/sinatra/sinatra) (Ruby) and [guzzle/guzzle](https://github.com/guzzle/guzzle) (PHP), with sampled edges spot-checked against the source. ripgrep ships as a fourth demo: its riskiest files are the directory walker and gitignore engine in `crates/ignore` (`walk.rs` M 9.4).
+Only the import parser is language-specific. Git history, scoring, AI notes and all three views work the same way everywhere.
 
-## Architecture
+| Language | How an import becomes an edge |
+| --- | --- |
+| **Python** | `ast`: relative imports, `src/` layouts, `__init__.py` re-exports resolved to the real module |
+| **JavaScript / TypeScript** (`.js .jsx .ts .tsx .mjs .vue .svelte`) | relative paths, `index` files, `./x.js` → `x.ts`, `tsconfig`/`jsconfig` path aliases, monorepo workspace packages |
+| **Go** | module path from `go.mod`; an import links to every file in that package |
+| **Java / Kotlin / Scala** | `package` + class → file; wildcard imports → the whole package |
+| **Rust** | `mod` declarations, `use crate::/super::/self::`, `{a, b}` groups, workspace crates |
+| **C / C++ / Objective-C** | `#include` relative to the file, then by unique path suffix |
+| **C#** | `using` → the type, or the files declaring that namespace |
+| **Ruby** | `require_relative`, gem-style `require` → `lib/<name>.rb` |
+| **PHP** | `use` namespace\class → file, `require`/`include` |
+
+Verified on real repos ([zustand](https://github.com/pmndrs/zustand), [fzf](https://github.com/junegunn/fzf), [gson](https://github.com/google/gson), [ripgrep](https://github.com/BurntSushi/ripgrep), [hiredis](https://github.com/redis/hiredis), [sinatra](https://github.com/sinatra/sinatra), [guzzle](https://github.com/guzzle/guzzle)) by spot-checking sampled edges against the source. Tests, docs, examples, vendored code and build output are excluded by default (`--include-tests` brings tests, docs and examples back).
+
+---
+
+## 🏗 Architecture
 
 ```mermaid
 flowchart LR
-  A[GitHub URL] -->|git clone --filter=blob:none| B[ingest.py<br/>full log, renames]
-  B --> C[deps.py<br/>ast import graph]
+  A[GitHub URL] -->|git clone --filter=blob:none| B[ingest.py<br/>full history · renames]
+  B --> C[deps.py + langs.py<br/>import graph, 9 language families]
   B --> D[gitstats.py<br/>churn · authors · fixes · co-change]
   C --> E[risk.py<br/>frozen scoring engine]
   D --> E
-  E --> F[(one JSON model<br/>data/models/*.json)]
-  B --> S[snapshots.py<br/>28 sampled commits] --> G[(data/snapshots/*.json)]
+  E --> F[(one JSON model)]
+  B --> S[snapshots.py<br/>28 sampled commits] --> G[(time-travel frames)]
   F --> H[FastAPI]
-  H --> I[agent.py<br/>gpt-4o-mini + disk cache]
+  H --> I[agent.py<br/>gpt-4o-mini · cached · path-validated]
   F --> J[React + Vite]
   G --> J
-  J --> K[2D graph · risk map<br/>canvas + d3-force]
-  J --> L[3D city · time-travel<br/>three.js + bloom]
+  J --> K[hazard map · blast cascade<br/>canvas + d3-force]
+  J --> L[code city · time-travel<br/>three.js + bloom]
 ```
 
-- **Ingest:** a blobless clone keeps the *full* commit history while skipping file contents until they're needed. A shallow clone would make churn, authorship and co-change meaningless.
-- **Import parsing:** Python uses `ast` and handles relative imports, `src/` layouts and `__init__.py` re-exports, so edges point at the real module. Otherwise everything collapses into a star centered on `__init__.py` (on fastapi, 2% of edges end at an `__init__.py`). Other languages use per-language import resolvers (see [Languages](#languages)). Test, docs and example folders, vendored code and build output are excluded by default; add `--include-tests` to include tests, docs and examples.
-- **Ask-the-repo:** the model must return JSON `{answer, files[]}`, and every path is checked against the model before anything gets highlighted. Invented paths are dropped, and the UI says how many were dropped.
-- **Offline demo:** the three demo models and their snapshots are committed. The frontend loads them as static files, so the demo runs without the backend or an API key.
+- **Full history, fast.** A *blobless* clone keeps every commit but skips file contents until they're needed. A shallow clone would make churn, authorship and co-change meaningless.
+- **One model, every view.** The backend writes a single JSON model. The 2D map, the 3D city, the inspector and the AI all read the same numbers.
+- **Offline demo.** The four demo repos ship with their models, snapshots and precomputed AI notes, so the app runs from static files with no backend and no API key.
+- **Honest AI.** Prompts contain only the selected file's metrics, its dependents and a short code excerpt. Answers are cached, and file paths are validated against the repo before they're highlighted.
 
-## Run it
+---
+
+## 🚀 Run it
 
 ```bash
-# backend (Python 3.11+, tested on 3.14)
+# backend · Python 3.11+ (tested on 3.14)
 cd backend
 python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
 .venv/bin/uvicorn richter.api:app --port 8000
 
-# frontend (Node 20.19+, tested on 24) in a second terminal
-cd frontend && npm install && npm run dev      # → http://localhost:5173
+# frontend · Node 20.19+ (tested on 24), in a second terminal
+cd frontend && npm install && npm run dev        # → http://localhost:5173
 ```
 
-Optional: `cp .env.example .env` and set `OPENAI_API_KEY` to enable AI guard notes, unblock plans and ask-the-repo.
+Optional: `cp .env.example .env` and set `OPENAI_API_KEY` for live AI notes and free-form questions. Without a key, the demo repos still show their precomputed AI notes.
 
 ```bash
-# analyze any public repo in a supported language, then precompute its time-travel frames
 cd backend
-.venv/bin/python -m richter.cli analyze https://github.com/owner/repo [--include-tests]
-.venv/bin/python -m richter.cli snapshots https://github.com/owner/repo
-.venv/bin/python -m richter.cli notes https://github.com/owner/repo      # precompute AI notes (needs key)
-.venv/bin/python -m richter.cli backtest https://github.com/owner/repo   # needs snapshots
-.venv/bin/python -m pytest -q                  # 17 tests
+.venv/bin/python -m richter.cli analyze   https://github.com/owner/repo [--include-tests]
+.venv/bin/python -m richter.cli snapshots https://github.com/owner/repo   # time-travel frames
+.venv/bin/python -m richter.cli notes     https://github.com/owner/repo   # precompute AI notes (needs key)
+.venv/bin/python -m richter.cli backtest  https://github.com/owner/repo   # needs snapshots
+.venv/bin/python -m pytest -q                                              # 19 tests
 ```
 
-Keys: `1` graph · `2` risk map · `3` city · `Esc` clear selection.
+| Key | Action |
+| --- | --- |
+| `1` `2` `3` | graph · risk map · code city |
+| `F` | find a file |
+| `A` | ask the repo |
+| `/` | switch repo |
+| `Esc` | clear selection |
+
+---
 
 ## Scope and limitations
 
-- **Import resolution is pattern-based outside Python.** It catches standard import syntax but isn't a compiler: Java/Kotlin/Scala/C# files can use same-package types with no import, and those links are invisible. Swift, Dart and other languages aren't parsed yet. A [tree-sitter](https://tree-sitter.github.io) front end would make extraction more robust; everything after the parser is already language-agnostic.
-- **AI notes need a key for anything outside the bundle.** The demo repos include precomputed `gpt-4o-mini` notes (14 files each) and answers to the three suggested questions. Other files fall back to a labelled rule-based note, and free-form questions need `OPENAI_API_KEY`.
+- **Outside Python, import parsing is pattern-based, not a compiler.** Java/Kotlin/Scala/C# files can use same-package types without an import, and those links are invisible. Go and C# links are package/namespace-level. Swift and Dart aren't parsed yet. A [tree-sitter](https://tree-sitter.github.io) front end would make extraction more robust; everything after the parser is already language-agnostic.
 - **Fix detection** is a regex over commit messages (`fix`, `bug`, `revert`, `hotfix`, `regression`, `crash`, `broken`).
-- **Importance only counts imports inside the repo.** A library's public entry points look less central than they really are, because their callers live outside the repo.
+- **Importance only counts imports inside the repo**, so a library's public entry points look less central than they are.
+- **Only source code is mapped.** Folders holding only assets, data or compiled caches (PDFs, images, `__pycache__`) don't appear in the city.
+- **The map is a layout, not a geography.** Contours show where risky files cluster in the import graph; distance has no meaning beyond that.
 - **First ingest** of a large repo is slow (about 4 minutes for fastapi's 7,932 commits), because rename detection fetches file contents on demand. Later runs reuse the clone.
-- Snapshots skip files that only ever appeared through merge commits (the log is read with `--no-merges`).
-- Visuals were checked with headless Chrome using software WebGL. Bloom on a real GPU may look slightly stronger.
+- **Free-form AI questions need `OPENAI_API_KEY`.** Selection-aware questions always go to the live API.
+- The demo video's narration is an AI-generated voice (OpenAI `gpt-4o-mini-tts`).
 
 ---
 
 ## Hackathon project overview
 
 - **Project name:** Richter — measure the magnitude of risk in any codebase
-- **Short description:** Richter ingests a public GitHub repo and predicts what breaks when you change a file (blast radius), where work keeps getting reworked (fix-heavy churn), and which files are secretly coupled (co-change with no import link). It fuses these into one magnitude score and writes guard notes and unblock plans with an LLM. It helps engineers and reviewers touch risky code safely.
+- **Short description:** Richter ingests a public GitHub repo and predicts what breaks when you change a file (blast radius), where work keeps getting reworked (fix-heavy churn), and which files are secretly coupled (co-change with no import link). It fuses these into one magnitude score shown as a seismic hazard map and a 3D code city with time-travel, and writes guard notes and unblock plans with an LLM. It helps engineers and reviewers touch risky code safely.
 - **Team:** Muhammed Asil Pari ([@asil-eng](https://github.com/asil-eng))
-- **Working demo:** Local; see [Run it](#run-it). The demo repos load without the backend or an API key.
-- **Technology stack:** Python 3 + FastAPI, GitPython, `ast` + per-language import resolvers, networkx (backend); React 19 + Vite + TypeScript, d3-force, three.js (frontend); OpenAI `gpt-4o-mini` (notes).
+- **Working demo:** Local; see [Run it](#-run-it). The four demo repos load without the backend or an API key. Video: [docs/richter-demo.mp4](docs/richter-demo.mp4).
+- **Technology stack:** Python 3 + FastAPI, GitPython, `ast` + per-language import resolvers, networkx (backend); React 19 + Vite + TypeScript, d3-force, three.js (frontend); OpenAI `gpt-4o-mini` (notes, ask-the-repo).
 
 ### Run the project
 
 1. Prerequisites and versions: Python 3.11+ (tested on 3.14), git 2.30+, Node 20.19+ (tested on 24)
 2. Dependency installation: `cd backend && python3 -m venv .venv && .venv/bin/pip install -r requirements.txt` and `cd frontend && npm install`
-3. Environment setup: `cp .env.example .env` and set `OPENAI_API_KEY` (only needed for AI notes and ask-the-repo)
+3. Environment setup: `cp .env.example .env` and set `OPENAI_API_KEY` (only needed for live AI notes and free-form questions)
 4. Start the project: `cd backend && .venv/bin/uvicorn richter.api:app --port 8000`, then `cd frontend && npm run dev` → http://localhost:5173
 5. Run checks or tests: `cd backend && .venv/bin/python -m pytest -q`; `cd frontend && npm run build && npx oxlint src`
 
 ### Current status
 
-- Working features: ingest, import + git parsers, risk engine, JSON model, FastAPI, 2D graph with blast-radius cascade, risk map, ghost-edge and bus-factor layers, report card, 3D code city, time-travel (precomputed for rich, fastapi, black), ask-the-repo with path validation, guard notes and unblock plans (AI path verified with gpt-4o-mini; rule-based fallback verified).
+- Working features: blobless ingest with full history; import graphs for Python, JS/TS, Go, Java/Kotlin/Scala, Rust, C/C++, C#, Ruby, PHP; git stats and de-noised co-change; frozen risk engine; FastAPI; seismic hazard map with blast-radius cascade; risk map; ghost-edge and bus-factor layers; explanatory inspector; report card; 3D code city with time-travel; selection-aware ask-the-repo with path validation; guard notes and unblock plans (AI path verified with `gpt-4o-mini`, rule-based fallback verified); searchable repo picker; file finder; backtest CLI.
 - Known limitations: see [Scope and limitations](#scope-and-limitations).
-- Libraries, APIs, and public datasets used: [FastAPI](https://fastapi.tiangolo.com), [GitPython](https://github.com/gitpython-developers/GitPython), [networkx](https://networkx.org), [NumPy](https://numpy.org)/[SciPy](https://scipy.org) (PageRank), [React](https://react.dev), [Vite](https://vite.dev), [d3-force](https://d3js.org/d3-force), [three.js](https://threejs.org), [IBM Plex Mono](https://github.com/IBM/plex) and [Archivo](https://github.com/Omnibus-Type/Archivo) via Fontsource, [OpenAI API](https://platform.openai.com). Demo data is derived from the public repositories [Textualize/rich](https://github.com/Textualize/rich), [fastapi/fastapi](https://github.com/fastapi/fastapi), [psf/black](https://github.com/psf/black) and [BurntSushi/ripgrep](https://github.com/BurntSushi/ripgrep).
+- Libraries, APIs, and public datasets used: [FastAPI](https://fastapi.tiangolo.com), [GitPython](https://github.com/gitpython-developers/GitPython), [networkx](https://networkx.org), [NumPy](https://numpy.org)/[SciPy](https://scipy.org) (PageRank), [React](https://react.dev), [Vite](https://vite.dev), [d3-force](https://d3js.org/d3-force), [three.js](https://threejs.org), [IBM Plex Mono](https://github.com/IBM/plex) and [Archivo](https://github.com/Omnibus-Type/Archivo) via Fontsource, [OpenAI API](https://platform.openai.com) (chat and text-to-speech). Demo data is derived from the public repositories [Textualize/rich](https://github.com/Textualize/rich), [fastapi/fastapi](https://github.com/fastapi/fastapi), [psf/black](https://github.com/psf/black) and [BurntSushi/ripgrep](https://github.com/BurntSushi/ripgrep).
 
 See [AI_USAGE.md](AI_USAGE.md) for AI assistance and [CHANGELOG.md](CHANGELOG.md) for the development record.
 

@@ -4,6 +4,13 @@ Record each meaningful project change during the event, newest first. Update thi
 
 ## Event build log
 
+## 2026-10-25T00:33:22+05:30 — README rewrite with fresh media and demo video
+
+- Changed: Rewrote `README.md`: banner, demo thumbnail linking to `docs/richter-demo.mp4`, problem statement, seven illustrated feature sections (hazard map, blast radius, inspector, ask, hidden coupling, city + time-travel, report card + languages), scoring, findings across four repos (ripgrep added), backtest with the honest reading, languages, architecture, run, keys, limitations (incl. AI narration disclosure); hackathon overview/event sections kept and updated. Regenerated all media from the caption-free demo recording (`docs/*.jpg`, `blast-radius.gif`, `time-travel.gif`); removed three outdated images. Committed the 9.1 MB demo video. SUBMISSION.md links the video.
+- Why: Participant: the README is the core of the project and should be top quality with images and correct explanations.
+- Validation: Every `docs/` path in the README exists; all in-page anchors checked with github-slugger 2.0.0 (6/6 ok); rendered through GitHub's /markdown API (gfm, repo context); every figure cross-checked against the models (ripgrep: grade A, M 1.8, walk.rs M 9.4 with 84 commits, 21 fixes, 31 authors).
+- Limitations: An inline video player in the README needs the mp4 uploaded through the GitHub web editor; until then the thumbnail links to the file.
+
 ## 2026-10-25T00:24:00+05:30 — Demo video (AI narration) + thumbnail
 
 - Changed: Produced a 94 s demo video outside the repo (`~/Desktop/devin/richter-demo/`: `richter-demo.mp4` 1280x800 9.5 MB for README upload, `richter-demo-1920.mp4` 1920x1200 master). Real app recorded via Chrome DevTools screencast with a scripted cursor; title/outro cards; camera punch-ins; captions in Archivo; narration generated with OpenAI `gpt-4o-mini-tts` (voice onyx); low synthesized drone and two impact hits; loudness-normalised to -16 LUFS. Added `docs/demo-thumbnail.jpg`.

@@ -8,7 +8,7 @@ Complete this file during the hackathon and use it to prepare your submission th
 - **Short description:** Changing a central file in an unfamiliar codebase is risky, and the risk is invisible. Richter ingests a public GitHub repo and predicts what breaks when a file changes (transitive blast radius), where work keeps getting reworked (fix-heavy churn), and which files are secretly coupled (co-change with no import). It fuses these into one magnitude score shown as a 2D risk graph and a 3D code city with time-travel, and writes guard notes and unblock plans with an LLM. It helps engineers, reviewers and newcomers touch risky code safely.
 - **Code repository URL:** https://github.com/asil-eng/richter
 - **Final submitted implementation commit SHA:** TODO — participant to record at submission
-- **Working demo URL or local demo steps:** Local — `cd frontend && npm install && npm run dev`, open http://localhost:5173. The three demo repos load without the backend; start `cd backend && .venv/bin/uvicorn richter.api:app --port 8000` for notes, ask-the-repo and analyzing new repos.
+- **Working demo URL or local demo steps:** Demo video: docs/richter-demo.mp4 (94 s, AI narration). Local — `cd frontend && npm install && npm run dev`, open http://localhost:5173. The three demo repos load without the backend; start `cd backend && .venv/bin/uvicorn richter.api:app --port 8000` for notes, ask-the-repo and analyzing new repos.
 - **Demo access requirements:** None for the demo repos (precomputed AI notes included). `OPENAI_API_KEY` in `.env` enables notes for other files and free-form questions.
 
 ## Participants

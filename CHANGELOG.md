@@ -4,6 +4,13 @@ Record each meaningful project change during the event, newest first. Update thi
 
 ## Event build log
 
+## 2026-10-25T00:39:27+05:30 — Demo video hosted on GitHub Pages
+
+- Changed: Added `docs/index.html` (Richter-styled player page) and `docs/.nojekyll`; enabled GitHub Pages from `main:/docs`. README thumbnail and SUBMISSION.md now link to https://asil-eng.github.io/richter/.
+- Why: Participant clicked the thumbnail and GitHub's file viewer showed 'we can't show files that are this big'; raw.githubusercontent serves the mp4 as application/octet-stream, which downloads instead of playing.
+- Validation: Pages status built; HTTP 200 with content-type video/mp4 and accept-ranges bytes; Playwright loaded the page and played the video (currentTime 2.8 s after 3 s, 1280x800, duration 93.5 s, no media error).
+- Limitations: An inline player inside the README itself still requires uploading the mp4 through the GitHub web editor.
+
 ## 2026-10-25T00:33:22+05:30 — README rewrite with fresh media and demo video
 
 - Changed: Rewrote `README.md`: banner, demo thumbnail linking to `docs/richter-demo.mp4`, problem statement, seven illustrated feature sections (hazard map, blast radius, inspector, ask, hidden coupling, city + time-travel, report card + languages), scoring, findings across four repos (ripgrep added), backtest with the honest reading, languages, architecture, run, keys, limitations (incl. AI narration disclosure); hackathon overview/event sections kept and updated. Regenerated all media from the caption-free demo recording (`docs/*.jpg`, `blast-radius.gif`, `time-travel.gif`); removed three outdated images. Committed the 9.1 MB demo video. SUBMISSION.md links the video.

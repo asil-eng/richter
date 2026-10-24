@@ -37,6 +37,7 @@ No participant AI usage has been recorded yet. Replace the placeholder row as yo
 | 2026-10-24T23:50+05:30 | Claude Code (Claude Opus 5.5) | Graph as a seismic hazard map: isoseismal contours, aftershocks, magnitude labels | Hazard-map rendering for the 2D graph | Pending participant review | Screenshots on two repos; fixed an exaggeration found in review |
 | 2026-10-25T00:24+05:30 | Claude Code (Claude Opus 5.5) | Demo video (AI narration) + thumbnail | Wrote narration, generated AI voice, scripted recording, composited and encoded the video | Pending participant review | Frame review + loudness measurement |
 | 2026-10-25T00:33+05:30 | Claude Code (Claude Opus 5.5) | README rewrite with fresh media and demo video | README rewrite and media generation | Pending participant review | Paths, anchors and figures verified |
+| 2026-10-25T00:39+05:30 | Claude Code (Claude Opus 5.5) | Demo video hosted on GitHub Pages | Diagnosed video link; set up Pages player | Pending participant review | HTTP headers + browser playback |
 
 ## Template preparation
 

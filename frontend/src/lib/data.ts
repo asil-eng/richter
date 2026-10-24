@@ -67,11 +67,12 @@ export async function fetchNote(slug: string, file: string, kind: 'guard' | 'unb
   }
 }
 
-export async function askRepo(slug: string, question: string): Promise<AskResult> {
+export async function askRepo(slug: string, question: string, focus?: string): Promise<AskResult> {
   try {
-    return await postJSON<AskResult>('/api/ask', { slug, question })
+    return await postJSON<AskResult>('/api/ask', { slug, question, focus })
   } catch (e) {
-    const hit = (await notesBundle(slug))?.ask[normalize(question)]
+    // the offline bundle only holds repo-wide answers
+    const hit = focus ? undefined : (await notesBundle(slug))?.ask[normalize(question)]
     if (hit) return { ...hit, cached: true }
     throw e
   }

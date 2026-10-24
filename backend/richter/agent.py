@@ -152,9 +152,38 @@ def unblock_plan(model: dict, path: str, repo_root: Path | None = None) -> dict:
 
 ASK_SYSTEM = (
     "You answer questions about a codebase's risk using ONLY the risk model summary given. "
+    "If a CURRENT SELECTION block is present, the user is looking at that file and folder: "
+    "words like 'this', 'this file', 'here', 'it' or 'this folder' refer to it, and answers "
+    "should be about it unless the question clearly asks about the whole repo. "
     "Answer in plain English, 2-5 sentences. List the files your answer is about, copying paths "
     'exactly as they appear in the summary. Reply as JSON: {"answer": str, "files": [str]}'
 )
+
+
+def focus_block(model: dict, path: str, repo_root: Path | None = None) -> str:
+    """What the user is looking at: the selected file and its folder, in model terms."""
+    i, n = _node(model, path)
+    nodes = model["nodes"]
+    imports = [nodes[b]["id"] for a, b in model["edges"] if a == i]
+    folder = [m for m in nodes if m["dir"] == n["dir"]]
+    folder.sort(key=lambda m: -m["magnitude"])
+    in_folder = {m["id"] for m in folder}
+    outside_dependents = {nodes[a]["dir"] for a, b in model["edges"]
+                          if nodes[b]["id"] in in_folder and nodes[a]["id"] not in in_folder}
+    lines = [
+        "CURRENT SELECTION (the user is looking at this file right now):",
+        _metrics_block(model, i, n),
+        f"language: {n.get('lang', 'python')}; lines of code: {n['loc']}",
+        f"it imports: {', '.join(imports[:12]) or 'nothing in the repo'}",
+        f"its folder {n['dir']}/ has {len(folder)} files (riskiest first):",
+        *[f"  {m['id']} | M {m['magnitude'] * 10:.1f} | blast {m['blast_size']} | fixes {m['fixes']}"
+          + (" | single author" if m["bus_factor"] else "") for m in folder[:12]],
+        f"other folders that import from {n['dir']}/: {', '.join(sorted(outside_dependents)[:10]) or 'none'}",
+    ]
+    excerpt = _excerpt(repo_root, path)[:1500]
+    if excerpt:
+        lines += ["code excerpt:", excerpt]
+    return "\n".join(lines)
 
 
 def summarize_model(model: dict, top: int = 25) -> str:
@@ -190,12 +219,16 @@ def validate_files(model: dict, names: list) -> list[str]:
     return out
 
 
-def ask(model: dict, question: str) -> dict:
+def ask(model: dict, question: str, focus: str | None = None, repo_root: Path | None = None) -> dict:
     question = question.strip()[:500]
     if not question:
         raise ValueError("empty question")
+    context = summarize_model(model)
     key = f"{model['repo']['head']}:{' '.join(question.lower().split())}"
-    data = _chat_json("ask", key, ASK_SYSTEM, summarize_model(model) + "\n\nquestion: " + question)
+    if focus:
+        context += "\n\n" + focus_block(model, focus, repo_root)  # KeyError if not in model
+        key += f"@{focus}"
+    data = _chat_json("ask", key, ASK_SYSTEM, context + "\n\nquestion: " + question)
     raw = data.get("files", [])
     files = validate_files(model, raw if isinstance(raw, list) else [])
     return {"answer": str(data.get("answer", "")), "files": files,

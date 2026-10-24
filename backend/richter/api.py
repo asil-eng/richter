@@ -116,6 +116,7 @@ class NoteReq(BaseModel):
 class AskReq(BaseModel):
     slug: str
     question: str
+    focus: str | None = None  # path of the file selected in the UI
 
 
 @app.post("/api/note")
@@ -136,7 +137,9 @@ def note(req: NoteReq):
 def ask(req: AskReq):
     m = load_model(req.slug)
     try:
-        return agent.ask(m, req.question)
+        return agent.ask(m, req.question, req.focus, repo_root(req.slug))
+    except KeyError:
+        raise HTTPException(404, f"{req.focus} not in model")
     except agent.AgentUnavailable as e:
         raise HTTPException(503, f"Ask-the-repo needs an API key: {e}")
     except ValueError as e:

@@ -4,6 +4,13 @@ Record each meaningful project change during the event, newest first. Update thi
 
 ## Event build log
 
+## 2026-10-24T23:45:56+05:30 — Ask-the-repo knows the current selection
+
+- Changed: Backend `agent.py`: `ask(model, question, focus, repo_root)` appends a CURRENT SELECTION block (file metrics, what it imports, dependents by hop, ghost partners, language/LOC, its folder's files ranked by magnitude, other folders importing from it, short code excerpt); the system prompt maps 'this file/this folder/it/here' to the selection; cache key includes the focus. `api.py` AskReq gains `focus` (404 if not in model). Frontend: `askRepo(..., focus)`; ask bar shows a context chip (◉ file · folder/, ✕ to ask about the whole repo, WHOLE REPO otherwise), selection-specific suggestions (impact, why risky, riskiest in folder, coupling), answers labelled '— about <file>'; offline bundle used only for repo-wide questions. Tests for focus block and cache key.
+- Why: Participant: the chat did not know which file/folder was selected ('The currently selected file is not specified').
+- Validation: `pytest` 19 passed; `tsc -b`, `oxlint` clean. Playwright with rich/traceback.py selected: 'which file have i currently selected and is it safe to change?' -> names rich/traceback.py, M 6.5, blast 64; 'which files in this folder are riskiest?' -> console.py 8.2, cells.py 7.8, text.py 7.5 (match the model); detaching the chip switches to WHOLE REPO; no page errors.
+- Limitations: Selection-aware questions need the live API and a key (they are not in the offline bundle).
+
 ## 2026-10-24T23:37:41+05:30 — Ask bar redesign
 
 - Changed: `frontend/src/components/AskBar.tsx` rewritten: suggestions moved out of the input into a popover above the bar (TRY ASKING / MATCHING, category tags FRAGILE/COUPLING/IMPACT/FILE, ⚡ for precomputed answers, two repo-specific questions built from the riskiest and widest-reaching files, filtering as you type, arrow keys + Enter); `A` focuses the bar; RUN button disabled until there is text, spinner while busy; READING state with the question echoed and a live seismograph; answer card with question echo, CACHED badge, COPY and CLEAR, file chips colored by magnitude with scores ('highlighted on the map · click to open'); friendly errors for a missing key or unreachable API. Styles in `app.css` replaced.

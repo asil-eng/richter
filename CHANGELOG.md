@@ -4,6 +4,13 @@ Record each meaningful project change during the event, newest first. Update thi
 
 ## Event build log
 
+## 2026-10-24T23:13:21+05:30 — Inspector instruments: plain-English summary, gauge, risk quadrant, shockwave rings
+
+- Changed: New `frontend/src/components/Instruments.tsx`: RiskQuadrant (every file plotted by depended-on vs reworked, four labelled zones, this file pulsing with crosshairs, dots clickable) and ShockRings (epicenter with one ring per import hop, animated shockwaves, clickable dots). `Inspector.tsx`: header now opens with a plain-English sentence (what breaks, how often it changed, by how many people), the analog gauge shared with the report card, and a verdict callout; WHY IT'S RISKY and BLAST RADIUS sections use the new instruments with one-line captions.
+- Why: Participant: the inspector was still plain and a first-time viewer would not understand it; liked the analog gauge on the report card and asked for something similarly innovative.
+- Validation: Playwright at 1440x1000 on rich/cells.py: summary, gauge, quadrant and rings render; no page errors. `tsc -b` and `oxlint` clean.
+- Limitations: Rings show up to 90 dots per hop; very large repos collapse beyond that (counts stay exact).
+
 ## 2026-10-24T23:09:33+05:30 — Inspector redesign
 
 - Changed: `Inspector.tsx`: magnitude header with descriptor and a one-line verdict (fragile and reworked / load-bearing but stable / reworked but isolated / quiet), a 0-10 Richter scale with a spring-in marker, STRUCTURAL/HUMAN meters with numeric values; BLAST RADIUS card (big count, % of codebase, stacked hop bar + counts); 4-column stats strip; MAGNITUDE OVER HISTORY sparkline from the time-travel snapshots; downstream hops with a colored rail, a short explanation per hop, chips sorted by importance with a magnitude dot, and expandable '+N more'. Old readout grid CSS removed. `App.tsx` passes snapshots to the inspector.

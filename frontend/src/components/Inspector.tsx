@@ -2,7 +2,8 @@ import { useEffect, useMemo, useState } from 'react'
 import { fetchNote } from '../lib/data'
 import { descriptor, fmtM, heat, shortName } from '../lib/heat'
 import type { Note, RiskModel, Snapshots } from '../lib/types'
-import { Meter } from './Gauge'
+import { Gauge, Meter } from './Gauge'
+import { RiskQuadrant, ShockRings } from './Instruments'
 
 interface Props {
   model: RiskModel
@@ -172,37 +173,51 @@ function FileInspector({
         <div className="insp-dir">{parts.join('/') || '.'}/</div>
         <div className="insp-file">{file}</div>
 
-        <div className="insp-reading">
-          <div className="insp-mag-num" style={{ color: heat(n.magnitude), textShadow: `0 0 28px ${heat(n.magnitude, 0.4)}` }}>
-            {fmtM(n.magnitude)}
-          </div>
-          <div className="insp-reading-side">
-            <div className="insp-desc" style={{ color: heat(n.magnitude) }}>
-              M · {descriptor(m10)}
+        <p className="insp-summary">
+          Change <b>{file}</b> and{' '}
+          {n.blast_size ? (
+            <>
+              <b className="hot">{n.blast_size} files</b> ({pct}% of {model.repo.name.split('/').pop()}) could break.
+            </>
+          ) : (
+            <>nothing else in the repo imports it.</>
+          )}{' '}
+          It has been changed <b>{n.churn}×</b>, <b>{n.fixes}</b> of those were fixes, by <b>{n.authors}</b>{' '}
+          {n.authors === 1 ? 'person' : 'people'}.
+        </p>
+
+        <div className="insp-gauge">
+          <Gauge value={m10} size={168} />
+          <div className="insp-gauge-side">
+            <div className="insp-mag-num" style={{ color: heat(n.magnitude), textShadow: `0 0 28px ${heat(n.magnitude, 0.4)}` }}>
+              {fmtM(n.magnitude)}
             </div>
-            <div className={`insp-verdict ${v.hot ? 'is-hot' : ''}`}>{v.text}</div>
+            <div className="insp-desc" style={{ color: heat(n.magnitude) }}>
+              {descriptor(m10)}
+            </div>
           </div>
         </div>
-
-        <div className="scale" aria-label={`magnitude ${fmtM(n.magnitude)} of 10`}>
-          <div className="scale-track" />
-          <div className="scale-ticks">
-            {Array.from({ length: 11 }, (_, k) => (
-              <span key={k}>{k % 2 === 0 ? k : ''}</span>
-            ))}
-          </div>
-          <div className="scale-marker" style={{ left: `${n.magnitude * 100}%` }} />
-        </div>
-
-        <div className="axes">
-          <Axis name="STRUCTURAL" hint="how much depends on it" value={n.structural} cool />
-          <Axis name="HUMAN" hint="how often it's reworked" value={n.human} />
-        </div>
+        <div className={`insp-verdict ${v.hot ? 'is-hot' : ''}`}>{v.text}</div>
         {n.bus_factor && <div className="flag">BUS FACTOR 1 — one author has written every commit</div>}
+      </section>
+
+      <section className="panel">
+        <div className="label">
+          WHY IT'S RISKY <span className="label-dim">/ every file in the repo</span>
+        </div>
+        <RiskQuadrant model={model} i={i} onSelect={(j) => onSelect(j)} />
+        <div className="axes">
+          <Axis name="DEPENDED ON" hint="structural: importance + blast radius" value={n.structural} cool />
+          <Axis name="REWORKED" hint="human: churn × fix ratio" value={n.human} />
+        </div>
+        <p className="caption">
+          Right = more code depends on it. Up = more often fixed and reworked. The top-right corner is where changes hurt most.
+        </p>
       </section>
 
       <section className="panel blast-card">
         <div className="label">BLAST RADIUS</div>
+        <ShockRings model={model} i={i} onSelect={(j) => onSelect(j)} />
         <div className="blast-hero">
           <span className="blast-num" style={{ color: n.blast_size ? 'var(--orange)' : 'var(--text-2)' }}>
             {n.blast_size}
@@ -226,6 +241,9 @@ function FileInspector({
           ))}
           {rings.length === 0 && <span className="muted">Nothing inside the repo imports it.</span>}
         </div>
+        <p className="caption">
+          Centre = this file. Ring 1 imports it directly, ring 2 imports ring 1, and so on. Click a dot to jump there.
+        </p>
       </section>
 
       <section className="panel stats-strip">

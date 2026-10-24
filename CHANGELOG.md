@@ -4,6 +4,13 @@ Record each meaningful project change during the event, newest first. Update thi
 
 ## Event build log
 
+## 2026-10-25T00:47:57+05:30 — Hosted live demo + README overhaul
+
+- Changed: Static demo mode in the frontend (`VITE_STATIC`, base-aware data paths, cached notes/answers only, clear live-only messages, ANALYZE YOUR REPO link) and `frontend/scripts/build-pages.sh` building to `docs/app/` from committed demo data only; precomputed notes now cover every START HERE pick. Live at https://asil-eng.github.io/richter/app/. README: hero with badges and four headline numbers, Try it now (live app, video, local), a collapsible 60-second judge tour, comparison with existing tool categories, why the numbers can be trusted, who it's for, collapsible scoring/language detail, roadmap (clearly marked as not built). SUBMISSION.md links the live app.
+- Why: Participant: the README should make judges certain on first read; a no-install live demo is the strongest proof.
+- Validation: Static build tested locally and on the live Pages URL with Playwright: cached AI note, cached answer, free-form message, repo switch, city; 0 page errors, 0 failed requests. README: 0 broken anchors (github-slugger), all images present, live/video/badge URLs return 200. A quoting bug briefly committed (apostrophe in a TS string) was fixed forward in 57318d0 before rebuilding; the published app never contained it.
+- Limitations: Hosted demo answers only the ⚡ questions and precomputed notes; free-form and file-specific AI need the local backend with a key. Comparison table is compiled from public docs and marked as such.
+
 ## 2026-10-25T00:39:27+05:30 — Demo video hosted on GitHub Pages
 
 - Changed: Added `docs/index.html` (Richter-styled player page) and `docs/.nojekyll`; enabled GitHub Pages from `main:/docs`. README thumbnail and SUBMISSION.md now link to https://asil-eng.github.io/richter/.

@@ -2,23 +2,56 @@
 
 <img src="docs/banner.jpg" alt="Richter — measure the magnitude of risk in any codebase" width="100%">
 
-**Every codebase has a few files that can take everything down with them. Richter finds them before you touch them.**
+### Every codebase has a few files that can take everything down with them.<br>Richter finds them *before* you touch them.
 
-<sub>Python · TypeScript · JavaScript · Go · Rust · Java · Kotlin · C/C++ · C# · Ruby · PHP</sub>
-
-[**▶ Watch the demo**](#-demo) · [How it works](#-how-the-score-works) · [Does it predict anything?](#-backtest-does-it-predict-anything) · [Run it](#-run-it)
+<a href="https://asil-eng.github.io/richter/app/"><img src="https://img.shields.io/badge/LIVE_DEMO-open_in_browser-ff6a1a?style=for-the-badge&labelColor=13191d" alt="Live demo"></a>
+<a href="https://asil-eng.github.io/richter/"><img src="https://img.shields.io/badge/VIDEO-94_seconds-e8eef0?style=for-the-badge&labelColor=13191d" alt="Demo video"></a>
+<a href="#-languages"><img src="https://img.shields.io/badge/LANGUAGES-9_families-6fb3b0?style=for-the-badge&labelColor=13191d" alt="9 language families"></a>
+<a href="#-run-it"><img src="https://img.shields.io/badge/TESTS-19_passing-6fb3b0?style=for-the-badge&labelColor=13191d" alt="19 tests passing"></a>
 
 </div>
 
----
+<br>
 
-## ▶ Demo
+<table>
+<tr>
+<td align="center" width="25%"><h2>88 files</h2><sub>downstream of <b>one</b> file in <a href="https://github.com/Textualize/rich">rich</a>: change <code>cells.py</code> and 81% of the codebase feels it</sub></td>
+<td align="center" width="25%"><h2>17×</h2><sub>fastapi's <code>security/*</code> modules changed together, without ever importing each other</sub></td>
+<td align="center" width="25%"><h2>4–7×</h2><sub>better than random at predicting where future bug fixes land (Python repos, <a href="#-backtest-does-it-predict-anything">backtest</a>)</sub></td>
+<td align="center" width="25%"><h2>0 installs</h2><sub>to try it: the <a href="https://asil-eng.github.io/richter/app/">live demo</a> runs entirely in your browser</sub></td>
+</tr>
+</table>
 
-<!-- To show an inline player: edit this README on github.com, drag docs/richter-demo.mp4 onto this line, and delete the thumbnail link below. -->
+## ⚡ Try it now
+
+| | | |
+| --- | --- | --- |
+| 🌐 | **[Open the live app](https://asil-eng.github.io/richter/app/)** | Four real repos (rich, fastapi, black, ripgrep), fully interactive, nothing to install |
+| ▶ | **[Watch the 94-second demo](https://asil-eng.github.io/richter/)** | The whole story with narration |
+| 💻 | **[Run it on your own repo](#-run-it)** | Two commands, then paste any GitHub URL |
 
 [![Richter demo video — 94 seconds](docs/demo-thumbnail.jpg)](https://asil-eng.github.io/richter/)
 
-<sub>94 seconds · click to play (opens the video player) · narration is AI-generated (OpenAI TTS)</sub>
+<sub>Click to play · narration is AI-generated (OpenAI TTS)</sub>
+
+<!-- To show an inline player instead: edit this README on github.com, drag docs/richter-demo.mp4 here, and delete the thumbnail link above. -->
+
+<details>
+<summary><b>🧭 The 60-second tour (for judges)</b></summary>
+
+<br>
+
+Open the **[live app](https://asil-eng.github.io/richter/app/)**, then:
+
+1. **Read the map.** Textualize/rich loads as a seismic hazard map. The orange contours mark where risk concentrates.
+2. **Pick an epicenter.** In the right panel under *START HERE*, click **MOST DANGEROUS · console.py**. Watch the blast radius ripple out, and read the plain-English summary, the gauge and the danger-zone plot.
+3. **Read the AI note.** Scroll the right panel to **GUARD NOTE / UNBLOCK PLAN**: what breaks, why, and what to check before merging.
+4. **Ask the repo.** Press `A` and pick ⚡ *Which files are most fragile?* The answer highlights the files on the map.
+5. **Find hidden coupling.** Press `Esc`, scroll the left panel to **LAYERS**, and switch on **GHOST EDGES**.
+6. **Travel in time.** Press `3` for the code city and drag the timeline at the bottom: seven years of history.
+7. **Change language.** Press `/`, type `ripgrep`, and press Enter: a Rust codebase, same instruments.
+
+</details>
 
 ---
 
@@ -106,9 +139,53 @@ Paste any public GitHub URL into **ANALYZE**. Switch between analyzed repos with
 
 ---
 
+## 🆚 What's different
+
+Code visualizers already exist. Richter's bet is that **structure and history only become useful together**, and only if they answer *"what happens if I change this?"*
+
+| | Dependency-graph tools<br><sub>pydeps, madge, dependency-cruiser</sub> | Hotspot / change-coupling tools<br><sub>CodeScene, code-maat</sub> | Code-city & history visualizers<br><sub>CodeCity, Gource</sub> | **Richter** |
+| --- | :---: | :---: | :---: | :---: |
+| Import / dependency structure | ✅ | ◐ | ◐ | ✅ |
+| Git history: churn, fixes, authors | — | ✅ | ◐ | ✅ |
+| **Transitive blast radius** of one file, by hop | ◐ | ◐ | — | ✅ |
+| Change coupling with no import between files | — | ✅ | — | ✅ |
+| One fused 0–10 risk score per file and per repo | — | ◐ | — | ✅ |
+| Plain-English notes grounded in the file's metrics | — | ◐ | — | ✅ |
+| Open source, demo runs offline in the browser | ✅ | ◐ | ✅ | ✅ |
+
+<sub>✅ yes · ◐ partially, or depends on the tool · — no. Compiled from each project's public docs; corrections welcome.</sub>
+
+## 🛡 Why you can trust the numbers
+
+- **The scoring was frozen before it was tested.** `SCORING_VERSION = "1.0"` was locked after one sanity check, then backtested on four repos. It was never tuned to the results.
+- **Results are published even when they're unflattering.** On ripgrep, Richter predicted future fixes no better than random. That result [is in the table](#-backtest-does-it-predict-anything).
+- **The AI can't invent files.** Every path an answer mentions is checked against the real repo before it's highlighted; invented ones are dropped and counted.
+- **Every number is reproducible.** `analyze`, `snapshots`, `notes` and `backtest` are CLI commands; the demo data in this repo is exactly what they produce.
+- **The heat map can't exaggerate.** Contours reach M8 only around files that really are M8. An earlier version that inflated dense clusters was caught and fixed.
+- **It's tested.** 19 backend tests cover the parsers (including per-language import resolution), the risk engine, snapshots and the AI guard rails.
+
+## 👥 Who it's for
+
+| When you're… | Richter tells you… |
+| --- | --- |
+| **Reviewing a pull request** | whether it touches an M8 file with 88 dependents, and which of them to test |
+| **New to a codebase** | where the dragons are before you write your first line |
+| **Planning a refactor** | which files sit in the *danger zone*: central **and** constantly reworked |
+| **Managing a team** | which risky files only one person has ever touched (bus factor) |
+| **Paying down tech debt** | where fixes keep landing, ranked by how far a change would reach |
+
+---
+
 ## 🧮 How the score works
 
-All scoring lives in one isolated module of pure functions, [`backend/richter/risk.py`](backend/richter/risk.py):
+Two questions per file, combined so that only files bad at **both** run hot:
+
+> **magnitude = √( structural × human )**  ·  *structural*: how much depends on it  ·  *human*: how often it gets reworked
+
+<details>
+<summary><b>Exact definitions</b> (all in <a href="backend/richter/risk.py"><code>backend/richter/risk.py</code></a>, pure functions)</summary>
+
+<br>
 
 | Signal | Definition |
 | --- | --- |
@@ -124,6 +201,8 @@ All scoring lives in one isolated module of pure functions, [`backend/richter/ri
 **The repo grade** uses four *absolute* signals (fix concentration, widest blast radius, bus-factor share, hidden-coupling density), because file magnitudes are relative within a repo and couldn't tell repos apart.
 
 The scoring was **frozen** (`SCORING_VERSION = "1.0"`) after one sanity check: are fastapi's hottest files really the dangerous ones? `routing.py` ranks #1 and `dependencies/utils.py` #4, alongside `encoders.py`, `params.py` and `exceptions.py`. The bottom five are re-export stubs.
+
+</details>
 
 ### What it found
 
@@ -160,6 +239,11 @@ What magnitude adds is **impact**: among reworked files, it ranks the ones whose
 
 Only the import parser is language-specific. Git history, scoring, AI notes and all three views work the same way everywhere.
 
+<details>
+<summary><b>How each language's imports become edges</b></summary>
+
+<br>
+
 | Language | How an import becomes an edge |
 | --- | --- |
 | **Python** | `ast`: relative imports, `src/` layouts, `__init__.py` re-exports resolved to the real module |
@@ -173,6 +257,8 @@ Only the import parser is language-specific. Git history, scoring, AI notes and 
 | **PHP** | `use` namespace\class → file, `require`/`include` |
 
 Verified on real repos ([zustand](https://github.com/pmndrs/zustand), [fzf](https://github.com/junegunn/fzf), [gson](https://github.com/google/gson), [ripgrep](https://github.com/BurntSushi/ripgrep), [hiredis](https://github.com/redis/hiredis), [sinatra](https://github.com/sinatra/sinatra), [guzzle](https://github.com/guzzle/guzzle)) by spot-checking sampled edges against the source. Tests, docs, examples, vendored code and build output are excluded by default (`--include-tests` brings tests, docs and examples back).
+
+</details>
 
 ---
 
@@ -216,6 +302,8 @@ cd frontend && npm install && npm run dev        # → http://localhost:5173
 
 Optional: `cp .env.example .env` and set `OPENAI_API_KEY` for live AI notes and free-form questions. Without a key, the demo repos still show their precomputed AI notes.
 
+The hosted demo is the same frontend built in static mode: `frontend/scripts/build-pages.sh` writes it to `docs/app/` using only the committed demo data.
+
 ```bash
 cd backend
 .venv/bin/python -m richter.cli analyze   https://github.com/owner/repo [--include-tests]
@@ -248,12 +336,22 @@ cd backend
 
 ---
 
+## 🗺 What's next
+
+These aren't built yet:
+- **A GitHub Action** that comments on pull requests: *"this PR touches 3 files above M7; 112 files downstream."*
+- **[tree-sitter](https://tree-sitter.github.io) parsers**, for exact imports in every language plus Swift and Dart.
+- **Risk thresholds in CI:** fail a build when a change pushes a file into the danger zone.
+- **Per-function blast radius** inside large files.
+
+---
+
 ## Hackathon project overview
 
 - **Project name:** Richter — measure the magnitude of risk in any codebase
 - **Short description:** Richter ingests a public GitHub repo and predicts what breaks when you change a file (blast radius), where work keeps getting reworked (fix-heavy churn), and which files are secretly coupled (co-change with no import link). It fuses these into one magnitude score shown as a seismic hazard map and a 3D code city with time-travel, and writes guard notes and unblock plans with an LLM. It helps engineers and reviewers touch risky code safely.
 - **Team:** Muhammed Asil Pari ([@asil-eng](https://github.com/asil-eng))
-- **Working demo:** Local; see [Run it](#-run-it). The four demo repos load without the backend or an API key. Video: [asil-eng.github.io/richter](https://asil-eng.github.io/richter/).
+- **Working demo:** Live at **https://asil-eng.github.io/richter/app/** (static build, four demo repos, cached AI). Video: https://asil-eng.github.io/richter/. Full app locally: see [Run it](#-run-it).
 - **Technology stack:** Python 3 + FastAPI, GitPython, `ast` + per-language import resolvers, networkx (backend); React 19 + Vite + TypeScript, d3-force, three.js (frontend); OpenAI `gpt-4o-mini` (notes, ask-the-repo).
 
 ### Run the project

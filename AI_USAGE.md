@@ -38,6 +38,7 @@ No participant AI usage has been recorded yet. Replace the placeholder row as yo
 | 2026-10-25T00:24+05:30 | Claude Code (Claude Opus 5.5) | Demo video (AI narration) + thumbnail | Wrote narration, generated AI voice, scripted recording, composited and encoded the video | Pending participant review | Frame review + loudness measurement |
 | 2026-10-25T00:33+05:30 | Claude Code (Claude Opus 5.5) | README rewrite with fresh media and demo video | README rewrite and media generation | Pending participant review | Paths, anchors and figures verified |
 | 2026-10-25T00:39+05:30 | Claude Code (Claude Opus 5.5) | Demo video hosted on GitHub Pages | Diagnosed video link; set up Pages player | Pending participant review | HTTP headers + browser playback |
+| 2026-10-25T00:47+05:30 | Claude Code (Claude Opus 5.5) | Hosted live demo + README overhaul | Static hosting mode, Pages build, README rewrite | Pending participant review | Live URL tested end to end; links validated |
 
 ## Template preparation
 

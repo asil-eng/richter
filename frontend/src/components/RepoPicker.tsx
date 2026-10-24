@@ -20,7 +20,12 @@ export function RepoPicker({
 
   const matches = useMemo(() => {
     const terms = q.toLowerCase().split(/\s+/).filter(Boolean)
-    return repos.filter((r) => terms.every((t) => r.name.toLowerCase().includes(t)))
+    const hits = repos.filter((r) => terms.every((t) => r.name.toLowerCase().includes(t)))
+    // matches on the repo's own name ("textual") rank above matches on the owner ("Textualize/rich")
+    const repoName = (r: RepoEntry) => (r.name.split('/')[1] ?? r.name).toLowerCase()
+    const score = (r: RepoEntry) =>
+      terms.reduce((s, t) => s + (repoName(r) === t ? 3 : repoName(r).startsWith(t) ? 2 : repoName(r).includes(t) ? 1 : 0), 0)
+    return terms.length ? [...hits].sort((a, b) => score(b) - score(a)) : hits
   }, [repos, q])
 
   const show = (v: boolean) => {

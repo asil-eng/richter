@@ -4,6 +4,13 @@ Record each meaningful project change during the event, newest first. Update thi
 
 ## Event build log
 
+## 2026-10-24T22:34:54+05:30 — City: camera-facing district labels, clearer legend
+
+- Changed: `CityView.tsx`: district labels turn to face the camera every frame and sit on the plot edge nearest the viewer (they read mirrored/upside-down when orbiting); label color kept below the bloom threshold. `App.tsx` + `app.css`: HUD restructured into a wrapping row plus hint line; city legend now says DISTRICT = FOLDER WITH .PY FILES, with a tooltip noting tests/docs/examples are excluded by default.
+- Why: Participant saw 3 districts for starlette but 6 top-level folders on GitHub, and upside-down labels. Verified: .github, docs and scripts contain 0 .py files; tests/ (35 .py) is excluded by default, so 3 districts (starlette, starlette/middleware, benchmarks) is correct — the UI just didn't say so.
+- Validation: Counted .py files per folder in the starlette clone. Playwright screenshots of the starlette city from the default view and after orbiting to the far side: labels upright; HUD no longer overlaps. `tsc -b` and `oxlint` clean.
+- Limitations: Including tests in the city requires `richter.cli analyze --include-tests`; there is no UI toggle.
+
 ## 2026-10-24T22:29:21+05:30 — Fix: long URL in Analyze shifted the whole UI sideways
 
 - Changed: `frontend/src/styles/app.css`: repo tabs strip shrinks and scrolls horizontally (hidden scrollbar, edge fade) so the top bar never exceeds the viewport; `overflow: clip` on body, `.app` and `.topbar` so the page cannot be scrolled programmatically; ellipsis in the Analyze input. `TopBar.tsx`: active repo tab scrolls into view.

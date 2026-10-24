@@ -704,23 +704,28 @@ kbd {
 .hud-tl {
   top: var(--s-4);
   left: var(--s-4);
-  display: flex;
-  gap: var(--s-4);
+  right: var(--s-4);
 }
-.hud-tl span + span::before {
+.hud-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px var(--s-4);
+}
+.hud-row span {
+  white-space: nowrap;
+}
+.hud-row span + span::before {
   content: '·';
   margin-right: var(--s-4);
   color: var(--text-4);
 }
+.hud-hint {
+  margin-top: 6px;
+  color: var(--text-3);
+}
 .hud-view {
   color: var(--text);
   font-weight: 600;
-}
-.hud-tl2 {
-  top: calc(var(--s-4) + 20px);
-  left: var(--s-4);
-  color: var(--text-3);
-  letter-spacing: 0.1em;
 }
 
 .tooltip {

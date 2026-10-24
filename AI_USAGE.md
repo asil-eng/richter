@@ -21,6 +21,7 @@ No participant AI usage has been recorded yet. Replace the placeholder row as yo
 | 2026-10-24T22:10+05:30 | Claude Code (Claude Opus 5.5) | Real AI notes: sharper prompts, portable cache, offline bundle | Improved agent prompts and caching, generated and reviewed AI notes, added offline fallback | Pending participant review | pytest 12 passed; live + offline UI checks |
 | 2026-10-24T22:25+05:30 | Claude Code (Claude Opus 5.5) | Readability pass | Readability pass on tokens, CSS and canvas labels | Pending participant review | tsc/lint clean; screenshots reviewed |
 | 2026-10-24T22:29+05:30 | Claude Code (Claude Opus 5.5) | Fix: long URL in Analyze shifted the whole UI sideways | Diagnosed and fixed top-bar overflow | Pending participant review | Playwright measurements at 4 widths |
+| 2026-10-24T22:34+05:30 | Claude Code (Claude Opus 5.5) | City: camera-facing district labels, clearer legend | Diagnosed folder/district question, fixed label orientation and HUD | Pending participant review | Screenshots from two camera angles |
 
 ## Template preparation
 

@@ -106,20 +106,25 @@ export default function App() {
           <LeftRail model={model} selected={selected} onSelect={select} layers={layers} setLayers={setLayers} />
           <main className={`stage stage-${view}`} key={slug}>
             <div className="hud hud-tl">
-              <span className="hud-view">{VIEW_NAME[view]}</span>
-              <span>{model.summary.files} FILES</span>
-              {view === 'city' ? (
-                <>
-                  <span>DISTRICT = FOLDER</span>
-                  <span>HEIGHT = IMPORTANCE</span>
-                  <span>GLOW = MAGNITUDE</span>
-                </>
-              ) : (
-                <>
-                  <span>{model.summary.edges} EDGES</span>
-                  <span>{view === 'risk' ? 'COLOR = MAGNITUDE' : 'SIZE = IMPORTANCE'}</span>
-                </>
-              )}
+              <div className="hud-row">
+                <span className="hud-view">{VIEW_NAME[view]}</span>
+                <span>{model.summary.files} FILES</span>
+                {view === 'city' ? (
+                  <>
+                    <span title="Folders with analyzed Python files. tests/, docs/ and examples/ are excluded by default.">DISTRICT = FOLDER WITH .PY FILES</span>
+                    <span>HEIGHT = IMPORTANCE</span>
+                    <span>GLOW = MAGNITUDE</span>
+                  </>
+                ) : (
+                  <>
+                    <span>{model.summary.edges} EDGES</span>
+                    <span>{view === 'risk' ? 'COLOR = MAGNITUDE' : 'SIZE = IMPORTANCE'}</span>
+                  </>
+                )}
+              </div>
+              <div className="hud-hint">
+                {view === 'city' ? 'DRAG ORBIT · RIGHT-DRAG PAN · SCROLL ZOOM' : 'SCROLL ZOOM · DRAG PAN · DBL-CLICK FIT'}
+              </div>
             </div>
             {view === 'city' ? (
               <CityView
@@ -140,9 +145,6 @@ export default function App() {
                 onSelect={select}
               />
             )}
-            <div className="hud hud-tl2">
-              {view === 'city' ? 'DRAG ORBIT · RIGHT-DRAG PAN · SCROLL ZOOM' : 'SCROLL ZOOM · DRAG PAN · DBL-CLICK FIT'}
-            </div>
             {view === 'city' && snapshots && <Timeline snapshots={snapshots} time={time} setTime={setTime} />}
             {view === 'city' && !snapshots && <div className="hud hud-bl">NO SNAPSHOTS — run `richter.cli snapshots` for time-travel</div>}
             <AskBar slug={slug} model={model} onHighlight={setHighlight} onSelect={select} />

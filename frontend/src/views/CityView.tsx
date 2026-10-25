@@ -16,6 +16,9 @@ import type { RiskModel, Snapshots } from '../lib/types'
 
 const CELL = 3.6
 const HOP_MS = 260
+// The cinematic fly-in plays once per session; switching repos inside the city
+// afterwards gets a short settle so browsing several cities stays snappy.
+let cityIntroPlayed = false
 
 interface Props {
   model: RiskModel
@@ -203,7 +206,10 @@ export function CityView({ model, snapshots, time, selected, highlight, onSelect
 
     const camera = new THREE.PerspectiveCamera(36, W() / H(), 0.5, span * 20)
     const home = new THREE.Vector3(span * 0.88, span * 0.62, span * 0.98)
-    camera.position.set(span * 0.2, span * 2.6, span * 0.35) // intro: high overhead
+    const firstIntro = !cityIntroPlayed
+    const INTRO_MS = firstIntro ? 2800 : 900
+    if (firstIntro) camera.position.set(span * 0.2, span * 2.6, span * 0.35) // intro: high overhead
+    else camera.position.copy(home).multiplyScalar(1.18)
     const controls = new OrbitControls(camera, renderer.domElement)
     controls.enableDamping = true
     controls.dampingFactor = 0.06
@@ -301,7 +307,7 @@ export function CityView({ model, snapshots, time, selected, highlight, onSelect
       return {
         i, mesh, mat, x: lot.x, z: lot.z, w,
         h: 0, vh: 0, m: 0, vm: 0, targetH: 0, targetM: 0,
-        bornAt: now0 + 700 + dist * 1300 + Math.random() * 250,
+        bornAt: firstIntro ? now0 + 700 + dist * 1300 + Math.random() * 250 : now0 + 60 + dist * 380 + Math.random() * 90,
       }
     })
 
@@ -468,11 +474,12 @@ export function CityView({ model, snapshots, time, selected, highlight, onSelect
       computeTargets()
 
       // intro fly-in, then hand control to the user
-      const introT = (now - now0) / 2800
+      const introT = (now - now0) / INTRO_MS
       if (introT < 1) {
         camera.position.lerpVectors(flyFrom, home, easeInOut(introT))
         camera.lookAt(controls.target)
       } else if (!controls.enabled) {
+        cityIntroPlayed = true // only once an intro has actually finished
         controls.enabled = true
         controls.autoRotate = true
       }

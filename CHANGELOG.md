@@ -21,6 +21,13 @@ Record each meaningful project change during the event, newest first. Update thi
 
 ## Event build log
 
+## 2026-10-25T05:37:29+05:30 — New 65-second demo video (ElevenLabs narration) + faster city switching
+
+- Changed: Re-made the demo video: kinetic-typography cards (open, 'Your code, as a city', CTA end card), footage timed to ElevenLabs word timestamps, camera punch-ins, kinetic stats (88 files, 17x), city labels (hugo, excalidraw, rich time-travel), a Python/TypeScript/Go/Rust report-card montage synced to each spoken word, word-synced captions, a synthesized music bed side-chain ducked under the voice, whooshes and impacts; -14 LUFS. Replaced `docs/richter-demo.mp4` (1280x800, 8.8 MB), `docs/demo-play.jpg`, `docs/demo-thumbnail.jpg`; README/Pages/SUBMISSION now say 65 seconds and credit ElevenLabs. App: `CityView.tsx` plays the cinematic fly-in once per session; later repo switches settle in ~0.9 s (flag set only after an intro completes, so React StrictMode's double mount can't skip it). Hosted demo rebuilt.
+- Why: Participant asked for a far more dynamic, professional demo with a more realistic voice and more emphasis on the code city.
+- Validation: Contact sheets of raw footage and the final cut reviewed; fixed an empty excalidraw city (slow fly-in on every switch, fixed in the app), a picker typing race, and local non-demo repos appearing in the picker (parked during recording, restored after). ebur128: -14.2 LUFS, LRA 4.3, peak -1.1 dBFS; no silences > 1 s. `tsc -b`, `oxlint` clean.
+- Limitations: Narration voice is AI-generated (ElevenLabs free tier, credited). Music is a simple synthesized bed.
+
 ## 2026-10-25T05:10:06+05:30 — Callout pointing to the repo switcher
 
 - Changed: `TopBar.tsx`: a second callout under the REPO switcher ('Try another repo · N analyzed · <two largest other repos>…'); clicking opens the searchable picker; it disappears once the visitor switches repo or dismisses it. Both callouts are now left-anchored to their controls so they sit side by side. `app.css` styles. Hosted demo rebuilt.

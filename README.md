@@ -5,7 +5,7 @@
 ### Every codebase has a few files that can take everything down with them.<br>Richter finds them *before* you touch them.
 
 <a href="https://asil-eng.github.io/richter/app/"><img src="https://img.shields.io/badge/LIVE_DEMO-open_in_browser-ff6a1a?style=for-the-badge&labelColor=13191d" alt="Live demo"></a>
-<a href="https://asil-eng.github.io/richter/"><img src="https://img.shields.io/badge/VIDEO-94_seconds-e8eef0?style=for-the-badge&labelColor=13191d" alt="Demo video"></a>
+<a href="https://asil-eng.github.io/richter/"><img src="https://img.shields.io/badge/VIDEO-65_seconds-e8eef0?style=for-the-badge&labelColor=13191d" alt="Demo video"></a>
 <a href="#-languages"><img src="https://img.shields.io/badge/LANGUAGES-9_families-6fb3b0?style=for-the-badge&labelColor=13191d" alt="9 language families"></a>
 <a href="#-run-it"><img src="https://img.shields.io/badge/TESTS-19_passing-6fb3b0?style=for-the-badge&labelColor=13191d" alt="19 tests passing"></a>
 
@@ -27,12 +27,12 @@
 | | | |
 | --- | --- | --- |
 | 🌐 | **[Open the live app](https://asil-eng.github.io/richter/app/)** | Seven real repos (rich, fastapi, black, ripgrep, plus the larger excalidraw, hugo and textual), interactive, nothing to install |
-| ▶ | **[Watch the 94-second demo](https://asil-eng.github.io/richter/)** | The whole story with narration |
+| ▶ | **[Watch the 65-second demo](https://asil-eng.github.io/richter/)** | The whole story with narration |
 | 💻 | **[Run it on your own repo](#-run-it)** | Two commands, then paste any GitHub URL |
 
-[![Watch the 94-second Richter demo](docs/demo-play.jpg)](https://asil-eng.github.io/richter/)
+[![Watch the 65-second Richter demo](docs/demo-play.jpg)](https://asil-eng.github.io/richter/)
 
-<sub>Click to play · narration is AI-generated (OpenAI TTS)</sub>
+<sub>Click to play · narration is AI-generated (ElevenLabs)</sub>
 
 <!-- To show an inline player instead: edit this README on github.com, drag docs/richter-demo.mp4 here, and delete the thumbnail link above. -->
 
@@ -335,7 +335,7 @@ cd backend
 - **The map is a layout, not a geography.** Contours show where risky files cluster in the import graph; distance has no meaning beyond that.
 - **First ingest** of a large repo is slow (about 4 minutes for fastapi's 7,932 commits), because rename detection fetches file contents on demand. Later runs reuse the clone.
 - **Free-form AI questions need `OPENAI_API_KEY`.** Selection-aware questions always go to the live API.
-- The demo video's narration is an AI-generated voice (OpenAI `gpt-4o-mini-tts`).
+- The demo video's narration is an AI-generated voice ([ElevenLabs](https://elevenlabs.io)); the music bed is synthesized.
 
 ---
 
@@ -369,7 +369,7 @@ These aren't built yet:
 
 - Working features: blobless ingest with full history; import graphs for Python, JS/TS, Go, Java/Kotlin/Scala, Rust, C/C++, C#, Ruby, PHP; git stats and de-noised co-change; frozen risk engine; FastAPI; seismic hazard map with blast-radius cascade; risk map; ghost-edge and bus-factor layers; explanatory inspector; report card; 3D code city with time-travel; selection-aware ask-the-repo with path validation; guard notes and unblock plans (AI path verified with `gpt-4o-mini`, rule-based fallback verified); searchable repo picker; file finder; backtest CLI.
 - Known limitations: see [Scope and limitations](#scope-and-limitations).
-- Libraries, APIs, and public datasets used: [FastAPI](https://fastapi.tiangolo.com), [GitPython](https://github.com/gitpython-developers/GitPython), [networkx](https://networkx.org), [NumPy](https://numpy.org)/[SciPy](https://scipy.org) (PageRank), [React](https://react.dev), [Vite](https://vite.dev), [d3-force](https://d3js.org/d3-force), [three.js](https://threejs.org), [IBM Plex Mono](https://github.com/IBM/plex) and [Archivo](https://github.com/Omnibus-Type/Archivo) via Fontsource, [OpenAI API](https://platform.openai.com) (chat and text-to-speech). Demo data is derived from the public repositories [Textualize/rich](https://github.com/Textualize/rich), [fastapi/fastapi](https://github.com/fastapi/fastapi), [psf/black](https://github.com/psf/black) and [BurntSushi/ripgrep](https://github.com/BurntSushi/ripgrep).
+- Libraries, APIs, and public datasets used: [FastAPI](https://fastapi.tiangolo.com), [GitPython](https://github.com/gitpython-developers/GitPython), [networkx](https://networkx.org), [NumPy](https://numpy.org)/[SciPy](https://scipy.org) (PageRank), [React](https://react.dev), [Vite](https://vite.dev), [d3-force](https://d3js.org/d3-force), [three.js](https://threejs.org), [IBM Plex Mono](https://github.com/IBM/plex) and [Archivo](https://github.com/Omnibus-Type/Archivo) via Fontsource, [OpenAI API](https://platform.openai.com) (chat), [ElevenLabs](https://elevenlabs.io) (demo narration). Demo data is derived from the public repositories [Textualize/rich](https://github.com/Textualize/rich), [fastapi/fastapi](https://github.com/fastapi/fastapi), [psf/black](https://github.com/psf/black) and [BurntSushi/ripgrep](https://github.com/BurntSushi/ripgrep).
 
 See [AI_USAGE.md](AI_USAGE.md) for AI assistance and [CHANGELOG.md](CHANGELOG.md) for the development record.
 

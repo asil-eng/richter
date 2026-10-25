@@ -44,6 +44,7 @@ No participant AI usage has been recorded yet. Replace the placeholder row as yo
 | 2026-10-25T04:35+05:30 | Claude Code (Claude Opus 5.5) | Callout pointing first-time visitors to the code city | Code city callout | Pending participant review | Playwright interaction test |
 | 2026-10-25T04:43+05:30 | Claude Code (Claude Opus 5.5) | City callout on every visit + permanent 3D badge | Callout visibility fix and 3D badge | Pending participant review | Playwright test |
 | 2026-10-25T05:10+05:30 | Claude Code (Claude Opus 5.5) | Callout pointing to the repo switcher | Repo-switcher callout | Pending participant review | Playwright at three widths |
+| 2026-10-25T05:37+05:30 | Claude Code (Claude Opus 5.5) | New 65-second demo video (ElevenLabs narration) + faster city switching | Scripted, voiced (ElevenLabs), recorded and edited the demo video; city switching speed-up | Pending participant review | Frame review + loudness measurement |
 
 ## Template preparation
 

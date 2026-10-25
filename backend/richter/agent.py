@@ -151,11 +151,13 @@ def unblock_plan(model: dict, path: str, repo_root: Path | None = None) -> dict:
         return _rule_unblock(n)
 
 
-ASK_VERSION = "8"  # bump when the ask prompt or context changes, so stale cached answers aren't reused
+ASK_VERSION = "9"  # bump when the ask prompt or context changes, so stale cached answers aren't reused
 ASK_SYSTEM = (
     "You answer questions about a codebase and its risk. Use the PROJECT block (README excerpt and "
     "folders) for what the project is and does, and the risk model summary for anything about risk; "
-    "Use the RICHTER UI GUIDE for questions about what something on screen means. Use nothing else. "
+    "Use the RICHTER UI GUIDE for questions about what something on screen means. To explain what a "
+    "selected file does, read its code excerpt in the CURRENT SELECTION block (its functions, classes "
+    "and docstrings) and describe its purpose concretely. Use nothing else. "
     "This is a conversation: earlier questions and your answers come before the latest question. "
     "Resolve follow-ups ('it', 'that one', 'the second file', 'why?', 'what about the safest?') "
     "from that conversation. "
@@ -192,7 +194,7 @@ def focus_block(model: dict, path: str, repo_root: Path | None = None) -> str:
           + (" | single author" if m["bus_factor"] else "") for m in folder[:12]],
         f"other folders that import from {n['dir']}/: {', '.join(sorted(outside_dependents)[:10]) or 'none'}",
     ]
-    excerpt = _excerpt(repo_root, path)[:1500]
+    excerpt = _excerpt(repo_root, path)[:3500]
     if excerpt:
         lines += ["code excerpt:", excerpt]
     return "\n".join(lines)

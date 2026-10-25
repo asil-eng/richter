@@ -21,6 +21,13 @@ Record each meaningful project change during the event, newest first. Update thi
 
 ## Event build log
 
+## 2026-10-25T09:06:25+05:30 — Ask-the-repo explains what a selected file does
+
+- Changed: `backend/richter/agent.py`: the prompt now lets the assistant read the selected file's code excerpt (functions, classes, docstrings) to explain its purpose; the excerpt grows from 1,500 to 3,500 characters; `ASK_VERSION` 9.
+- Why: with cells.py selected, 'what is the function of this file?' got 'not sure' — the excerpt was sent but the prompt said to use only the README and risk data.
+- Validation: `pytest` 21 passed. Live: cells.py → measures terminal cell widths of Unicode characters (`CellTable`, `cell_len`, `get_character_cell_size`); hugo tpl/template.go → the template interface and `RenderingContext`; fastapi routing.py → request routing, handler matching, dependency resolution.
+- Limitations: explains from the first 3,500 characters of the file; very long files are only partially seen.
+
 ## 2026-10-25T08:09:09+05:30 — Ask-the-repo understands Richter's own screen
 
 - Changed: `backend/richter/agent.py` adds a RICHTER UI GUIDE to the ask context (what circles, sizes, colors, lines, ghost edges, contours, broken rings, the cascade, city towers, beam, timeline and both side panels mean) and the current view; `ask()` / `AskReq` take `view` (graph | risk | city), included in the cache key; `ASK_VERSION` 8. Frontend passes the current view from `App.tsx` through `AskBar` to `askRepo`.

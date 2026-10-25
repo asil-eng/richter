@@ -118,6 +118,7 @@ class AskReq(BaseModel):
     question: str
     focus: str | None = None  # path of the file selected in the UI
     history: list[dict] = []  # earlier turns of this conversation: [{q, a, about?}]
+    view: str | None = None  # graph | risk | city: what the user is looking at
 
 
 @app.post("/api/note")
@@ -138,7 +139,7 @@ def note(req: NoteReq):
 def ask(req: AskReq):
     m = load_model(req.slug)
     try:
-        return agent.ask(m, req.question, req.focus, repo_root(req.slug), req.history)
+        return agent.ask(m, req.question, req.focus, repo_root(req.slug), req.history, req.view)
     except KeyError:
         raise HTTPException(404, f"{req.focus} not in model")
     except agent.AgentUnavailable as e:

@@ -85,7 +85,13 @@ export interface Turn {
   about?: string | null
 }
 
-export async function askRepo(slug: string, question: string, focus?: string, history: Turn[] = []): Promise<AskResult> {
+export async function askRepo(
+  slug: string,
+  question: string,
+  focus?: string,
+  history: Turn[] = [],
+  view?: string,
+): Promise<AskResult> {
   // the offline bundle only holds first-turn, repo-wide answers
   const bundled = async () => (focus || history.length ? undefined : (await notesBundle(slug))?.ask[normalize(question)])
   if (STATIC) {
@@ -94,7 +100,7 @@ export async function askRepo(slug: string, question: string, focus?: string, hi
     throw new LiveOnly('ask')
   }
   try {
-    return await postJSON<AskResult>('/api/ask', { slug, question, focus, history })
+    return await postJSON<AskResult>('/api/ask', { slug, question, focus, history, view })
   } catch (e) {
     const hit = await bundled()
     if (hit) return { ...hit, cached: true }

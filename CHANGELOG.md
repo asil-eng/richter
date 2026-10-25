@@ -21,6 +21,13 @@ Record each meaningful project change during the event, newest first. Update thi
 
 ## Event build log
 
+## 2026-10-25T08:09:09+05:30 — Ask-the-repo understands Richter's own screen
+
+- Changed: `backend/richter/agent.py` adds a RICHTER UI GUIDE to the ask context (what circles, sizes, colors, lines, ghost edges, contours, broken rings, the cascade, city towers, beam, timeline and both side panels mean) and the current view; `ask()` / `AskReq` take `view` (graph | risk | city), included in the cache key; `ASK_VERSION` 8. Frontend passes the current view from `App.tsx` through `AskBar` to `askRepo`.
+- Why: 'what does the line between blobs in the canvas represent?' got 'not sure' — the assistant knew the repo but not the app's visuals.
+- Validation: `pytest` 21 passed; `tsc -b`, `oxlint` clean. Live: graph view 'line between blobs' → imports; city view 'height of a building' → importance; risk view 'orange rings' → isoseismal contours.
+- Limitations: none identified in these checks.
+
 ## 2026-10-25T08:02:06+05:30 — Ask-the-repo knows what the project is
 
 - Changed: `backend/richter/agent.py`: new `project_block()` adds a PROJECT section to the ask context — the README excerpt from the local clone (badges/HTML stripped, 2,500 chars) and the folder layout with file counts; the prompt uses it for 'what is/does this project' questions and the risk model for risk questions; `ASK_VERSION` 7.

@@ -18,6 +18,7 @@ interface Props {
   slug: string
   model: RiskModel
   selected: number | null
+  view: string
   onHighlight: (files: Set<number>) => void
   onSelect: (i: number) => void
 }
@@ -32,7 +33,7 @@ interface Exchange {
 // A command line, not a chat bubble: a running conversation about the repo's risk, where
 // follow-ups ("and the safest one?") carry the earlier turns, and named files are targeted
 // on the instrument.
-export function AskBar({ slug, model, selected, onHighlight, onSelect }: Props) {
+export function AskBar({ slug, model, selected, view, onHighlight, onSelect }: Props) {
   const [q, setQ] = useState('')
   const [thread, setThread] = useState<Exchange[]>([])
   const threadEnd = useRef<HTMLDivElement>(null)
@@ -105,7 +106,7 @@ export function AskBar({ slug, model, selected, onHighlight, onSelect }: Props) 
     setCursor(-1)
     const settle = (patch: Partial<Exchange>) => setThread((th) => th.map((t, k) => (k === th.length - 1 ? { ...t, ...patch } : t)))
     try {
-      const r = await askRepo(slug, text, focusNode?.id, history)
+      const r = await askRepo(slug, text, focusNode?.id, history, view)
       settle({ res: r })
       highlight(r.files)
     } catch (e) {

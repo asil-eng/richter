@@ -151,11 +151,11 @@ def unblock_plan(model: dict, path: str, repo_root: Path | None = None) -> dict:
         return _rule_unblock(n)
 
 
-ASK_VERSION = "7"  # bump when the ask prompt or context changes, so stale cached answers aren't reused
+ASK_VERSION = "8"  # bump when the ask prompt or context changes, so stale cached answers aren't reused
 ASK_SYSTEM = (
     "You answer questions about a codebase and its risk. Use the PROJECT block (README excerpt and "
     "folders) for what the project is and does, and the risk model summary for anything about risk; "
-    "use nothing else. "
+    "Use the RICHTER UI GUIDE for questions about what something on screen means. Use nothing else. "
     "This is a conversation: earlier questions and your answers come before the latest question. "
     "Resolve follow-ups ('it', 'that one', 'the second file', 'why?', 'what about the safest?') "
     "from that conversation. "
@@ -255,6 +255,26 @@ def validate_files(model: dict, names: list) -> list[str]:
 MAX_TURNS = 6
 README_CHARS = 2500
 
+# How to read Richter's own screen, so questions about the UI ("what are these lines?") work.
+UI_GUIDE = """RICHTER UI GUIDE (the app the user is looking at):
+- Dependency graph / risk map (views 1 and 2): every circle ("node", "blob") is one source file. Circle SIZE =
+  importance (how central: PageRank on imports). Circle COLOR = magnitude 0-10, teal = calm, amber -> red = risky
+  (in the plain graph view circles are teal-outlined and size matters most).
+- Thin straight LINES between circles = imports: one file imports the other. Hovering a circle turns its own
+  import lines teal.
+- Dashed amber curved lines = GHOST EDGES (layer toggle): files that are often committed together but never import
+  each other = hidden coupling.
+- Orange contour rings / shaded zones labelled M5-M8 = isoseismal contours: where high-magnitude files cluster.
+- Dashed broken ring around a circle = BUS FACTOR layer: only one person has ever changed that file.
+- Clicking a file = blast radius: a shockwave spreads to every file that depends on it; red = hop 1 (imports it
+  directly), orange = hop 2, amber = hop 3+; everything else dims.
+- Code city (view 3): folders = districts (flat plots), files = towers. Tower HEIGHT = importance, GLOW color =
+  magnitude. Blinking red lights mark the most dangerous towers. Clicking a tower fires a beam and shockwave rings
+  and lights up its dependents. The timeline at the bottom replays history (28 snapshots).
+- Left panel: repo report card (gauge 0-10, grade A-F; fix concentration, reach, bus factor, hidden coupling),
+  top risks. Right panel: selected file's summary, gauge, danger-zone chart (x = depended on, y = reworked),
+  blast-radius rings, AI guard note / unblock plan."""
+
 
 def project_block(model: dict, repo_root: Path | None) -> str:
     """What the project is: README excerpt (from the local clone) and its folder layout."""
@@ -278,18 +298,25 @@ def project_block(model: dict, repo_root: Path | None) -> str:
     return "\n".join(lines)
 
 
+VIEWS = {"graph": "dependency graph (view 1)", "risk": "risk map (view 2)", "city": "code city (view 3)"}
+
+
 def ask(model: dict, question: str, focus: str | None = None, repo_root: Path | None = None,
-        history: list[dict] | None = None) -> dict:
+        history: list[dict] | None = None, view: str | None = None) -> dict:
     """`history`: earlier turns of this conversation, [{"q", "a", "about"?}], oldest first."""
     question = question.strip()[:500]
     if not question:
         raise ValueError("empty question")
     turns = [t for t in (history or []) if isinstance(t, dict) and t.get("q") and t.get("a")][-MAX_TURNS:]
-    context = project_block(model, repo_root) + "\n\n" + summarize_model(model)
+    context = UI_GUIDE + "\n\n" + project_block(model, repo_root) + "\n\n" + summarize_model(model)
+    if view in VIEWS:
+        context += f"\n\nThe user is currently looking at the {VIEWS[view]}."
     key = f"v{ASK_VERSION}:{model['repo']['head']}:{' '.join(question.lower().split())}"
     if focus:
         context += "\n\n" + focus_block(model, focus, repo_root)  # KeyError if not in model
         key += f"@{focus}"
+    if view in VIEWS:
+        key += f"#{view}"
     # the risk model goes first (system context); prior turns follow as real chat messages
     prior = [{"role": "user", "content": context + "\n\n(Conversation starts below.)"},
              {"role": "assistant", "content": '{"answer": "Ready.", "files": []}'}]

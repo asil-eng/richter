@@ -202,7 +202,7 @@ export default function App() {
             {view === 'city' && snapshots && <Timeline snapshots={snapshots} time={time} setTime={setTime} />}
             {view === 'city' && !snapshots && <div className="hud hud-bl">NO SNAPSHOTS — run `richter.cli snapshots` for time-travel</div>}
             <FileFinder model={model} onSelect={select} />
-            <AskBar slug={slug} model={model} selected={selected} onHighlight={setHighlight} onSelect={select} />
+            <AskBar slug={slug} model={model} selected={selected} view={view} onHighlight={setHighlight} onSelect={select} />
           </main>
           <Inspector model={model} slug={slug} snapshots={snapshots} selected={selected} onSelect={select} />
         </>

@@ -18,6 +18,7 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import re
 import subprocess
 from pathlib import Path
 
@@ -150,9 +151,11 @@ def unblock_plan(model: dict, path: str, repo_root: Path | None = None) -> dict:
         return _rule_unblock(n)
 
 
-ASK_VERSION = "6"  # bump when the ask prompt or context changes, so stale cached answers aren't reused
+ASK_VERSION = "7"  # bump when the ask prompt or context changes, so stale cached answers aren't reused
 ASK_SYSTEM = (
-    "You answer questions about a codebase's risk using ONLY the risk model summary given. "
+    "You answer questions about a codebase and its risk. Use the PROJECT block (README excerpt and "
+    "folders) for what the project is and does, and the risk model summary for anything about risk; "
+    "use nothing else. "
     "This is a conversation: earlier questions and your answers come before the latest question. "
     "Resolve follow-ups ('it', 'that one', 'the second file', 'why?', 'what about the safest?') "
     "from that conversation. "
@@ -250,6 +253,29 @@ def validate_files(model: dict, names: list) -> list[str]:
 
 
 MAX_TURNS = 6
+README_CHARS = 2500
+
+
+def project_block(model: dict, repo_root: Path | None) -> str:
+    """What the project is: README excerpt (from the local clone) and its folder layout."""
+    folders: dict[str, int] = {}
+    for n in model["nodes"]:
+        folders[n["dir"]] = folders.get(n["dir"], 0) + 1
+    top = sorted(folders.items(), key=lambda kv: -kv[1])[:12]
+    lines = ["PROJECT:", "folders (analyzed source files): " + ", ".join(f"{d}/ ({c})" for d, c in top)]
+    readme = None
+    if repo_root is not None:
+        for name in ("README.md", "README.rst", "README.txt", "README", "readme.md"):
+            if (repo_root / name).is_file():
+                readme = (repo_root / name).read_text(errors="replace")
+                break
+    if readme:
+        text = re.sub(r"<[^>]+>|!\[[^\]]*\]\([^)]*\)", " ", readme)    # drop HTML and badge images
+        text = re.sub(r"\n{3,}", "\n\n", text).strip()[:README_CHARS]
+        lines += ["README excerpt:", text]
+    else:
+        lines.append("README: not available here; infer only from file and folder names, and say so.")
+    return "\n".join(lines)
 
 
 def ask(model: dict, question: str, focus: str | None = None, repo_root: Path | None = None,
@@ -259,7 +285,7 @@ def ask(model: dict, question: str, focus: str | None = None, repo_root: Path | 
     if not question:
         raise ValueError("empty question")
     turns = [t for t in (history or []) if isinstance(t, dict) and t.get("q") and t.get("a")][-MAX_TURNS:]
-    context = summarize_model(model)
+    context = project_block(model, repo_root) + "\n\n" + summarize_model(model)
     key = f"v{ASK_VERSION}:{model['repo']['head']}:{' '.join(question.lower().split())}"
     if focus:
         context += "\n\n" + focus_block(model, focus, repo_root)  # KeyError if not in model

@@ -21,6 +21,13 @@ Record each meaningful project change during the event, newest first. Update thi
 
 ## Event build log
 
+## 2026-10-25T08:02:06+05:30 — Ask-the-repo knows what the project is
+
+- Changed: `backend/richter/agent.py`: new `project_block()` adds a PROJECT section to the ask context — the README excerpt from the local clone (badges/HTML stripped, 2,500 chars) and the folder layout with file counts; the prompt uses it for 'what is/does this project' questions and the risk model for risk questions; `ASK_VERSION` 7.
+- Why: 'what does this repo do?' got 'not sure' because the assistant only received risk metrics.
+- Validation: `pytest` 21 passed. Live: rich → 'a Python library for rich text and beautiful formatting in the terminal…'; hugo → 'a fast and flexible static site generator… written in Go'; 'what does console.py do and why is it risky?' combines purpose and magnitude.
+- Limitations: the README comes from the local clone; without one the assistant infers from file and folder names and says so.
+
 ## 2026-10-25T07:58:13+05:30 — Ask-the-repo: conversation memory, full-repo context
 
 - Changed: `backend/richter/agent.py`: `summarize_model` lists every file for repos up to 160 files (riskiest and calmest 30/20 plus min/median/max for larger ones) and collapses a long tie at the lowest displayed score into an exact count; `ask()` takes `history` (last 6 turns) and sends them as chat messages after the risk-model context; the prompt resolves follow-ups, reports ties, and says when a referenced file isn't in the conversation; cache key versioned (`ASK_VERSION`) and includes a hash of the history. `api.py` AskReq gains `history`. Frontend `AskBar.tsx` keeps a per-repo conversation thread (CONVERSATION · N QUESTIONS, NEW CHAT, copy thread, auto-scroll, 'Ask a follow-up…'); `data.ts` sends history; the hosted demo serves bundled answers only for first-turn questions. `vite.config.ts` proxy target overridable via `RICHTER_API`.

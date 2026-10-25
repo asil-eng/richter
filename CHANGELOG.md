@@ -21,6 +21,13 @@ Record each meaningful project change during the event, newest first. Update thi
 
 ## Event build log
 
+## 2026-10-25T06:02:45+05:30 — Main demo video: 2.5-minute walkthrough with the city burst
+
+- Changed: Replaced the demo with a single 2:31 walkthrough (ElevenLabs narration, word-synced actions and captions): the problem, what Richter reads, reading the hazard map, the cells.py blast radius, the inspector and danger zone, guard note and selection-aware ask, hidden coupling and bus factor, the report card, the code city with a building clicked so the shock bursts through its 181 dependents (hugo template.go), rich time-travel, a language montage, and the outro. New poster from the city burst. `docs/richter-demo.mp4` (1280x800, 17.4 MB) served via GitHub Pages; README, Pages player and SUBMISSION say 2½ minutes. App: `CityView.tsx` exposes a read-only `window.__richterCity.screenOf(path)` (tower screen position) used to click a specific building in scripted recordings. Hosted demo rebuilt.
+- Why: Participant: the 65-second cut felt rushed; wanted one main video, kept on GitHub (not YouTube), with the building-click burst in the city section.
+- Validation: Hook tested: clicking via screenOf selects tpl/template.go and triggers the beam, rings and 181 dependents. Raw and final contact sheets reviewed (24 frames). ebur128: -14.3 LUFS, peak -1.1 dBFS. Recording used only the 7 demo repos; local repos restored after. `tsc -b`, `oxlint` clean.
+- Limitations: AI-generated voice (credited). Synthesized music bed. Video is above GitHub's 10 MB inline-upload limit, so the README links to the Pages player.
+
 ## 2026-10-25T05:37:29+05:30 — New 65-second demo video (ElevenLabs narration) + faster city switching
 
 - Changed: Re-made the demo video: kinetic-typography cards (open, 'Your code, as a city', CTA end card), footage timed to ElevenLabs word timestamps, camera punch-ins, kinetic stats (88 files, 17x), city labels (hugo, excalidraw, rich time-travel), a Python/TypeScript/Go/Rust report-card montage synced to each spoken word, word-synced captions, a synthesized music bed side-chain ducked under the voice, whooshes and impacts; -14 LUFS. Replaced `docs/richter-demo.mp4` (1280x800, 8.8 MB), `docs/demo-play.jpg`, `docs/demo-thumbnail.jpg`; README/Pages/SUBMISSION now say 65 seconds and credit ElevenLabs. App: `CityView.tsx` plays the cinematic fly-in once per session; later repo switches settle in ~0.9 s (flag set only after an intro completes, so React StrictMode's double mount can't skip it). Hosted demo rebuilt.

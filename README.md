@@ -5,7 +5,7 @@
 ### Every codebase has a few files that can take everything down with them.<br>Richter finds them *before* you touch them.
 
 <a href="https://asil-eng.github.io/richter/app/"><img src="https://img.shields.io/badge/LIVE_DEMO-open_in_browser-ff6a1a?style=for-the-badge&labelColor=13191d" alt="Live demo"></a>
-<a href="https://asil-eng.github.io/richter/"><img src="https://img.shields.io/badge/VIDEO-65_seconds-e8eef0?style=for-the-badge&labelColor=13191d" alt="Demo video"></a>
+<a href="https://asil-eng.github.io/richter/"><img src="https://img.shields.io/badge/VIDEO-2½_minutes-e8eef0?style=for-the-badge&labelColor=13191d" alt="Demo video"></a>
 <a href="#-languages"><img src="https://img.shields.io/badge/LANGUAGES-9_families-6fb3b0?style=for-the-badge&labelColor=13191d" alt="9 language families"></a>
 <a href="#-run-it"><img src="https://img.shields.io/badge/TESTS-19_passing-6fb3b0?style=for-the-badge&labelColor=13191d" alt="19 tests passing"></a>
 
@@ -27,10 +27,10 @@
 | | | |
 | --- | --- | --- |
 | 🌐 | **[Open the live app](https://asil-eng.github.io/richter/app/)** | Seven real repos (rich, fastapi, black, ripgrep, plus the larger excalidraw, hugo and textual), interactive, nothing to install |
-| ▶ | **[Watch the 65-second demo](https://asil-eng.github.io/richter/)** | The whole story with narration |
+| ▶ | **[Watch the 2½-minute demo](https://asil-eng.github.io/richter/)** | The whole story with narration |
 | 💻 | **[Run it on your own repo](#-run-it)** | Two commands, then paste any GitHub URL |
 
-[![Watch the 65-second Richter demo](docs/demo-play.jpg)](https://asil-eng.github.io/richter/)
+[![Watch the 2½-minute Richter demo](docs/demo-play.jpg)](https://asil-eng.github.io/richter/)
 
 <sub>Click to play · narration is AI-generated (ElevenLabs)</sub>
 

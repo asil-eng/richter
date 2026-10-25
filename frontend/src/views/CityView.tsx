@@ -458,6 +458,18 @@ export function CityView({ model, snapshots, time, selected, highlight, onSelect
       }
     }
 
+    // read-only hook for scripted demos/tests: where is a file's tower on screen right now?
+    const hook = window as unknown as { __richterCity?: { screenOf: (id: string) => [number, number] | null } }
+    hook.__richterCity = {
+      screenOf: (id) => {
+        const t = towers[model.nodes.findIndex((n) => n.id === id)]
+        if (!t) return null
+        const v = new THREE.Vector3(t.x, 0.12 + Math.max(0.5, t.h) * 0.55, t.z).project(camera)
+        const r = renderer.domElement.getBoundingClientRect()
+        return [r.left + ((v.x + 1) / 2) * r.width, r.top + ((1 - v.y) / 2) * r.height]
+      },
+    }
+
     // ---- loop
     let raf = 0
     let last = performance.now()
@@ -605,6 +617,7 @@ export function CityView({ model, snapshots, time, selected, highlight, onSelect
       el2.removeEventListener('pointerleave', onLeave)
       el2.removeEventListener('wheel', onWheel)
       controls.dispose()
+      delete hook.__richterCity
       scene.traverse((o) => {
         const m = o as THREE.Mesh
         m.geometry?.dispose()

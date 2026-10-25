@@ -70,6 +70,19 @@ You're about to change a file. What else breaks? Is this the file that gets "fix
 
 It fuses them into one **magnitude** from 0 to 10, like an earthquake. Files high on *both* axes are the ones that hurt.
 
+## ⚙️ How it works
+
+<table>
+<tr>
+<td align="center" width="25%"><h3>1 · Paste a repo</h3><sub>Drop any public GitHub link into <b>ANALYZE</b>:<br><code>github.com/owner/repo</code></sub></td>
+<td align="center" width="25%"><h3>2 · Richter reads it</h3><sub>Clones the <b>full history</b>, maps every <b>import</b> between files, and reads every <b>commit</b>: churn, fixes, authors</sub></td>
+<td align="center" width="25%"><h3>3 · It scores every file</h3><sub><b>blast radius</b> + how often it's <b>reworked</b> → one <b>magnitude</b> from 0–10, plus hidden coupling and bus factor</sub></td>
+<td align="center" width="25%"><h3>4 · You explore and act</h3><sub>Click a file or a building to see what breaks, read the <b>AI guard note</b>, ask questions, replay history</sub></td>
+</tr>
+</table>
+
+<sub>No setup in the code you analyze, no config: just the link. Small repos take seconds; a few thousand commits take a few minutes. <a href="#-analyze-any-github-repo">Step-by-step guide →</a></sub>
+
 ---
 
 ## What you get

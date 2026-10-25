@@ -30,7 +30,7 @@
 | --- | --- | --- |
 | 🌐 | **[Open the live app](https://asil-eng.github.io/richter/app/)** | Seven real repos (rich, fastapi, black, ripgrep, plus the larger excalidraw, hugo and textual), interactive, nothing to install |
 | ▶ | **[Watch the 2½-minute demo](https://asil-eng.github.io/richter/)** | The whole story with narration |
-| 💻 | **[Run it on your own repo](#-run-it)** | Start the backend and frontend, then paste any GitHub URL |
+| 💻 | **[Analyze your own repo](#-analyze-any-github-repo)** | Run it locally, paste any public GitHub repo link, get its risk map |
 
 [![Watch the 2½-minute Richter demo](docs/demo-play.jpg)](https://asil-eng.github.io/richter/)
 
@@ -144,6 +144,26 @@ Folders become districts and files become towers: **height = how much depends on
 </table>
 
 Paste any public GitHub URL into **ANALYZE**. Switch between analyzed repos with the searchable picker (`/`).
+
+---
+
+## 🔍 Analyze any GitHub repo
+
+The live demo ships with seven preloaded repos. To analyze **your own** (or any public repo), run Richter locally ([setup below](#-run-it)), then:
+
+1. **Paste the repo link** into the box at the top-right of the app (`github.com/owner/repo`) and press **ANALYZE**.
+   Any form works: `https://github.com/pallets/flask`, `github.com/pallets/flask`.
+2. **Watch it work.** The box shows each stage: **CLONE** (download the full history) → **HISTORY** (read every commit) → **SCORE** (build the import graph and score every file). Small repos take seconds; a few thousand commits take a few minutes.
+3. **Explore.** The repo opens automatically and is added to the **REPO** picker (press `/` to switch). Click any file to see its blast radius, press `3` for the city.
+4. **Optional:** for time-travel, precompute its history snapshots:
+   ```bash
+   cd backend && .venv/bin/python -m richter.cli snapshots https://github.com/owner/repo
+   ```
+   With `OPENAI_API_KEY` set in `.env`, guard notes and questions work for the new repo too.
+
+Prefer the terminal? `cd backend && .venv/bin/python -m richter.cli analyze https://github.com/owner/repo` does the same thing.
+
+**Good to know:** the repo must be **public**; it must use one of the [supported languages](#-languages); repos with very long histories (e.g. VS Code's ~130,000 commits) are too large to analyze locally. In the hosted demo the ANALYZE box links here instead, because GitHub Pages can't run the analysis server.
 
 ---
 

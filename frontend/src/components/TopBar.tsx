@@ -112,7 +112,7 @@ export function TopBar({ repos, slug, onRepo, view, onView, onAnalyzed, cityRead
       </nav>
 
       {STATIC ? (
-        <a className="analyze analyze-demo" href="https://github.com/asil-eng/richter#-run-it" target="_blank" rel="noreferrer">
+        <a className="analyze analyze-demo" href="https://github.com/asil-eng/richter#-analyze-any-github-repo" target="_blank" rel="noreferrer">
           <span>LIVE DEMO · 4 REPOS</span>
           <b>ANALYZE YOUR REPO →</b>
         </a>

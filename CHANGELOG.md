@@ -21,6 +21,13 @@ Record each meaningful project change during the event, newest first. Update thi
 
 ## Event build log
 
+## 2026-10-25T06:32:42+05:30 — README: how to analyze your own repo
+
+- Changed: New README section 'Analyze any GitHub repo': paste a public repo link into the ANALYZE box, the CLONE → HISTORY → SCORE stages, where the repo appears (REPO picker), optional snapshots/AI notes, the CLI equivalent, and limits (public repos, supported languages, very long histories, hosted demo cannot analyze). 'Try it now' links to it; the hosted demo's ANALYZE YOUR REPO button now links there too. Hosted demo rebuilt.
+- Why: Participant: the README did not explain that you give Richter a repo link to analyze.
+- Validation: README anchors checked with github-slugger (0 broken). `tsc -b`, `oxlint` clean.
+- Limitations: None identified in these checks.
+
 ## 2026-10-25T06:06:06+05:30 — Final README pass + real CI
 
 - Changed: README: track statement (Devin Hacks Kochi, Track 2: Make the Invisible Visible); replaced the '4–7×' headline (churn alone matches it, per our own backtest) with the city's 181-tower burst; 'nobody looks at together' -> 'rarely meet in one view'; 'Reviewing a pull request' (no PR feature) -> 'About to change a file'; run instructions no longer say 'two commands'; section 6 rebuilt around the code city with a full-width building-click burst image (`docs/city-burst.jpg`) plus time-travel; X (full screen) added to the keys table.

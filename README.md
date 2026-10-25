@@ -4,10 +4,12 @@
 
 ### Every codebase has a few files that can take everything down with them.<br>Richter finds them *before* you touch them.
 
+<sub><b>Devin Hacks Kochi · Track 2: Make the Invisible Visible</b> — it reveals risk nobody can see in the code, then tells you what to do about it.</sub>
+
 <a href="https://asil-eng.github.io/richter/app/"><img src="https://img.shields.io/badge/LIVE_DEMO-open_in_browser-ff6a1a?style=for-the-badge&labelColor=13191d" alt="Live demo"></a>
 <a href="https://asil-eng.github.io/richter/"><img src="https://img.shields.io/badge/VIDEO-2½_minutes-e8eef0?style=for-the-badge&labelColor=13191d" alt="Demo video"></a>
 <a href="#-languages"><img src="https://img.shields.io/badge/LANGUAGES-9_families-6fb3b0?style=for-the-badge&labelColor=13191d" alt="9 language families"></a>
-<a href="#-run-it"><img src="https://img.shields.io/badge/TESTS-19_passing-6fb3b0?style=for-the-badge&labelColor=13191d" alt="19 tests passing"></a>
+<a href="backend/tests"><img src="https://img.shields.io/badge/TESTS-19_passing-6fb3b0?style=for-the-badge&labelColor=13191d" alt="19 tests passing"></a>
 
 </div>
 
@@ -17,7 +19,7 @@
 <tr>
 <td align="center" width="25%"><h2>88 files</h2><sub>downstream of <b>one</b> file in <a href="https://github.com/Textualize/rich">rich</a>: change <code>cells.py</code> and 81% of the codebase feels it</sub></td>
 <td align="center" width="25%"><h2>17×</h2><sub>fastapi's <code>security/*</code> modules changed together, without ever importing each other</sub></td>
-<td align="center" width="25%"><h2>4–7×</h2><sub>better than random at predicting where future bug fixes land (Python repos, <a href="#-backtest-does-it-predict-anything">backtest</a>)</sub></td>
+<td align="center" width="25%"><h2>181</h2><sub>towers light up when you click hugo's <code>template.go</code> in the <a href="#6--your-codebase-as-a-city-click-a-building-watch-the-shock-spread">code city</a></sub></td>
 <td align="center" width="25%"><h2>0 installs</h2><sub>to try it: the <a href="https://asil-eng.github.io/richter/app/">live demo</a> runs entirely in your browser</sub></td>
 </tr>
 </table>
@@ -28,7 +30,7 @@
 | --- | --- | --- |
 | 🌐 | **[Open the live app](https://asil-eng.github.io/richter/app/)** | Seven real repos (rich, fastapi, black, ripgrep, plus the larger excalidraw, hugo and textual), interactive, nothing to install |
 | ▶ | **[Watch the 2½-minute demo](https://asil-eng.github.io/richter/)** | The whole story with narration |
-| 💻 | **[Run it on your own repo](#-run-it)** | Two commands, then paste any GitHub URL |
+| 💻 | **[Run it on your own repo](#-run-it)** | Start the backend and frontend, then paste any GitHub URL |
 
 [![Watch the 2½-minute Richter demo](docs/demo-play.jpg)](https://asil-eng.github.io/richter/)
 
@@ -59,7 +61,7 @@ Open the **[live app](https://asil-eng.github.io/richter/app/)**, then:
 
 You're about to change a file. What else breaks? Is this the file that gets "fixed" every other week? Is it secretly tied to a file it never imports? On a large codebase nobody can hold all of that in their head, and the tools we have show the *structure* of code, not the *risk* in it.
 
-**Richter reads two things nobody looks at together:**
+**Richter reads two things that rarely meet in one view:**
 
 | | Signal | Where it comes from |
 | --- | --- | --- |
@@ -111,16 +113,22 @@ For any file, Richter also writes a **guard note** (*what breaks and why, a chec
 
 Dashed **ghost edges** connect files that are repeatedly committed together with no import between them: coupling the code doesn't declare. In [fastapi](https://github.com/fastapi/fastapi), the `security/*` modules changed together up to **17 times** without ever importing each other.
 
-### 6 · The same data as a city, with seven years of history
+### 6 · Your codebase as a city: click a building, watch the shock spread
+
+<img src="docs/city-burst.jpg" alt="Clicking hugo's template.go tower in the code city: a beam fires and its 181 dependent towers ignite" width="100%">
+
+Folders become districts and files become towers: **height = how much depends on it, glow = magnitude**. **Click any building** and a beam fires from it while shockwave rings roll across the ground, igniting every tower that depends on it. Above is [hugo](https://github.com/gohugoio/hugo) (537 Go files): click `tpl/template.go` and **181 towers light up**.
 
 <table>
 <tr>
 <td width="50%"><img src="docs/time-travel.gif" alt="Scrubbing rich's history: the code city grows and heats up"></td>
 <td width="50%"><img src="docs/city.jpg" alt="Code city of rich at night"></td>
 </tr>
+<tr>
+<td><b>Time-travel.</b> Drag the seismogram timeline to replay the repo's history (28 snapshots, each scored by the same engine) and watch the hotspots form. Rich grows from 25 files in 2019 to 109 today.</td>
+<td><b>Seven repos to explore</b> in the <a href="https://asil-eng.github.io/richter/app/">live demo</a>, including the large hugo and excalidraw cities. Press <code>3</code> for the city and <code>X</code> for full screen.</td>
+</tr>
 </table>
-
-Folders become districts and files become towers: **height = importance, glow = magnitude**. Drag the seismogram timeline to replay the repo's history (28 snapshots, each scored by the same engine) and watch the hotspots form. Rich grows from 25 files in 2019 to 109 today.
 
 ### 7 · A report card for the whole repo, in any language
 
@@ -168,7 +176,7 @@ Code visualizers already exist. Richter's bet is that **structure and history on
 
 | When you're… | Richter tells you… |
 | --- | --- |
-| **Reviewing a pull request** | whether it touches an M8 file with 88 dependents, and which of them to test |
+| **About to change a file** | whether it's an M8 file with 88 dependents, and which of them to test |
 | **New to a codebase** | where the dragons are before you write your first line |
 | **Planning a refactor** | which files sit in the *danger zone*: central **and** constantly reworked |
 | **Managing a team** | which risky files only one person has ever touched (bus factor) |
@@ -322,6 +330,7 @@ cd backend
 | `F` | find a file |
 | `A` | ask the repo |
 | `/` | switch repo |
+| `X` | full screen |
 | `Esc` | clear selection |
 
 ---

@@ -8,5 +8,5 @@ export default defineConfig({
   plugins: [react()],
   base: process.env.RICHTER_BASE ?? '/',
   publicDir: process.env.RICHTER_DATA ?? '../data',
-  server: { proxy: { '/api': 'http://localhost:8000' } },
+  server: { proxy: { '/api': process.env.RICHTER_API ?? 'http://localhost:8000' } },
 })

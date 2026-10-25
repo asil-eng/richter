@@ -21,6 +21,13 @@ Record each meaningful project change during the event, newest first. Update thi
 
 ## Event build log
 
+## 2026-10-25T07:58:13+05:30 — Ask-the-repo: conversation memory, full-repo context
+
+- Changed: `backend/richter/agent.py`: `summarize_model` lists every file for repos up to 160 files (riskiest and calmest 30/20 plus min/median/max for larger ones) and collapses a long tie at the lowest displayed score into an exact count; `ask()` takes `history` (last 6 turns) and sends them as chat messages after the risk-model context; the prompt resolves follow-ups, reports ties, and says when a referenced file isn't in the conversation; cache key versioned (`ASK_VERSION`) and includes a hash of the history. `api.py` AskReq gains `history`. Frontend `AskBar.tsx` keeps a per-repo conversation thread (CONVERSATION · N QUESTIONS, NEW CHAT, copy thread, auto-scroll, 'Ask a follow-up…'); `data.ts` sends history; the hosted demo serves bundled answers only for first-turn questions. `vite.config.ts` proxy target overridable via `RICHTER_API`.
+- Why: the assistant forgot earlier questions, and only saw the 25 riskiest files, so 'which file has the least score?' answered 5.1 while 0.5 files existed.
+- Validation: `pytest` 21 passed (new tests: low-end coverage in the summary, history sent and keyed into the cache). Live: 'which is the file with the least score?' → several files tie at 0.5 (was 5.1); follow-ups 'why is it so low?' and 'which file is the riskiest compared to it?' resolve correctly; hugo 'safest file' answered from the calm end. UI (port 5174 against backend 8001): 3-turn thread, NEW CHAT clears, no page errors. `tsc -b`, `oxlint` clean.
+- Limitations: vague references ('the file we discussed before') can still be resolved to a file named in the selection context rather than the conversation.
+
 ## 2026-10-25T06:32:42+05:30 — README: how to analyze your own repo
 
 - Changed: New README section 'Analyze any GitHub repo': paste a public repo link into the ANALYZE box, the CLONE → HISTORY → SCORE stages, where the repo appears (REPO picker), optional snapshots/AI notes, the CLI equivalent, and limits (public repos, supported languages, very long histories, hosted demo cannot analyze). 'Try it now' links to it; the hosted demo's ANALYZE YOUR REPO button now links there too. Hosted demo rebuilt.

@@ -37,8 +37,28 @@ def test_focus_block_describes_file_and_folder():
 
 def test_ask_cache_key_depends_on_focus(monkeypatch):
     keys = []
-    monkeypatch.setattr(agent, "_chat_json", lambda kind, key, s, u: keys.append((key, u)) or {"answer": "", "files": []})
+    monkeypatch.setattr(agent, "_chat_json", lambda kind, key, s, u, prior=None: keys.append((key, u + str(prior))) or {"answer": "", "files": []})
     agent.ask(MODEL, "is this safe?")
     agent.ask(MODEL, "is this safe?", focus="pkg/core.py")
     assert keys[0][0] != keys[1][0]
     assert "CURRENT SELECTION" not in keys[0][1] and "CURRENT SELECTION" in keys[1][1]
+
+
+def test_summary_lists_low_end_and_scope():
+    text = agent.summarize_model(MODEL)
+    assert "ALL 2 files" in text and "pkg/app.py" in text   # the calm file is present
+    big = {**MODEL, "nodes": [dict(MODEL["nodes"][1], id=f"f{i}.py", magnitude=i / 400) for i in range(300)]}
+    t2 = agent.summarize_model(big)
+    assert "30 riskiest and 20 calmest of 300" in t2 and "f0.py" in t2 and "f299.py" in t2 and "f150.py" not in t2
+
+
+def test_ask_sends_history_and_keys_cache_on_it(monkeypatch):
+    calls = []
+    monkeypatch.setattr(agent, "_chat_json",
+                        lambda kind, key, s, u, prior=None: calls.append((key, u, prior)) or {"answer": "", "files": []})
+    agent.ask(MODEL, "and why?")
+    agent.ask(MODEL, "and why?", history=[{"q": "riskiest file?", "a": "pkg/core.py is riskiest", "about": "pkg/core.py"}])
+    k0, _, p0 = calls[0]; k1, _, p1 = calls[1]
+    assert k0 != k1
+    assert any("riskiest file?" in m["content"] for m in p1 if m["role"] == "user")
+    assert any("pkg/core.py is riskiest" in m["content"] for m in p1 if m["role"] == "assistant")

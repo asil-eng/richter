@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { askRepo, LiveOnly, STATIC } from '../lib/data'
+import type { Turn } from '../lib/data'
 import { heat, shortName } from '../lib/heat'
 import type { AskResult, RiskModel } from '../lib/types'
 import { Seismo } from './Seismo'
@@ -21,23 +22,29 @@ interface Props {
   onSelect: (i: number) => void
 }
 
-// A command line, not a chat bubble: one question in, one plain-English reading out,
-// with the named files targeted on the instrument.
+interface Exchange {
+  q: string
+  about: string | null
+  res?: AskResult
+  err?: string
+}
+
+// A command line, not a chat bubble: a running conversation about the repo's risk, where
+// follow-ups ("and the safest one?") carry the earlier turns, and named files are targeted
+// on the instrument.
 export function AskBar({ slug, model, selected, onHighlight, onSelect }: Props) {
   const [q, setQ] = useState('')
-  const [asked, setAsked] = useState('')
+  const [thread, setThread] = useState<Exchange[]>([])
+  const threadEnd = useRef<HTMLDivElement>(null)
   const [focus, setFocus] = useState(false)
   const [cursor, setCursor] = useState(-1)
   const [busy, setBusy] = useState(false)
-  const [res, setRes] = useState<AskResult | null>(null)
-  const [err, setErr] = useState<string | null>(null)
   const [copied, setCopied] = useState(false)
   const input = useRef<HTMLInputElement>(null)
   // the selected file is sent as context unless the user detaches it
   const [detached, setDetached] = useState<number | null>(null)
   // the hosted demo only has precomputed whole-repo answers, so it never sends a focus
   const focusNode = !STATIC && selected !== null && selected !== detached ? model.nodes[selected] : null
-  const [askedAbout, setAskedAbout] = useState<string | null>(null)
 
   const suggestions = useMemo<Suggestion[]>(() => {
     if (focusNode) {
@@ -62,7 +69,12 @@ export function AskBar({ slug, model, selected, onHighlight, onSelect }: Props) 
   const filtered = q.trim()
     ? suggestions.filter((s) => s.q.toLowerCase().includes(q.trim().toLowerCase()))
     : suggestions
-  const showSugs = focus && !busy && filtered.length > 0 && !(res && !q)
+  // with a conversation open, an empty focused input keeps the thread visible for a follow-up
+  const showSugs = focus && !busy && filtered.length > 0 && (thread.length === 0 || q.trim() !== '')
+
+  useEffect(() => {
+    threadEnd.current?.scrollIntoView({ block: 'end' })
+  }, [thread, busy])
 
   // `A` focuses the ask bar from anywhere
   useEffect(() => {
@@ -77,50 +89,51 @@ export function AskBar({ slug, model, selected, onHighlight, onSelect }: Props) 
     return () => window.removeEventListener('keydown', onKey)
   }, [])
 
+  const highlight = (files: string[]) => {
+    const idx = new Map(model.nodes.map((n, i) => [n.id, i]))
+    onHighlight(new Set(files.map((f) => idx.get(f)!).filter((i) => i !== undefined)))
+  }
+
   const submit = async (question: string) => {
     const text = question.trim()
     if (!text || busy) return
+    const about = focusNode?.id ?? null
+    const history: Turn[] = thread.filter((t) => t.res).slice(-6).map((t) => ({ q: t.q, a: t.res!.answer, about: t.about }))
+    setThread((th) => [...th, { q: text, about }])
     setBusy(true)
-    setErr(null)
-    setRes(null)
-    setAsked(text)
-    setAskedAbout(focusNode?.id ?? null)
     setQ('')
     setCursor(-1)
-    input.current?.blur()
+    const settle = (patch: Partial<Exchange>) => setThread((th) => th.map((t, k) => (k === th.length - 1 ? { ...t, ...patch } : t)))
     try {
-      const r = await askRepo(slug, text, focusNode?.id)
-      setRes(r)
-      const idx = new Map(model.nodes.map((n, i) => [n.id, i]))
-      onHighlight(new Set(r.files.map((f) => idx.get(f)!).filter((i) => i !== undefined)))
+      const r = await askRepo(slug, text, focusNode?.id, history)
+      settle({ res: r })
+      highlight(r.files)
     } catch (e) {
       const m = (e as Error).message
-      if (e instanceof LiveOnly) {
-        setErr('This hosted demo answers the ⚡ questions from a precomputed cache. Run Richter locally with an OpenAI key to ask anything, including questions about the selected file.')
-        onHighlight(new Set())
-        return
-      }
-      setErr(
-        m.includes('API key')
-          ? 'Free-form questions need an OpenAI key (OPENAI_API_KEY in .env). The suggested questions marked ⚡ work without one.'
-          : m.includes('Failed to fetch') || m.includes('502')
-            ? 'The Richter API is not reachable. Start the backend to ask new questions.'
-            : m,
-      )
+      settle({
+        err:
+          e instanceof LiveOnly
+            ? history.length
+              ? 'Follow-up questions need the live engine. Run Richter locally with an OpenAI key to have a full conversation.'
+              : 'This hosted demo answers the ⚡ questions from a precomputed cache. Run Richter locally with an OpenAI key to ask anything, including questions about the selected file.'
+            : m.includes('API key')
+              ? 'Free-form questions need an OpenAI key (OPENAI_API_KEY in .env). The suggested questions marked ⚡ work without one.'
+              : m.includes('Failed to fetch') || m.includes('502')
+                ? 'The Richter API is not reachable. Start the backend to ask new questions.'
+                : m,
+      })
       onHighlight(new Set())
     } finally {
       setBusy(false)
     }
   }
   const clear = () => {
-    setRes(null)
-    setErr(null)
-    setAsked('')
+    setThread([])
     onHighlight(new Set())
   }
   const copy = async () => {
-    if (!res) return
-    await navigator.clipboard?.writeText(`${asked}\n\n${res.answer}\n\nFiles: ${res.files.join(', ')}`).catch(() => {})
+    const text = thread.map((t) => `Q: ${t.q}\nA: ${t.res?.answer ?? t.err ?? ''}`).join('\n\n')
+    await navigator.clipboard?.writeText(text).catch(() => {})
     setCopied(true)
     setTimeout(() => setCopied(false), 1400)
   }
@@ -143,61 +156,61 @@ export function AskBar({ slug, model, selected, onHighlight, onSelect }: Props) 
 
   return (
     <div className={`ask ${focus ? 'is-focus' : ''}`}>
-      {(busy || res || err) && !showSugs && (
-        <div className={`ask-card ${err ? 'is-err' : ''}`}>
+      {thread.length > 0 && !showSugs && (
+        <div className="ask-card">
           <div className="ask-card-head">
-            <span className="ask-card-label">{busy ? 'READING' : err ? 'NO READING' : 'ANSWER'}</span>
-            {res?.cached && <span className="ask-badge">⚡ CACHED</span>}
+            <span className="ask-card-label">{busy ? 'READING' : 'CONVERSATION'}</span>
+            <span className="ask-count">{thread.length} {thread.length === 1 ? 'QUESTION' : 'QUESTIONS'}</span>
             {!busy && (
               <span className="ask-card-actions">
-                {res && (
-                  <button onClick={copy} className="ask-act">
-                    {copied ? 'COPIED' : 'COPY'}
-                  </button>
-                )}
+                <button onClick={copy} className="ask-act">
+                  {copied ? 'COPIED' : 'COPY'}
+                </button>
                 <button onClick={clear} className="ask-act">
-                  CLEAR ✕
+                  NEW CHAT ✕
                 </button>
               </span>
             )}
           </div>
-          <div className="ask-q">
-            “{asked}”{askedAbout && <span className="ask-about"> — about {shortName(askedAbout)}</span>}
+          <div className="ask-thread">
+            {thread.map((t, k) => (
+              <div key={k} className={`ask-turn ${k === thread.length - 1 ? 'is-last' : ''}`}>
+                <div className="ask-q">
+                  “{t.q}”{t.about && <span className="ask-about"> — about {shortName(t.about)}</span>}
+                  {t.res?.cached && <span className="ask-badge">⚡</span>}
+                </div>
+                {!t.res && !t.err && (
+                  <div className="ask-reading">
+                    <Seismo level={0.75} color="#ff6a1a" height={26} speed={1.6} />
+                    <span>Reading the risk model…</span>
+                  </div>
+                )}
+                {t.err && <p className="ask-err">{t.err}</p>}
+                {t.res && (
+                  <>
+                    <p className="ask-answer">{t.res.answer}</p>
+                    {t.res.files.length > 0 && (
+                      <div className="ask-files">
+                        {t.res.files.map((f) => {
+                          const i = model.nodes.findIndex((n) => n.id === f)
+                          const m = model.nodes[i]?.magnitude ?? 0
+                          return (
+                            <button key={f} className="ask-file" onClick={() => onSelect(i)} title={f}>
+                              <i style={{ background: heat(m) }} />
+                              {shortName(f)}
+                              <b style={{ color: heat(m) }}>{(m * 10).toFixed(1)}</b>
+                            </button>
+                          )
+                        })}
+                      </div>
+                    )}
+                    {t.res.dropped > 0 && <div className="muted">{t.res.dropped} path(s) the model invented were discarded</div>}
+                  </>
+                )}
+              </div>
+            ))}
+            <div ref={threadEnd} />
           </div>
-          {busy && (
-            <div className="ask-reading">
-              <Seismo level={0.75} color="#ff6a1a" height={26} speed={1.6} />
-              <span>Reading the risk model…</span>
-            </div>
-          )}
-          {err && <p className="ask-err">{err}</p>}
-          {res && (
-            <>
-              <p className="ask-answer">{res.answer}</p>
-              {res.files.length > 0 && (
-                <>
-                  <div className="ask-files-head">
-                    <span>{res.files.length} FILES</span>
-                    <span className="ask-files-hint">highlighted on the map · click to open</span>
-                  </div>
-                  <div className="ask-files">
-                    {res.files.map((f) => {
-                      const i = model.nodes.findIndex((n) => n.id === f)
-                      const m = model.nodes[i]?.magnitude ?? 0
-                      return (
-                        <button key={f} className="ask-file" onClick={() => onSelect(i)} title={f}>
-                          <i style={{ background: heat(m) }} />
-                          {shortName(f)}
-                          <b style={{ color: heat(m) }}>{(m * 10).toFixed(1)}</b>
-                        </button>
-                      )
-                    })}
-                  </div>
-                </>
-              )}
-              {res.dropped > 0 && <div className="muted">{res.dropped} path(s) the model invented were discarded</div>}
-            </>
-          )}
         </div>
       )}
 
@@ -264,7 +277,9 @@ export function AskBar({ slug, model, selected, onHighlight, onSelect }: Props) 
           onFocus={() => setFocus(true)}
           onBlur={() => setFocus(false)}
           onKeyDown={onKeyDown}
-          placeholder={focusNode ? 'Ask about this file or its folder…' : "Ask anything about this codebase's risk…"}
+          placeholder={
+            thread.length ? 'Ask a follow-up…' : focusNode ? 'Ask about this file or its folder…' : "Ask anything about this codebase's risk…"
+          }
           spellCheck={false}
           aria-label="Ask the repo"
         />

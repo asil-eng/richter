@@ -79,17 +79,24 @@ export async function fetchNote(slug: string, file: string, kind: 'guard' | 'unb
   }
 }
 
-export async function askRepo(slug: string, question: string, focus?: string): Promise<AskResult> {
+export interface Turn {
+  q: string
+  a: string
+  about?: string | null
+}
+
+export async function askRepo(slug: string, question: string, focus?: string, history: Turn[] = []): Promise<AskResult> {
+  // the offline bundle only holds first-turn, repo-wide answers
+  const bundled = async () => (focus || history.length ? undefined : (await notesBundle(slug))?.ask[normalize(question)])
   if (STATIC) {
-    const hit = focus ? undefined : (await notesBundle(slug))?.ask[normalize(question)]
+    const hit = await bundled()
     if (hit) return { ...hit, cached: true }
     throw new LiveOnly('ask')
   }
   try {
-    return await postJSON<AskResult>('/api/ask', { slug, question, focus })
+    return await postJSON<AskResult>('/api/ask', { slug, question, focus, history })
   } catch (e) {
-    // the offline bundle only holds repo-wide answers
-    const hit = focus ? undefined : (await notesBundle(slug))?.ask[normalize(question)]
+    const hit = await bundled()
     if (hit) return { ...hit, cached: true }
     throw e
   }

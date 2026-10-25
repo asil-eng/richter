@@ -40,7 +40,7 @@ def _cache_path(kind: str, key: str) -> Path:
     return CACHE_DIR / kind / f"{h}.json"
 
 
-def _chat_json(kind: str, key: str, system: str, user: str) -> dict:
+def _chat_json(kind: str, key: str, system: str, user: str, prior: list[dict] | None = None) -> dict:
     """`key` identifies the request (repo HEAD + file or question), NOT the prompt text:
     prompts include excerpts from a local clone that other machines may not have, and
     the committed cache must still hit there."""
@@ -55,7 +55,7 @@ def _chat_json(kind: str, key: str, system: str, user: str) -> dict:
         model=MODEL,
         temperature=0.3,
         response_format={"type": "json_object"},
-        messages=[{"role": "system", "content": system}, {"role": "user", "content": user}],
+        messages=[{"role": "system", "content": system}, *(prior or []), {"role": "user", "content": user}],
     )
     data = json.loads(resp.choices[0].message.content or "{}")
     cp.parent.mkdir(parents=True, exist_ok=True)
@@ -150,8 +150,17 @@ def unblock_plan(model: dict, path: str, repo_root: Path | None = None) -> dict:
         return _rule_unblock(n)
 
 
+ASK_VERSION = "6"  # bump when the ask prompt or context changes, so stale cached answers aren't reused
 ASK_SYSTEM = (
     "You answer questions about a codebase's risk using ONLY the risk model summary given. "
+    "This is a conversation: earlier questions and your answers come before the latest question. "
+    "Resolve follow-ups ('it', 'that one', 'the second file', 'why?', 'what about the safest?') "
+    "from that conversation. "
+    "The summary says whether it lists every file or only the riskiest and calmest ones; if an "
+    "answer depends on files that are not listed, say so instead of guessing. 'Lowest/safest/"
+    "least risky' means the smallest magnitude. If several files share the lowest or highest "
+    "value, say that several files tie (give the count only if you are sure) and name at most three. If the user refers to something that is not in the "
+    "conversation or the summary, say you are not sure what they mean instead of guessing. "
     "If a CURRENT SELECTION block is present, the user is looking at that file and folder: "
     "words like 'this', 'this file', 'here', 'it' or 'this folder' refer to it, and answers "
     "should be about it unless the question clearly asks about the whole repo. "
@@ -186,16 +195,37 @@ def focus_block(model: dict, path: str, repo_root: Path | None = None) -> str:
     return "\n".join(lines)
 
 
-def summarize_model(model: dict, top: int = 25) -> str:
+def summarize_model(model: dict, full_upto: int = 160, top: int = 30, bottom: int = 20) -> str:
+    """Every file for typical repos; the riskiest and calmest ones (plus stats) for large repos,
+    so 'safest file' questions have the low end too."""
     nodes = model["nodes"]
-    ranked = sorted(nodes, key=lambda n: -n["magnitude"])[:top]
+    ordered = sorted(nodes, key=lambda n: -n["magnitude"])
+    if len(ordered) <= full_upto:
+        ranked, scope = ordered, f"ALL {len(ordered)} files, riskiest first"
+    else:
+        ranked = ordered[:top] + ordered[-bottom:]
+        scope = (f"the {top} riskiest and {bottom} calmest of {len(ordered)} files "
+                 f"(the {len(ordered) - top - bottom} in between are not listed)")
+    mags = sorted(n["magnitude"] * 10 for n in nodes)
     lines = [f"repo {model['repo']['name']}: {model['summary']}",
+             f"magnitude across all files: min {mags[0]:.1f}, median {mags[len(mags) // 2]:.1f}, max {mags[-1]:.1f}",
+             f"table below lists {scope}",
              "columns: magnitude/10 = fragile AND reworked; blast = files that break if it changes; "
              "churn = commits; fixes = fix/revert commits; authors = distinct people; "
              "single_author = yes means ONE person wrote every commit (bus-factor risk)",
              "path | magnitude/10 | blast | churn | fixes | authors | single_author"]
+    # a long tie at the floor carries no extra information: keep a few, count the rest exactly
+    shown_m = lambda n: round(n["magnitude"] * 10, 1)  # ties as the user sees them (one decimal)
+    floor = shown_m(ordered[-1])
+    tied = [n for n in ranked if shown_m(n) == floor]
+    hidden = tied[3:] if len(tied) > 5 else []
+    shown = [n for n in ranked if n not in hidden]
     lines += [f"{n['id']} | {n['magnitude'] * 10:.1f} | {n['blast_size']} | {n['churn']} | "
-              f"{n['fixes']} | {n['authors']} | {'yes' if n['bus_factor'] else 'no'}" for n in ranked]
+              f"{n['fixes']} | {n['authors']} | {'yes' if n['bus_factor'] else 'no'}" for n in shown]
+    if hidden:
+        tie_total = sum(1 for n in nodes if shown_m(n) == floor)
+        lines.append(f"... and {len(hidden)} more files at magnitude {floor:.1f} "
+                     f"({tie_total} files in total share this lowest value)")
     ghosts = sorted((c for c in model["cochange"] if c["ghost"]), key=lambda c: -c["shared"])[:10]
     lines.append("hidden coupling (co-changed, no import):")
     lines += [f"{nodes[c['a']]['id']} <-> {nodes[c['b']]['id']} ({c['shared']} commits)" for c in ghosts]
@@ -219,16 +249,31 @@ def validate_files(model: dict, names: list) -> list[str]:
     return out
 
 
-def ask(model: dict, question: str, focus: str | None = None, repo_root: Path | None = None) -> dict:
+MAX_TURNS = 6
+
+
+def ask(model: dict, question: str, focus: str | None = None, repo_root: Path | None = None,
+        history: list[dict] | None = None) -> dict:
+    """`history`: earlier turns of this conversation, [{"q", "a", "about"?}], oldest first."""
     question = question.strip()[:500]
     if not question:
         raise ValueError("empty question")
+    turns = [t for t in (history or []) if isinstance(t, dict) and t.get("q") and t.get("a")][-MAX_TURNS:]
     context = summarize_model(model)
-    key = f"{model['repo']['head']}:{' '.join(question.lower().split())}"
+    key = f"v{ASK_VERSION}:{model['repo']['head']}:{' '.join(question.lower().split())}"
     if focus:
         context += "\n\n" + focus_block(model, focus, repo_root)  # KeyError if not in model
         key += f"@{focus}"
-    data = _chat_json("ask", key, ASK_SYSTEM, context + "\n\nquestion: " + question)
+    # the risk model goes first (system context); prior turns follow as real chat messages
+    prior = [{"role": "user", "content": context + "\n\n(Conversation starts below.)"},
+             {"role": "assistant", "content": '{"answer": "Ready.", "files": []}'}]
+    for t in turns:
+        about = f" [about {t['about']}]" if t.get("about") else ""
+        prior += [{"role": "user", "content": f"question{about}: {str(t['q'])[:500]}"},
+                  {"role": "assistant", "content": json.dumps({"answer": str(t["a"])[:1200], "files": []})}]
+    if turns:
+        key += "|h:" + hashlib.sha256(json.dumps(turns, sort_keys=True).encode()).hexdigest()[:12]
+    data = _chat_json("ask", key, ASK_SYSTEM, "question: " + question, prior)
     raw = data.get("files", [])
     files = validate_files(model, raw if isinstance(raw, list) else [])
     return {"answer": str(data.get("answer", "")), "files": files,
